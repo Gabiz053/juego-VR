@@ -1,7 +1,10 @@
-# This .gitignore file should be placed at the root of your Unity project directory
-#
-# Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
-#
+# ============================================
+# .gitignore para Unity 6 + URP + OpenXR
+# Basado en: github/gitignore/Unity.gitignore
+#            toptal.com/developers/gitignore/api/unity
+# ============================================
+
+# ---- Carpetas generadas por Unity ----
 .utmp/
 /[Ll]ibrary/
 /[Tt]emp/
