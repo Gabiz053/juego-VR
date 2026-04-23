@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c1a0001a0b04e4f8d3f1a0d0e0f0001, type: 3}
+  m_Name: PlanetConfig_Sun
+  m_EditorClassIdentifier:
+  _displayNameEs: Sol
+  _displayNameEn: Sun
+  _sceneName: Sol
+  _gravityY: -274.0
+  _skyTint: {r: 1, g: 0.6, b: 0.15, a: 1}
+  _skyGroundTint: {r: 1, g: 0.4, b: 0.05, a: 1}
+  _atmosphereThickness: 0.3
+  _skyExposure: 2.5
+  _sunColor: {r: 1, g: 0.75, b: 0.3, a: 1}
+  _sunIntensity: 2.0
+  _fogEnabled: 1
+  _fogColor: {r: 1, g: 0.55, b: 0.15, a: 1}
+  _fogDensity: 0.015
+  _platformTint: {r: 0.95, g: 0.55, b: 0.2, a: 1}
+  _rockTint: {r: 1, g: 0.5, b: 0.15, a: 1}
+  _sceneryRockCount: 70
+  _sceneryInnerRadius: 14
+  _sceneryOuterRadius: 70
+  _sceneryScaleRange: {x: 0.6, y: 3.5}
+  _sceneryRandomSeed: 909

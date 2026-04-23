@@ -123,6 +123,37 @@ Assets/
 - Contendra rig XR, locomocion, interaccion y sistemas de juego.
 - La jerarquia estructural de referencia se mantiene temporalmente igual a la plantilla original (ver `CONVENTIONS.md`, seccion 4).
 
+### 3.3 Escenas por planeta (Sistema Solar)
+
+Cada cuerpo del Sistema Solar tiene su propia escena con gravedad correcta, skybox propio y un test de caida de piedra ("drop rock") sobre una plataforma. Todas comparten la misma estructura runtime generada por `PlanetSceneBootstrap` a partir de un `PlanetConfigSO`.
+
+| Escena | Cuerpo | Gravedad (m/s^2) | Config SO |
+|--------|--------|------------------|-----------|
+| `Mercurio.unity` | Mercurio | -3.70 | `PlanetConfig_Mercury.asset` |
+| `Venus.unity` | Venus | -8.87 | `PlanetConfig_Venus.asset` |
+| `Tierra.unity` | Tierra | -9.81 | `PlanetConfig_Earth.asset` (opcional) |
+| `Luna.unity` | Luna | -1.62 | `PlanetConfig_Moon.asset` (opcional) |
+| `Marte.unity` | Marte | -3.71 | `PlanetConfig_Mars.asset` |
+| `Jupiter.unity` | Jupiter | -24.79 | `PlanetConfig_Jupiter.asset` |
+| `Saturno.unity` | Saturno | -10.44 | `PlanetConfig_Saturn.asset` |
+| `Urano.unity` | Urano | -8.87 | `PlanetConfig_Uranus.asset` |
+| `Neptuno.unity` | Neptuno | -11.15 | `PlanetConfig_Neptune.asset` |
+| `Pluton.unity` | Pluton | -0.62 | `PlanetConfig_Pluto.asset` |
+| `Sol.unity` | Sol | -274.0 | `PlanetConfig_Sun.asset` |
+
+Cada escena contiene:
+
+- `Main Camera` temporal (se sustituira por el rig XR cuando llegue la locomocion).
+- `Directional Light` tintada como el sol del planeta.
+- `SceneManager` con `PlanetSceneBootstrap` que, al iniciar:
+    1. Aplica `Physics.gravity.y` desde el `PlanetConfigSO`.
+    2. Construye un skybox procedural (`Skybox/Procedural`) tintado.
+    3. Instancia una plataforma circular con aro de seguridad.
+    4. Spawnea la piedra `GravityTestRock` sobre un pedestal.
+    5. Genera scenery de rocas low-poly alrededor de la plataforma (seed reproducible por planeta).
+
+`Tierra.unity` y `Luna.unity` conservan la version minima con `GravitySettings` para no romper flujos ya probados; su migracion al bootstrap es trivial (anadir un `SceneManager` con el `PlanetConfig_*` correspondiente).
+
 ---
 
 ## 4. Arquitectura base
@@ -218,11 +249,13 @@ Linea base recomendada:
 | Categoria | Ruta sugerida | Estado |
 |----------|----------------|--------|
 | ScriptableObjects | `Assets/_Project/Assets/ScriptableObjects/` | Pendiente |
+| ScriptableObjects | `Assets/_Project/Assets/ScriptableObjects/` | `PlanetConfig_{Mercury,Venus,Earth,Moon,Mars,Jupiter,Saturn,Uranus,Neptune,Pluto,Sun}.asset` |
 | Prefabs XR | `Assets/_Project/Prefabs/XR/` | Pendiente |
 | Prefabs UI | `Assets/_Project/Prefabs/UI/` | Pendiente |
 | Materiales | `Assets/_Project/Materials/` | Pendiente |
 | Audio | `Assets/_Project/Audio/` | Pendiente |
 | Modelos | `Assets/_Project/Models/` | Pendiente |
+| Scenery runtime | N/A | Procedural (ver `PlanetSceneBootstrap`) |
 
 <!-- TODO: Sustituir "Pendiente" por inventario real conforme se creen assets. -->
 
@@ -254,7 +287,17 @@ Linea base recomendada:
 
 | Script | Responsabilidad |
 |--------|-----------------|
-| Pendiente | Definir |
+| `PlanetConfigSO` | ScriptableObject con gravedad, colores de cielo, fog y parametros de scenery para cada cuerpo del Sistema Solar. |
+| `PlanetSceneBootstrap` | Aplica gravedad, skybox procedural, luz key, plataforma y scenery al entrar a una escena de planeta. |
+| `GravitySettings` | Setter minimo de `Physics.gravity.y` (usado en Tierra/Luna como version legada). |
+| `MenuController` | Menu inicial en `Menu.unity` que permite saltar a cualquiera de las 11 escenas. |
+
+### Interaction -- `Assets/_Project/Scripts/Interaction/`
+
+| Script | Responsabilidad |
+|--------|-----------------|
+| `GravityTestRock` | Rigidbody con respawn automatico + medicion de tiempo de caida; funciona con o sin XR Grab Interactable. |
+| `RespawnButton` | Pedestal mundial que respawnea la piedra al pulsar (OnMouseDown/OnTriggerEnter/Tecla R) y muestra HUD con planeta/gravedad/ultimo tiempo de caida. |
 
 ### Infrastructure -- `Assets/_Project/Scripts/Infrastructure/`
 

@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c1a0001a0b04e4f8d3f1a0d0e0f0001, type: 3}
+  m_Name: PlanetConfig_Mercury
+  m_EditorClassIdentifier:
+  _displayNameEs: Mercurio
+  _displayNameEn: Mercury
+  _sceneName: Mercurio
+  _gravityY: -3.7
+  _skyTint: {r: 0.06, g: 0.06, b: 0.08, a: 1}
+  _skyGroundTint: {r: 0.3, g: 0.25, b: 0.2, a: 1}
+  _atmosphereThickness: 0.0
+  _skyExposure: 0.8
+  _sunColor: {r: 1, g: 0.96, b: 0.85, a: 1}
+  _sunIntensity: 1.8
+  _fogEnabled: 0
+  _fogColor: {r: 0.1, g: 0.1, b: 0.1, a: 1}
+  _fogDensity: 0.01
+  _platformTint: {r: 0.55, g: 0.5, b: 0.45, a: 1}
+  _rockTint: {r: 0.5, g: 0.45, b: 0.38, a: 1}
+  _sceneryRockCount: 110
+  _sceneryInnerRadius: 14
+  _sceneryOuterRadius: 70
+  _sceneryScaleRange: {x: 0.6, y: 3.5}
+  _sceneryRandomSeed: 101

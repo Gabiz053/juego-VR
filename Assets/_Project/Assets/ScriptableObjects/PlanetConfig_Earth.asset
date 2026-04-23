@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c1a0001a0b04e4f8d3f1a0d0e0f0001, type: 3}
+  m_Name: PlanetConfig_Earth
+  m_EditorClassIdentifier:
+  _displayNameEs: Tierra
+  _displayNameEn: Earth
+  _sceneName: Tierra
+  _gravityY: -9.81
+  _skyTint: {r: 0.3, g: 0.5, b: 0.9, a: 1}
+  _skyGroundTint: {r: 0.15, g: 0.22, b: 0.1, a: 1}
+  _atmosphereThickness: 1.0
+  _skyExposure: 1.3
+  _sunColor: {r: 1, g: 0.96, b: 0.84, a: 1}
+  _sunIntensity: 1.1
+  _fogEnabled: 0
+  _fogColor: {r: 0.5, g: 0.5, b: 0.6, a: 1}
+  _fogDensity: 0.006
+  _platformTint: {r: 0.55, g: 0.55, b: 0.6, a: 1}
+  _rockTint: {r: 0.45, g: 0.4, b: 0.35, a: 1}
+  _sceneryRockCount: 90
+  _sceneryInnerRadius: 14
+  _sceneryOuterRadius: 70
+  _sceneryScaleRange: {x: 0.6, y: 3.5}
+  _sceneryRandomSeed: 110

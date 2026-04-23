@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c1a0001a0b04e4f8d3f1a0d0e0f0001, type: 3}
+  m_Name: PlanetConfig_Moon
+  m_EditorClassIdentifier:
+  _displayNameEs: Luna
+  _displayNameEn: Moon
+  _sceneName: Luna
+  _gravityY: -1.62
+  _skyTint: {r: 0.02, g: 0.02, b: 0.04, a: 1}
+  _skyGroundTint: {r: 0.35, g: 0.35, b: 0.38, a: 1}
+  _atmosphereThickness: 0.0
+  _skyExposure: 0.7
+  _sunColor: {r: 1, g: 0.98, b: 0.92, a: 1}
+  _sunIntensity: 1.4
+  _fogEnabled: 0
+  _fogColor: {r: 0.1, g: 0.1, b: 0.1, a: 1}
+  _fogDensity: 0.002
+  _platformTint: {r: 0.7, g: 0.7, b: 0.72, a: 1}
+  _rockTint: {r: 0.6, g: 0.58, b: 0.55, a: 1}
+  _sceneryRockCount: 100
+  _sceneryInnerRadius: 14
+  _sceneryOuterRadius: 70
+  _sceneryScaleRange: {x: 0.6, y: 3.5}
+  _sceneryRandomSeed: 111
