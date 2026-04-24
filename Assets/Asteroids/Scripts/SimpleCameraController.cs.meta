@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: b82a54ac813800f43ad86cfe2dd1384e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 281176
+  packageName: Asteroids Belt procedural generator URP
+  packageVersion: 1.1
+  assetPath: Assets/Asteroids/Scripts/SimpleCameraController.cs
+  uploadId: 708551

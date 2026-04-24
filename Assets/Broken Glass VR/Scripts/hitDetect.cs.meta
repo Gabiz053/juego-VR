@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: aa666fb329711694986ced4183eacab0
+timeCreated: 1502283777
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 97573
+  packageName: Broken Glass VR
+  packageVersion: 1.2
+  assetPath: Assets/Broken Glass VR/Scripts/hitDetect.cs
+  uploadId: 200024

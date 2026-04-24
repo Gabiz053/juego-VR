@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 9fad49c9fcb6d8441ba7281916fecad8
+VisualEffectImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 281176
+  packageName: Asteroids Belt procedural generator URP
+  packageVersion: 1.1
+  assetPath: Assets/Asteroids/Vfx/DustBlast.vfx
+  uploadId: 708551

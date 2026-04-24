@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 866daf676cdf893439a44272862dcb21
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 281176
+  packageName: Asteroids Belt procedural generator URP
+  packageVersion: 1.1
+  assetPath: Assets/Asteroids/Shaders/HLSL/CircleSpots.hlsl
+  uploadId: 708551

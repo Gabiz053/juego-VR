@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: cc8f6eadc406e6d4b91beb5f7216e334
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 281176
+  packageName: Asteroids Belt procedural generator URP
+  packageVersion: 1.1
+  assetPath: Assets/Asteroids/Scripts/AsteroidOrbitSpawner.cs
+  uploadId: 708551

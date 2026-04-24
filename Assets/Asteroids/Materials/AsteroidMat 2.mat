@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8700850809280554319
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 10
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: AsteroidMat 2
+  m_Shader: {fileID: -6465566751694194690, guid: a1d463b76c38bc544a5315d6fde55353, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses:
+  - MOTIONVECTORS
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BaseGeom_RND: 12.7
+    - _BigNoiseGeom_RND_0_3_5: 2.51
+    - _BigNoise_Geom_RND_0_3_5: 1.99
+    - _Color2Balance: 2.32
+    - _Color2Tiling_RND_0_10: 3.1
+    - _Color2_Coverage: 4.82
+    - _Color2_Strenght: 2.09
+    - _Color_1_2_Balance: 33
+    - _CraterAngle_RND_5_10: 5
+    - _CraterDensity_RND_0_7: 0
+    - _CraterDensity_RND_1_10: 2.93
+    - _Crater_Density_RND: 10
+    - _Crater_Density_RND_1_10: 1.89
+    - _Crater_angle_RND: 9.64
+    - _Crater_angle_RND_5_10: 9.95
+    - _FilanBtightness: 0.018
+    - _LongNoise_RND: 0.07
+    - _Metallic: 0.733
+    - _ObjScaleY_RND_1_3: 1
+    - _ObjScaleY_RND_1_5: 1
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _Smooth: 0.176
+    - _SubGeom_RND: 34.1
+    - _SubtractCratersFromVertex: 0.0109
+    - _VoronNoiseGeom_RND_0_2: 1.73
+    - _VoronNoiseGeom_RND_0_25_2: 1.43
+    - _WaveNoise2Geom_RND_10_70: 23.8
+    - _WaveNoiseGeom_RND_2_30: 8.4
+    - _Wave_Noise2_Geom_RND_10_70: 10
+    - _Wave_Noise_Geom_RND_2_30: 2
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color2_TXT_3: {r: 0.81761, g: 0.4827627, b: 0, a: 0}
+    - _Color2_TXT_4: {r: 0, g: 0.00934577, b: 1, a: 0}
+    - _Color_Crater_1: {r: 0.1509434, g: 0.05602023, b: 0, a: 0}
+    - _Color_Crater_2: {r: 0.70440245, g: 0.39450848, b: 0.17056279, a: 0}
+    - _Color_TXT_1: {r: 0, g: 0, b: 0, a: 0}
+    - _Color_TXT_2: {r: 0.5471698, g: 0.5471698, b: 0.5471698, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

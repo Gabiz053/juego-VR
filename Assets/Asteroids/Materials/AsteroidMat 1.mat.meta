@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: bb6f95b8066081144ae5f145bd820751
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 281176
+  packageName: Asteroids Belt procedural generator URP
+  packageVersion: 1.1
+  assetPath: Assets/Asteroids/Materials/AsteroidMat 1.mat
+  uploadId: 708551

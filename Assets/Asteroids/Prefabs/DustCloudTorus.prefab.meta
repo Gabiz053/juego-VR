@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: c6e429c52ed66f543829b1afbc5f3856
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 281176
+  packageName: Asteroids Belt procedural generator URP
+  packageVersion: 1.1
+  assetPath: Assets/Asteroids/Prefabs/DustCloudTorus.prefab
+  uploadId: 708551

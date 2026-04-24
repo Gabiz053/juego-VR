@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f9b0acb15868ab34d9344e0c94dd8a0c
+timeCreated: 1502282005
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 97573
+  packageName: Broken Glass VR
+  packageVersion: 1.2
+  assetPath: Assets/Broken Glass VR/Misc/Materials/cubeMat.mat
+  uploadId: 200024

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c4cd83576bc261248be39745660d6a96
+timeCreated: 1502281617
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 97573
+  packageName: Broken Glass VR
+  packageVersion: 1.2
+  assetPath: Assets/Broken Glass VR/Misc/Materials/capsuleMat.mat
+  uploadId: 200024

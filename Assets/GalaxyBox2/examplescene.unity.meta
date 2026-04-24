@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ff48664a33d0a9d4ea09bf66e15db934
+timeCreated: 1473274926
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84349
+  packageName: GalaxyBox 2.0
+  packageVersion: 1.0
+  assetPath: Assets/GalaxyBox2/examplescene.unity
+  uploadId: 165052

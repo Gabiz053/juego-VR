@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 789d4802d97488a4299d22f0a9d20204
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 281176
+  packageName: Asteroids Belt procedural generator URP
+  packageVersion: 1.1
+  assetPath: Assets/Asteroids/Scripts/AsteroidsRotate.cs
+  uploadId: 708551

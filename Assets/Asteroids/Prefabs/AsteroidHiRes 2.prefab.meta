@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 576916bea59c68e4592618fac70959c5
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 281176
+  packageName: Asteroids Belt procedural generator URP
+  packageVersion: 1.1
+  assetPath: Assets/Asteroids/Prefabs/AsteroidHiRes 2.prefab
+  uploadId: 708551

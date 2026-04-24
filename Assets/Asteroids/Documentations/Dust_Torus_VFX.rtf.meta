@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 444b09476bdbc8c4baac756e947f881d
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 281176
+  packageName: Asteroids Belt procedural generator URP
+  packageVersion: 1.1
+  assetPath: Assets/Asteroids/Documentations/Dust_Torus_VFX.rtf
+  uploadId: 708551

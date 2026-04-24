@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: dd5d3b52cf1f5964ea0c0d7d04aa1b28
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 281176
+  packageName: Asteroids Belt procedural generator URP
+  packageVersion: 1.1
+  assetPath: Assets/Asteroids/Documentations/RND Sliders Randomizer.rtf
+  uploadId: 708551

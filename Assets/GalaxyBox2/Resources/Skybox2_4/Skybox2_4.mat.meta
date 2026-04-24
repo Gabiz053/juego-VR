@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 3b1dfe74f6c814e409f576cbcc665216
+timeCreated: 1473276587
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84349
+  packageName: GalaxyBox 2.0
+  packageVersion: 1.0
+  assetPath: Assets/GalaxyBox2/Resources/Skybox2_4/Skybox2_4.mat
+  uploadId: 165052
