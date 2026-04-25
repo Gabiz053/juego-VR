@@ -126,6 +126,7 @@ namespace _Project.Scripts.Core
             }
 
             _instance = this;
+            transform.SetParent(null); // DontDestroyOnLoad only works on root GameObjects.
             DontDestroyOnLoad(gameObject);
             _currentState = _initialState;
 

@@ -34,7 +34,7 @@ namespace _Project.Scripts.Core
 
         [Header("Fade Configuration")]
         [Tooltip("Seconds each fade phase (fade-to-black and fade-in) takes. Uses smooth easing.")]
-        [SerializeField] private float _fadeDuration = 0.4f;
+        [SerializeField, Range(0.1f, 2f)] private float _fadeDuration = 0.4f;
 
         #endregion
 
@@ -105,6 +105,7 @@ namespace _Project.Scripts.Core
             }
 
             _instance = this;
+            transform.SetParent(null); // DontDestroyOnLoad only works on root GameObjects.
             DontDestroyOnLoad(gameObject);
             CreateFadeCanvas();
 

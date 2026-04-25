@@ -5,7 +5,7 @@ namespace _Project.Scripts.Core
 {
     /// <summary>
     /// Controls the ambient decorations in the portal room:
-    /// slow black-hole rotation, periodic asteroid fly-bys, and optional skybox rotation.
+    /// slow black-hole rotation, continuous asteroid fly-bys, and optional skybox rotation.
     /// Place this on a dedicated SceneManager GameObject in Main_VR.unity.
     /// </summary>
     [DisallowMultipleComponent]
@@ -15,8 +15,6 @@ namespace _Project.Scripts.Core
         #region Constants -------------------------------------------------------
 
         private const string LOG_TAG = "[SpaceAmbientController]";
-
-        // Standard skybox shader rotation property shared by most Unity skybox shaders.
         private const string SKYBOX_ROTATION_PROP = "_Rotation";
 
         #endregion
@@ -38,26 +36,32 @@ namespace _Project.Scripts.Core
         [SerializeField, Range(0f, 10f)] private float _skyboxRotationSpeed = 0.4f;
 
         [Header("Asteroid Fly-bys")]
-        [Tooltip("Prefab spawned for each fly-by. Must have an AsteroidFlyBy component.")]
-        [SerializeField] private GameObject _asteroidPrefab;
+        [Tooltip("Prefabs to choose from for each fly-by. One is picked at random each spawn. They do not need AsteroidFlyBy -- it is added automatically.")]
+        [SerializeField] private GameObject[] _asteroidPrefabs;
 
-        [Tooltip("Minimum seconds between asteroid spawns.")]
-        [SerializeField, Range(5f, 180f)] private float _minSpawnInterval = 25f;
+        [Tooltip("How many asteroids to spawn immediately when the scene starts.")]
+        [SerializeField, Range(0, 50)] private int _initialBatchCount = 20;
 
-        [Tooltip("Maximum seconds between asteroid spawns.")]
-        [SerializeField, Range(5f, 600f)] private float _maxSpawnInterval = 70f;
+        [Tooltip("Minimum seconds between subsequent asteroid spawns (after the initial batch).")]
+        [SerializeField, Range(0.5f, 60f)] private float _minSpawnInterval = 2f;
+
+        [Tooltip("Maximum seconds between subsequent asteroid spawns.")]
+        [SerializeField, Range(0.5f, 120f)] private float _maxSpawnInterval = 6f;
 
         [Tooltip("Radius from the scene centre where asteroids spawn and despawn (metres).")]
         [SerializeField, Range(30f, 300f)] private float _spawnRadius = 100f;
 
-        [Tooltip("Maximum concurrent fly-bys allowed at once.")]
-        [SerializeField, Range(1, 10)] private int _maxConcurrentAsteroids = 3;
+        [Tooltip("Maximum concurrent asteroids in the scene at once.")]
+        [SerializeField, Range(1, 60)] private int _maxConcurrentAsteroids = 30;
 
         [Tooltip("Travel speed range for spawned asteroids in metres per second.")]
-        [SerializeField] private Vector2 _asteroidSpeedRange = new(5f, 12f);
+        [SerializeField] private Vector2 _asteroidSpeedRange = new(6f, 20f);
 
         [Tooltip("Scale range for spawned asteroids in world metres.")]
-        [SerializeField] private Vector2 _asteroidScaleRange = new(0.5f, 4f);
+        [SerializeField] private Vector2 _asteroidScaleRange = new(0.3f, 5f);
+
+        [Tooltip("Minimum metres from the scene centre that asteroid paths must clear. Prevents asteroids flying through the platform area. Set to roughly the platform diagonal radius (~8 for a 10x10 platform).")]
+        [SerializeField, Range(0f, 60f)] private float _platformExclusionRadius = 12f;
 
         #endregion
 
@@ -85,8 +89,7 @@ namespace _Project.Scripts.Core
             SetupSkybox();
             ValidateReferences();
 
-            if (_asteroidPrefab != null)
-                StartCoroutine(AsteroidSpawnRoutine());
+            StartCoroutine(AsteroidSpawnRoutine());
         }
 
         private void Update()
@@ -97,7 +100,6 @@ namespace _Project.Scripts.Core
 
         private void OnDestroy()
         {
-            // Reset skybox to 0 so the next scene starts with a clean rotation.
             if (_skyboxSupportsRotation && _skyboxInstance != null)
                 _skyboxInstance.SetFloat(SKYBOX_ROTATION_PROP, 0f);
 
@@ -113,7 +115,6 @@ namespace _Project.Scripts.Core
         {
             if (!_rotateSkybox || RenderSettings.skybox == null) return;
 
-            // Create a runtime instance so we never dirty the shared skybox asset.
             _skyboxInstance = new Material(RenderSettings.skybox);
             RenderSettings.skybox = _skyboxInstance;
             _skyboxSupportsRotation = _skyboxInstance.HasProperty(SKYBOX_ROTATION_PROP);
@@ -136,47 +137,86 @@ namespace _Project.Scripts.Core
             _skyboxInstance.SetFloat(SKYBOX_ROTATION_PROP, _skyboxRotation);
         }
 
+        private GameObject PickRandomPrefab()
+        {
+            if (_asteroidPrefabs == null || _asteroidPrefabs.Length == 0) return null;
+            // Returns null when the randomly chosen slot is empty — caller falls back to primitive.
+            return _asteroidPrefabs[UnityEngine.Random.Range(0, _asteroidPrefabs.Length)];
+        }
+
+        [ContextMenu("Spawn Test Asteroid Now")]
+        private void SpawnTestAsteroid()
+        {
+            if (!Application.isPlaying) return;
+            // Fallback to primitives if no prefabs — still useful for testing the spawn logic.
+            SpawnAsteroid();
+        }
+
         private IEnumerator AsteroidSpawnRoutine()
         {
-            // Short random warm-up so the scene settles before the first asteroid.
-            yield return new WaitForSeconds(UnityEngine.Random.Range(5f, 15f));
+            // Spawn the initial burst immediately, one per frame to avoid a single-frame hitch.
+            int batch = Mathf.Min(_initialBatchCount, _maxConcurrentAsteroids);
+            for (int i = 0; i < batch; i++)
+            {
+                SpawnAsteroid();
+                yield return null;
+            }
 
+            // Keep topping up asteroids at a regular interval.
             while (true)
             {
                 if (_activeAsteroidCount < _maxConcurrentAsteroids)
                     SpawnAsteroid();
 
-                float interval = UnityEngine.Random.Range(_minSpawnInterval, _maxSpawnInterval);
-                Debug.Log($"{LOG_TAG} Next asteroid in {interval:F0}s -- active: {_activeAsteroidCount}.");
-                yield return new WaitForSeconds(interval);
+                yield return new WaitForSeconds(UnityEngine.Random.Range(_minSpawnInterval, _maxSpawnInterval));
             }
         }
 
         private void SpawnAsteroid()
         {
-            // Pick a random origin on the spawn sphere and aim across to the opposite side.
-            var origin      = UnityEngine.Random.onUnitSphere * _spawnRadius;
-            var destination = -origin + UnityEngine.Random.insideUnitSphere * (_spawnRadius * 0.25f);
+            var origin = UnityEngine.Random.onUnitSphere * _spawnRadius;
+            // Perpendicular offset steers the path away from the centre so asteroids
+            // clear the platform exclusion zone instead of flying through it.
+            var perp        = Vector3.Cross(origin.normalized, UnityEngine.Random.onUnitSphere).normalized;
+            float sideShift = _platformExclusionRadius * UnityEngine.Random.Range(1.5f, 2.5f);
+            var destination = -origin + perp * sideShift
+                              + UnityEngine.Random.insideUnitSphere * (_spawnRadius * 0.15f);
             var direction   = (destination - origin).normalized;
             float speed     = UnityEngine.Random.Range(_asteroidSpeedRange.x, _asteroidSpeedRange.y);
-            var velocity    = direction * speed;
-            float lifetime  = (destination - origin).magnitude / speed + 3f;
+            float lifetime  = (destination - origin).magnitude / speed + 5f;
 
-            var go = Instantiate(_asteroidPrefab, origin, Quaternion.LookRotation(direction));
-            go.transform.localScale = Vector3.one * UnityEngine.Random.Range(_asteroidScaleRange.x, _asteroidScaleRange.y);
+            GameObject go;
 
-            if (go.TryGetComponent<AsteroidFlyBy>(out var flyBy))
+            var chosenPrefab = PickRandomPrefab();
+            if (chosenPrefab != null)
             {
-                flyBy.Initialize(velocity, lifetime);
-                flyBy.OnExpired += OnAsteroidExpired;
-                _activeAsteroidCount++;
-                Debug.Log($"{LOG_TAG} Asteroid spawned -- speed: {speed:F1} m/s, lifetime: {lifetime:F1}s.");
+                go = Instantiate(chosenPrefab, origin, Quaternion.LookRotation(direction));
+
+                // Strip any third-party orbit/physics scripts (e.g. AsteroidOrbitAndRotate from
+                // the Asteroids asset pack) — they crash without a 'sun' reference and we drive
+                // movement ourselves via AsteroidFlyBy.
+                var legacyOrbit = go.GetComponent("AsteroidOrbitAndRotate");
+                if (legacyOrbit != null) Destroy(legacyOrbit);
+
+                if (go.TryGetComponent<Rigidbody>(out var rb)) Destroy(rb);
             }
             else
             {
-                Debug.LogWarning($"{LOG_TAG} _asteroidPrefab is missing AsteroidFlyBy component.", this);
-                Destroy(go);
+                // No prefabs assigned — primitive sphere fallback so asteroids always appear.
+                go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                go.name = "Asteroid_Runtime";
+                go.transform.SetPositionAndRotation(origin, Quaternion.LookRotation(direction));
+                if (go.TryGetComponent<Collider>(out var col)) Destroy(col);
             }
+
+            go.transform.localScale = Vector3.one * UnityEngine.Random.Range(_asteroidScaleRange.x, _asteroidScaleRange.y);
+
+            if (!go.TryGetComponent<AsteroidFlyBy>(out var flyBy))
+                flyBy = go.AddComponent<AsteroidFlyBy>();
+
+            flyBy.Initialize(direction * speed, lifetime);
+            flyBy.OnExpired += OnAsteroidExpired;
+            _activeAsteroidCount++;
         }
 
         private void OnAsteroidExpired()
@@ -192,8 +232,8 @@ namespace _Project.Scripts.Core
         {
             if (_blackHole == null)
                 Debug.LogWarning($"{LOG_TAG} _blackHole is not assigned.", this);
-            if (_asteroidPrefab == null)
-                Debug.LogWarning($"{LOG_TAG} _asteroidPrefab is not assigned.", this);
+            if (_asteroidPrefabs == null || _asteroidPrefabs.Length == 0)
+                Debug.LogWarning($"{LOG_TAG} _asteroidPrefabs is empty -- using primitive spheres as fallback.", this);
         }
 
         #endregion

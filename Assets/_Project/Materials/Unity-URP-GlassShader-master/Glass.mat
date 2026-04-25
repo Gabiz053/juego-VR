@@ -7,14 +7,14 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Forcefield Material
-  m_Shader: {fileID: -6465566751694194690, guid: 0b181787836bfd747ba417968c558323, type: 3}
+  m_Name: Glass
+  m_Shader: {fileID: -6465566751694194690, guid: da5b0bd7382ff6d4a936cf1055a67d6d, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
-  m_LightmapFlags: 1
-  m_EnableInstancingVariants: 1
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -24,20 +24,28 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - Texture2D_6BB4D92B:
-        m_Texture: {fileID: 2800000, guid: 00a1135727373e043b8c806db569c758, type: 3}
+    - _GlassRefractionMap:
+        m_Texture: {fileID: 2800000, guid: 2b9d47b972c60a54b871a79ac33e122d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - Texture2D_8322BAEB:
-        m_Texture: {fileID: 2800000, guid: e3501b3a46989804dbaf3d81d51ab0ca, type: 3}
+    - _MainTex:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - Texture2D_8C2B8E4D:
-        m_Texture: {fileID: 2800000, guid: 6a3ec16f46db3bf44a945bfe02e66dbc, type: 3}
+    - _Normal:
+        m_Texture: {fileID: 2800000, guid: 7aebad99ce25be74fb0e35147ae68dd5, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - Texture2D_BF119BBB:
-        m_Texture: {fileID: 2800000, guid: e3501b3a46989804dbaf3d81d51ab0ca, type: 3}
+    - _SampleTexture2DLOD_33e650cf57364e1fb8f2422e1e238bef_Texture_1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_810a0837398a4e329cb4ab11e7d6d816_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 7aebad99ce25be74fb0e35147ae68dd5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TintTexture:
+        m_Texture: {fileID: 2800000, guid: c2f7f3672859eff429950c91be01d07b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -54,28 +62,28 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - Vector1_36ADE7A9: 2
-    - Vector1_40C8C781: 0
-    - Vector1_5A253451: 1.5
-    - Vector1_761BC529: 0
-    - Vector1_8C6160BD: 0.4
-    - Vector1_AAA0E4A6: 10
-    - Vector1_B7129047: 1
-    - Vector1_D81D777D: 0.65
-    - Vector1_D8EEC96A: 1
-    - Vector1_F3CBCC0F: 1
+    - _DisortStrenght: 3
+    - _DisortStrength: 4
+    - _DistortionOnTexture: 1
+    - _Metalic: 0.246
+    - _Metallic: 0
+    - _NormalStrenght: 0.01
+    - _NormalStrength: 10
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _ReflectionStrenght: 0.05
+    - _ReflectionStrength: 0
+    - _RefractionStrenght: 1.15
+    - _Smoothness: 0.004
+    - _Strenght: 0.12
+    - _Tiling: 279
     m_Colors:
-    - Color_7456411E: {r: 0, g: 9.938316, b: 16.94838, a: 1}
-    - Color_9E9570C9: {r: 766.9961, g: 0, b: 0, a: 1}
-    - Vector2_24C90B4F: {r: 100, g: 100, b: 0, a: 0}
-    - Vector2_69492494: {r: 100, g: 100, b: 0, a: 0}
-    - Vector2_C824D695: {r: 1, g: 4, b: 0, a: 0}
-    - Vector2_FAAF7DC4: {r: 100, g: 100, b: 0, a: 0}
+    - _Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _Tiling: {r: 0.1, g: 0.1, b: 0, a: 0}
+    - _TintColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &3121237065628497285
+--- !u!114 &1748688521998277390
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}

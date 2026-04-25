@@ -1,13 +1,13 @@
 using System;
+using TMPro;
 using UnityEngine;
 
 namespace _Project.Scripts.Core
 {
     /// <summary>
-    /// Marks a portal that transports the player to a lesson scene when they physically
-    /// walk through the activation volume. Plays a looping hum while the player is nearby
-    /// and a teleport whoosh when they enter. Only the camera/head position triggers activation
-    /// — controller proximity does not.
+    /// A 3D portal sphere the player physically walks into to travel to a lesson scene.
+    /// Detection is camera/head only — controllers do not trigger it.
+    /// The hum clip is taken from AudioManager so no audio asset needs to be assigned here.
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("ProyectoVR/Core/LessonPortal")]
@@ -28,21 +28,22 @@ namespace _Project.Scripts.Core
         [Tooltip("Game state applied after the target scene finishes loading.")]
         [SerializeField] private GameState _targetGameState;
 
-        [Tooltip("Human-readable label shown in debug logs. E.g. 'Leccion 1 - Diorama Solar'.")]
+        [Tooltip("Human-readable lesson name shown in the floating label and debug logs.")]
         [SerializeField] private string _lessonLabel;
 
+        [Header("Label")]
+        [Tooltip("TMP_Text component floating above the portal. Accepts both 3D Text and UI Text TMP. Its text is set to _lessonLabel at Start.")]
+        [SerializeField] private TMP_Text _labelText;
+
         [Header("Activation Zone")]
-        [Tooltip("Trigger collider the player must physically walk into. Usually a thin box placed at the portal opening.")]
+        [Tooltip("Trigger collider the player must physically enter. Use a SphereCollider sized to match the portal sphere visual.")]
         [SerializeField] private Collider _activationZone;
 
         [Header("Proximity Audio")]
         [Tooltip("Radius in metres at which the ambient hum starts playing.")]
-        [SerializeField, Range(1f, 10f)] private float _proximityRadius = 5f;
+        [SerializeField, Range(1f, 20f)] private float _proximityRadius = 10f;
 
-        [Tooltip("Looping audio clip for the portal ambient hum. Assign teleporter_loop.wav.")]
-        [SerializeField] private AudioClip _ambientHumClip;
-
-        [Tooltip("Seconds to fade the hum in and out when entering/leaving proximity range.")]
+        [Tooltip("Seconds to fade the hum in and out.")]
         [SerializeField, Range(0f, 3f)] private float _humFadeDuration = 1f;
 
         [Tooltip("Maximum volume of the ambient hum (0-1).")]
@@ -52,7 +53,7 @@ namespace _Project.Scripts.Core
 
         #region Events ----------------------------------------------------------
 
-        /// <summary>Raised when the player enters this portal. Passes the portal instance.</summary>
+        /// <summary>Raised when the player enters this portal.</summary>
         public event Action<LessonPortal> OnPortalEntered;
 
         #endregion
@@ -88,12 +89,23 @@ namespace _Project.Scripts.Core
 
         private void Start()
         {
+            // Camera.main may be null in Awake with XR — safe here after all Awakes run.
             _mainCamera = Camera.main;
+
+            ConfigureHumFromAudioManager();
+
+            if (_labelText != null)
+                _labelText.text = _lessonLabel;
+
             ValidateReferences();
         }
 
         private void Update()
         {
+            // Lazy camera cache — XR camera might not be tagged MainCamera until after Start.
+            if (_mainCamera == null)
+                _mainCamera = Camera.main;
+
             if (_isActivated || _mainCamera == null) return;
 
             var cameraPos = _mainCamera.transform.position;
@@ -117,7 +129,7 @@ namespace _Project.Scripts.Core
         {
             if (_activationZone == null) return;
             if (SceneController.Instance == null || SceneController.Instance.IsTransitioning) return;
-            if (!_activationZone.bounds.Contains(cameraPos)) return;
+            if (!IsInsideActivationZone(cameraPos)) return;
 
             _isActivated = true;
             if (_humSource != null) _humSource.Stop();
@@ -128,12 +140,28 @@ namespace _Project.Scripts.Core
             SceneController.Instance.LoadScene(_targetSceneName, _targetGameState);
         }
 
+        // Handles both SphereCollider (portal sphere) and BoxCollider (flat plane fallback).
+        private bool IsInsideActivationZone(Vector3 point)
+        {
+            if (_activationZone is SphereCollider sphere)
+            {
+                float worldRadius = sphere.radius * Mathf.Max(
+                    Mathf.Abs(sphere.transform.lossyScale.x),
+                    Mathf.Abs(sphere.transform.lossyScale.y),
+                    Mathf.Abs(sphere.transform.lossyScale.z));
+                var worldCenter = sphere.transform.TransformPoint(sphere.center);
+                return Vector3.Distance(point, worldCenter) <= worldRadius;
+            }
+
+            return _activationZone.bounds.Contains(point);
+        }
+
         private void UpdateProximityHum(float distanceToPortal)
         {
             if (_humSource == null) return;
 
             float target = distanceToPortal < _proximityRadius ? _humMaxVolume : 0f;
-            float step = _humFadeDuration > 0f ? Time.deltaTime / _humFadeDuration : 1f;
+            float step   = _humFadeDuration > 0f ? Time.deltaTime / _humFadeDuration : 1f;
             _currentHumVolume = Mathf.MoveTowards(_currentHumVolume, target, step);
             _humSource.volume = _currentHumVolume;
         }
@@ -145,18 +173,35 @@ namespace _Project.Scripts.Core
 
             _humSource = go.AddComponent<AudioSource>();
             _humSource.spatialBlend = 1f;
-            _humSource.loop = true;
-            _humSource.volume = 0f;
+            _humSource.loop        = true;
+            _humSource.volume      = 0f;
             _humSource.playOnAwake = false;
-            _humSource.rolloffMode = AudioRolloffMode.Logarithmic;
-            _humSource.minDistance = 0.5f;
-            _humSource.maxDistance = _proximityRadius * 1.5f;
+            // Linear rolloff with minDistance = proximityRadius prevents Unity's spatial engine
+            // from also attenuating within the zone our script fades — logarithmic rolloff
+            // combined with our own volume fade resulted in the hum being inaudible.
+            _humSource.rolloffMode = AudioRolloffMode.Linear;
+            _humSource.minDistance = _proximityRadius;
+            _humSource.maxDistance = _proximityRadius * 2.5f;
+        }
 
-            if (_ambientHumClip != null)
+        private void ConfigureHumFromAudioManager()
+        {
+            if (AudioManager.Instance == null)
             {
-                _humSource.clip = _ambientHumClip;
-                _humSource.Play();
+                Debug.LogWarning($"{LOG_TAG} AudioManager not found -- portal hum will not play.", this);
+                return;
             }
+
+            var clip = AudioManager.Instance.PickRandomPortalHumClip();
+            if (clip == null)
+            {
+                Debug.LogWarning($"{LOG_TAG} No portal hum clip -- assign clips to '_portalHumSounds' in AudioManager Inspector.", this);
+                return;
+            }
+
+            _humSource.clip = clip;
+            _humSource.Play();
+            Debug.Log($"{LOG_TAG} Portal hum started -- '{clip.name}'.");
         }
 
         #endregion
@@ -170,9 +215,9 @@ namespace _Project.Scripts.Core
             if (_activationZone == null)
                 Debug.LogWarning($"{LOG_TAG} _activationZone is not assigned.", this);
             if (_mainCamera == null)
-                Debug.LogWarning($"{LOG_TAG} Main Camera not found in scene.", this);
-            if (_ambientHumClip == null)
-                Debug.LogWarning($"{LOG_TAG} _ambientHumClip is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} Main Camera not found — will retry each frame.", this);
+            if (_labelText == null)
+                Debug.LogWarning($"{LOG_TAG} _labelText is not assigned — create a 3D Text (TextMeshPro) child and assign it.", this);
         }
 
         #endregion

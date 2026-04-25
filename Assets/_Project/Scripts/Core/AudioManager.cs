@@ -82,6 +82,9 @@ namespace _Project.Scripts.Core
         [Tooltip("Sound when the player teleports through a portal. One-shot whoosh.")]
         [SerializeField] private AudioClip[] _portalTeleportSounds;
 
+        [Tooltip("Looping ambient hum played while the player is near a portal. Assign teleporter_loop.wav.")]
+        [SerializeField] private AudioClip[] _portalHumSounds;
+
         [Header("World Sounds (3D, spatial)")]
         [Tooltip("Planet or asteroid destruction sounds. Assign break.wav from Audio/SFX/Interaction/.")]
         [SerializeField] private AudioClip[] _explosionSounds;
@@ -298,6 +301,9 @@ namespace _Project.Scripts.Core
             Destroy(source.gameObject);
         }
 
+        /// <summary>Returns a random portal hum clip for a looping ambient AudioSource near a portal.</summary>
+        public AudioClip PickRandomPortalHumClip() => PickRandom(_portalHumSounds);
+
         /// <summary>Plays the portal proximity / ambient hum at <paramref name="position"/> (3D).</summary>
         public void PlayPortalProximitySound(Vector3 position) => PlaySFX3D(_portalProximitySounds, position);
 
@@ -324,6 +330,7 @@ namespace _Project.Scripts.Core
             }
 
             _instance = this;
+            transform.SetParent(null); // DontDestroyOnLoad only works on root GameObjects.
             DontDestroyOnLoad(gameObject);
             CreateAudioSources();
 
@@ -567,6 +574,8 @@ namespace _Project.Scripts.Core
                 Debug.LogWarning($"{LOG_TAG} _grabSounds is not assigned.", this);
             if (_impactSounds == null || _impactSounds.Length == 0)
                 Debug.LogWarning($"{LOG_TAG} _impactSounds is not assigned.", this);
+            if (_portalHumSounds == null || _portalHumSounds.Length == 0)
+                Debug.LogWarning($"{LOG_TAG} _portalHumSounds is not assigned.", this);
         }
 
         #endregion
