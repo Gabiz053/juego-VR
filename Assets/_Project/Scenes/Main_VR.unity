@@ -2024,7 +2024,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1976028011}
-  - component: {fileID: 1976028010}
+  - component: {fileID: 1976028012}
   m_Layer: 0
   m_Name: prueba
   m_TagString: Untagged
@@ -2032,18 +2032,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1976028010
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1976028009}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e9d090bc91fd53458cdaf6542850438, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1976028011
 Transform:
   m_ObjectHideFlags: 0
@@ -2059,6 +2047,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1976028012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1976028009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3e87ff7535f5f34bbb80e4ee69d45f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _muteAudioOnPause: 1
 --- !u!4 &1987957413 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3052698345397841721, guid: ecdb324c5051d2c46ae24b4cdde62555, type: 3}

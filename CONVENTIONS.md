@@ -4,7 +4,7 @@
 
 Referencia obligatoria para mantener consistencia. **Todo asset, script o carpeta nuevo debe cumplir estas reglas.**
 
-> **Ultima auditoria:** plantilla base activa - 2 escenas referencia - arquitectura por capas - convenciones estrictas.
+> **Ultima auditoria:** 25 Abril 2026 — managers core completos, patrones de singleton acordados, VR-specific rules añadidas.
 
 ---
 
@@ -302,7 +302,13 @@ Tabla con ejemplos de referencia para la plantilla base:
 | **DontDestroyOnLoad + ServiceLocator** | Servicio cross-escena | `SceneTransitionService` se registra como `ISceneTransitionService` y persiste |
 | **JSON persistence** | Guardado/carga de estado del mundo a disco | `SaveLoadService` serializa `SessionSaveData` via `JsonUtility` |
 
-> **Nota de proyecto — Singletons:** Los tres managers core (`GameManager`, `SceneController`, `AudioManager`) se acceden directamente como singletons (`Manager.Instance`) en lugar del Service Locator. Esta decision simplifica el uso para un equipo de cuatro personas. **No crear nuevos singletons** — solo estos tres managers justifican el patron.
+> **Nota de proyecto — Patrones reales usados:** Los tres managers core (`GameManager`, `SceneController`, `AudioManager`) se acceden directamente como singletons (`Manager.Instance`). **No se usa ServiceLocator ni EventBus** — decision acordada para simplificar el desarrollo en equipo de cuatro. No crear nuevos singletons fuera de estos tres.
+>
+> **Regla DontDestroyOnLoad:** Llamar siempre `transform.SetParent(null)` ANTES de `DontDestroyOnLoad(gameObject)` en `Awake`. DontDestroyOnLoad solo funciona en GameObjects raiz (sin padre).
+>
+> **Regla pausa VR:** Usar `Time.timeScale = 0` para pausar. El tracking del visor NO se ve afectado (corre a nivel OS). Nunca usar `AudioListener.pause` como unico mecanismo de pausa — congela todos los sonidos incluyendo UI.
+>
+> **Regla audio portal (AudioSource):** Usar `AudioRolloffMode.Linear` con `minDistance = proximityRadius` para evitar doble atenuacion cuando el script controla el volumen manualmente por distancia.
 
 ---
 
