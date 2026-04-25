@@ -302,6 +302,8 @@ Tabla con ejemplos de referencia para la plantilla base:
 | **DontDestroyOnLoad + ServiceLocator** | Servicio cross-escena | `SceneTransitionService` se registra como `ISceneTransitionService` y persiste |
 | **JSON persistence** | Guardado/carga de estado del mundo a disco | `SaveLoadService` serializa `SessionSaveData` via `JsonUtility` |
 
+> **Nota de proyecto — Singletons:** Los tres managers core (`GameManager`, `SceneController`, `AudioManager`) se acceden directamente como singletons (`Manager.Instance`) en lugar del Service Locator. Esta decision simplifica el uso para un equipo de cuatro personas. **No crear nuevos singletons** — solo estos tres managers justifican el patron.
+
 ---
 
 ## 5. Rendimiento -- target visores VR

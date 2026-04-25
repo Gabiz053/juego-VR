@@ -41,19 +41,31 @@ Plantilla tecnica inicial para un juego VR Standalone en Unity 6. Esta base here
 
 ## 1. Como abrir el proyecto
 
+> **Requisito previo — Git LFS:** Este repositorio usa Git Large File Storage para modelos 3D, texturas y audio. Debes instalarlo antes de clonar o los archivos binarios aparecerán corruptos.
+>
+> ```bash
+> # Instalar Git LFS (solo la primera vez en cada maquina)
+> git lfs install
+> ```
+>
+> Descarga Git LFS desde [git-lfs.com](https://git-lfs.com) si no lo tienes. En Windows se puede instalar tambien con `winget install GitHub.GitLFS`.
+
 1. Instala **Unity 6** con modulos: Android Build Support, OpenXR Plugin, Universal RP.
-2. Clona el repositorio:
+2. Instala **Git LFS** (ver requisito previo arriba) y ejecuta `git lfs install`.
+3. Clona el repositorio:
 
     ```bash
     git clone <tu-repo-vr>.git
+    cd <carpeta-del-repo>
+    git lfs pull   # descarga todos los binarios (modelos, texturas, audio)
     ```
 
-3. Abre la carpeta raiz en Unity Hub.
-4. Configura Build Target a **Android**.
-5. Escenas recomendadas para bootstrap:
+4. Abre la carpeta raiz en Unity Hub.
+5. Configura Build Target a **Android**.
+6. Escenas recomendadas para bootstrap:
     - `Assets/_Project/Scenes/Title_Screen.unity`
     - `Assets/_Project/Scenes/Main_VR.unity`
-6. En Project Settings, valida OpenXR + Interaction Profiles del visor objetivo.
+7. En Project Settings, valida OpenXR + Interaction Profiles del visor objetivo.
 
 ---
 
@@ -277,16 +289,13 @@ Linea base recomendada:
 |--------|-----------------|
 | Pendiente | Definir |
 
-### Interaction -- `Assets/_Project/Scripts/Interaction/`
-
-| Script | Responsabilidad |
-|--------|-----------------|
-| Pendiente | Definir |
-
 ### Core -- `Assets/_Project/Scripts/Core/`
 
 | Script | Responsabilidad |
 |--------|-----------------|
+| `GameManager` | Singleton persistente (DontDestroyOnLoad). Propietario del `GameState` global (`MainMenu`, `SolarSystem`, `PlanetSurface`, `Sandbox`). Expone `Instance`, `CurrentState` y evento `OnGameStateChanged`. |
+| `SceneController` | Singleton persistente (DontDestroyOnLoad). Carga escenas de forma asincrona con fade-to-black para evitar congelados en VR. Expone `LoadScene(sceneName, newState)` e `IsTransitioning`. Crea el canvas de fade en runtime (sin prefab). |
+| `AudioManager` | Singleton persistente (DontDestroyOnLoad). Tres capas: musica de fondo (shuffle Fisher-Yates, crossfade automatico), SFX 2D para UI, SFX 3D espacial instanciado en coordenadas del mundo. Metodos de conveniencia: `PlayUIClick`, `PlayGrabSound`, `PlayImpactSound`, `PlayExplosionSound`, etc. |
 | `PlanetConfigSO` | ScriptableObject con gravedad, colores de cielo, fog y parametros de scenery para cada cuerpo del Sistema Solar. |
 | `PlanetSceneBootstrap` | Aplica gravedad, skybox procedural, luz key, plataforma y scenery al entrar a una escena de planeta. |
 | `GravitySettings` | Setter minimo de `Physics.gravity.y` (usado en Tierra/Luna como version legada). |

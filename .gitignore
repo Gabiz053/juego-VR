@@ -124,3 +124,9 @@ local.properties
 !Assets/**/*.keystore
 [Aa]ssets/Plugins/Android/**/build/
 launcherTemplate.apk
+
+CLAUDE.md
+
+/.claude
+
+issues.sh
