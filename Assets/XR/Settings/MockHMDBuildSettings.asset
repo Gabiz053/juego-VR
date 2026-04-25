@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: MockHMDBuildSettings
   m_EditorClassIdentifier: 
   renderMode: 0
-  foveationEnabled: 0
+  foveationEnabled: 1
   gazeSimulationMode: 0
