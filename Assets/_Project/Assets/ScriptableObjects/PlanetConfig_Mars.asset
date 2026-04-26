@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c1a0001a0b04e4f8d3f1a0d0e0f0001, type: 3}
+  m_Script: {fileID: 11500000, guid: 013db69d5c1794946b905e14b2a09333, type: 3}
   m_Name: PlanetConfig_Mars
   m_EditorClassIdentifier:
   _displayNameEs: Marte
