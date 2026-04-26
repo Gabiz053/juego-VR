@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Splines;
 using Unity.Mathematics;
+using System.Collections;
 
 [RequireComponent(typeof(SplineContainer))]
 public class OrbitalSplineGenerator : MonoBehaviour
@@ -19,13 +20,20 @@ public class OrbitalSplineGenerator : MonoBehaviour
     void Start()
     {
         _splineContainer = GetComponent<SplineContainer>();
-        GenerateOrbit();
+        // Espera al final del frame para que todo esté posicionado
+        StartCoroutine(GenerateOrbitNextFrame());
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    IEnumerator GenerateOrbitNextFrame()
+    {
+        yield return new WaitForEndOfFrame();
+        GenerateOrbit();
     }
 
     void GenerateOrbit()
