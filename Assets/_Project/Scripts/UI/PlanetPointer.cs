@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using _Project.Scripts.Interaction;
 
@@ -5,7 +6,7 @@ namespace _Project.Scripts.UI
 {
     /// <summary>
     /// Lanza un raycast desde la mano derecha. Cuando apunta a un objeto
-    /// con tag "Planet", muestra el PlanetDataCard con sus datos.
+    /// con PlanetProxy, muestra el PlanetDataCard y el nombre flotante 3D.
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("ProyectoVR/UI/Planet Pointer")]
@@ -29,6 +30,8 @@ namespace _Project.Scripts.UI
         #region State
 
         private GameObject _currentTarget;
+        private TextMeshProUGUI _currentLabel;
+        private GameObject _currentPlanetLabel;
 
         #endregion
 
@@ -56,19 +59,33 @@ namespace _Project.Scripts.UI
             if (Physics.Raycast(ray, out RaycastHit hit, _rayDistance, _layerMask))
             {
                 GameObject target = hit.collider.gameObject;
+                PlanetProxy proxy = target.GetComponent<PlanetProxy>();
 
-                if (target.CompareTag("Planet"))
+                if (proxy != null)
                 {
                     if (_currentTarget != target)
                     {
+                        HideCurrentLabel();
+
                         _currentTarget = target;
 
-                        PlanetProxy proxy = target.GetComponent<PlanetProxy>();
-                        if (proxy != null)
+                        // Buscar el Canvas PlanetLabel hijo del planeta
+                        Canvas canvas = target.GetComponentInChildren<Canvas>(true);
+                        if (canvas != null)
                         {
-                            _dataCard.UpdateData(proxy);
+                            _currentPlanetLabel = canvas.gameObject;
+                            _currentPlanetLabel.SetActive(true);
+
+                            // Buscar el TextMeshProUGUI dentro del boton
+                            TextMeshProUGUI label = canvas.GetComponentInChildren<TextMeshProUGUI>(true);
+                            if (label != null)
+                            {
+                                label.text = proxy.PlanetName;
+                                _currentLabel = label;
+                            }
                         }
 
+                        _dataCard.UpdateData(proxy);
                         Debug.Log($"[PlanetPointer] Pointing at planet: {target.name}.");
                     }
                     return;
@@ -78,10 +95,23 @@ namespace _Project.Scripts.UI
             // El ray no golpea ningun planeta
             if (_currentTarget != null)
             {
+                HideCurrentLabel();
                 _currentTarget = null;
                 _dataCard.Hide();
                 Debug.Log("[PlanetPointer] No planet targeted.");
             }
+        }
+
+
+        private void HideCurrentLabel()
+        {
+            if (_currentPlanetLabel != null)
+            {
+                _currentPlanetLabel.SetActive(false);
+                _currentPlanetLabel = null;
+            }
+            _currentLabel = null;
+            _currentTarget = null;
         }
 
         #endregion

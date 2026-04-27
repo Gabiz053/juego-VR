@@ -28,14 +28,14 @@ namespace _Project.Scripts.Interaction
         [SerializeField] private float _distanceSunMKm = 57.9f;
 
         [Tooltip("Periodo orbital en dias terrestres.")]
-        [SerializeField] private float _orbitalPeriod = 88f;
+        [SerializeField] private string _orbitalPeriod = "24 horas";
 
         [Header("Datos fisicos")]
         [Tooltip("Diametro del planeta en km.")]
         [SerializeField] private float _diameterKm = 4879f;
 
         [Tooltip("Duracion del dia en dias terrestres.")]
-        [SerializeField] private float _dayDuration = 176f;
+        [SerializeField] private string _dayDuration = "176 días terrestres";
 
         [Tooltip("Gravedad superficial en m/s².")]
         [SerializeField] private float _gravity = 3.7f;
@@ -69,9 +69,9 @@ namespace _Project.Scripts.Interaction
         public string PlanetName => _planetName;
         public string PlanetType => _planetType;
         public float DistanceSunMKm => _distanceSunMKm;
-        public float OrbitalPeriod => _orbitalPeriod;
+        public string OrbitalPeriod => _orbitalPeriod;
         public float DiameterKm => _diameterKm;
-        public float DayDuration => _dayDuration;
+        public string DayDuration => _dayDuration;
         public float Gravity => _gravity;
         public float AvgTempC => _avgTempC;
         public float MinTempC => _minTempC;

@@ -107,8 +107,8 @@ namespace _Project.Scripts.UI
             SetText(_txtPlanetType, proxy.PlanetType);
             SetText(_txtDistSol, $"{proxy.DistanceSunMKm:F1} mill. km");
             SetText(_txtDiametro, $"{proxy.DiameterKm:N0} km");
-            SetText(_txtDurDia, $"{proxy.DayDuration:F0} dias terrestres");
-            SetText(_txtDurAnio, $"{proxy.OrbitalPeriod:F0} dias terrestres");
+            SetText(_txtDurDia, proxy.DayDuration);
+            SetText(_txtDurAnio, proxy.OrbitalPeriod);
             SetText(_txtTMedia, $"{proxy.AvgTempC:F0} °C");
             SetText(_txtRangoTemp, $"{proxy.MinTempC:F0} °C a {proxy.MaxTempC:F0} °C");
             SetText(_txtGravedad, $"{proxy.Gravity:F1} m/s²");

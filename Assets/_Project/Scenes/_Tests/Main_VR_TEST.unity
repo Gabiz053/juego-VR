@@ -1045,9 +1045,9 @@ MonoBehaviour:
   _planetName: Marte
   _planetType: Rocoso
   _distanceSunMKm: 57.9
-  _orbitalPeriod: 88
+  _orbitalPeriod: 
   _diameterKm: 4879
-  _dayDuration: 176
+  _dayDuration: 
   _gravity: 3.7
   _avgTempC: 167
   _minTempC: -180
