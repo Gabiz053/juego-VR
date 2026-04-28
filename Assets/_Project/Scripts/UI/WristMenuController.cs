@@ -60,8 +60,18 @@ namespace _Project.Scripts.UI
         [Tooltip("Icono que se muestra cuando las orbitas estan pausadas (indica que se puede reanudar).")]
         [SerializeField] private Sprite _iconPlay;
 
-        [Tooltip("Componente Image del icono dentro de Btn_Pause. Arrastra Icon_Pause aqui.")]
+        [Tooltip("Componente Image del hijo Icon_Pause dentro de Btn_Pause.")]
         [SerializeField] private Image _pauseButtonIcon;
+
+        [Header("Orbit Button Icons")]
+        [Tooltip("Icono que se muestra cuando las orbitas son visibles (indica que se pueden ocultar).")]
+        [SerializeField] private Sprite _iconOrbitVisible;
+
+        [Tooltip("Icono que se muestra cuando las orbitas estan ocultas (indica que se pueden mostrar).")]
+        [SerializeField] private Sprite _iconOrbitHidden;
+
+        [Tooltip("Componente Image del hijo Icon_ToggleOrbits dentro de Btn_ToggleOrbits.")]
+        [SerializeField] private Image _orbitButtonIcon;
 
         #endregion
 
@@ -91,7 +101,7 @@ namespace _Project.Scripts.UI
         public bool IsVisible => _isVisible;
 
         /// <summary>
-        /// Actualiza el icono del boton Pause segun el estado de pausa actual.
+        /// Actualiza el icono del boton Pause segun el estado de pausa.
         /// Llamar desde SolarSystemSceneConnector tras cada toggle.
         /// </summary>
         public void SetPauseIcon(bool isPaused)
@@ -100,6 +110,18 @@ namespace _Project.Scripts.UI
                 return;
 
             _pauseButtonIcon.sprite = isPaused ? _iconPlay : _iconPause;
+        }
+
+        /// <summary>
+        /// Actualiza el icono del boton Toggle Orbits segun la visibilidad actual.
+        /// Llamar desde SolarSystemSceneConnector tras cada toggle.
+        /// </summary>
+        public void SetOrbitIcon(bool isVisible)
+        {
+            if (_orbitButtonIcon == null)
+                return;
+
+            _orbitButtonIcon.sprite = isVisible ? _iconOrbitVisible : _iconOrbitHidden;
         }
 
         #endregion
@@ -111,7 +133,6 @@ namespace _Project.Scripts.UI
             ValidateReferences();
             RegisterButtonListeners();
 
-            // Empezar oculto
             _canvasGroup.alpha = 0f;
             _canvasGroup.interactable = false;
             _canvasGroup.blocksRaycasts = false;
@@ -247,6 +268,15 @@ namespace _Project.Scripts.UI
 
             if (_pauseButtonIcon == null)
                 Debug.LogWarning("[WristMenuController] _pauseButtonIcon is not assigned.", this);
+
+            if (_iconOrbitVisible == null)
+                Debug.LogWarning("[WristMenuController] _iconOrbitVisible is not assigned.", this);
+
+            if (_iconOrbitHidden == null)
+                Debug.LogWarning("[WristMenuController] _iconOrbitHidden is not assigned.", this);
+
+            if (_orbitButtonIcon == null)
+                Debug.LogWarning("[WristMenuController] _orbitButtonIcon is not assigned.", this);
         }
 
         #endregion

@@ -25,6 +25,9 @@ namespace _Project.Scripts.Core
         [Tooltip("Nombre exacto de la escena del menu principal (debe estar en Build Settings).")]
         [SerializeField] private string _mainMenuSceneName = "Main_VR";
 
+        [Tooltip("Controlador de visibilidad de lineas de orbita.")]
+        [SerializeField] private OrbitVisibilityController _orbitVisibilityController;
+
         #endregion
 
         #region Unity Lifecycle
@@ -94,8 +97,16 @@ namespace _Project.Scripts.Core
 
         private void HandleToggleOrbitsPressed()
         {
-            // TODO: conectar al sistema de orbitas cuando este implementado
-            Debug.Log("[SolarSystemSceneConnector] Toggle orbits pressed -- pending implementation.");
+            if (_orbitVisibilityController == null)
+            {
+                Debug.LogWarning("[SolarSystemSceneConnector] _orbitVisibilityController is not assigned.", this);
+                return;
+            }
+
+            _orbitVisibilityController.ToggleVisibility();
+            _wristMenuController.SetOrbitIcon(_orbitVisibilityController.IsVisible);
+
+            Debug.Log($"[SolarSystemSceneConnector] Orbits visible: {_orbitVisibilityController.IsVisible}.");
         }
 
         #endregion
