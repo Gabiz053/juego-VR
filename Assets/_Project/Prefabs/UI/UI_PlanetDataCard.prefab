@@ -35,7 +35,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 75.7, y: 25.8}
+  m_SizeDelta: {x: 170, y: 25.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6012984484439921252
 CanvasRenderer:
@@ -99,8 +99,8 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -202,7 +202,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "        DURACI\xD3N DEL A\xD1O"
+  m_text: "DURACI\xD3N DEL A\xD1O"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e456cd7ca3c7bf47a10c77f22dbf4bc, type: 2}
   m_sharedMaterial: {fileID: 8415137813554053878, guid: 2e456cd7ca3c7bf47a10c77f22dbf4bc, type: 2}
@@ -236,8 +236,8 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -339,7 +339,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "        RANGO T\xC9RMICO"
+  m_text: "RANGO T\xC9RMICO"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e456cd7ca3c7bf47a10c77f22dbf4bc, type: 2}
   m_sharedMaterial: {fileID: 8415137813554053878, guid: 2e456cd7ca3c7bf47a10c77f22dbf4bc, type: 2}
@@ -373,8 +373,8 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -510,8 +510,8 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -613,7 +613,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '        TEMPERATURA MEDIA'
+  m_text: TEMPERATURA MEDIA
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e456cd7ca3c7bf47a10c77f22dbf4bc, type: 2}
   m_sharedMaterial: {fileID: 8415137813554053878, guid: 2e456cd7ca3c7bf47a10c77f22dbf4bc, type: 2}
@@ -647,8 +647,8 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -848,7 +848,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 75.7, y: 25.8}
+  m_SizeDelta: {x: 170, y: 25.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3621284124069026777
 CanvasRenderer:
@@ -912,8 +912,8 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -985,7 +985,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 102.6, y: 25.8}
+  m_SizeDelta: {x: 170, y: 25.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2400032393660573785
 CanvasRenderer:
@@ -1049,8 +1049,8 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -1152,7 +1152,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "        DI\xC1METRO"
+  m_text: "DI\xC1METRO"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e456cd7ca3c7bf47a10c77f22dbf4bc, type: 2}
   m_sharedMaterial: {fileID: 8415137813554053878, guid: 2e456cd7ca3c7bf47a10c77f22dbf4bc, type: 2}
@@ -1186,8 +1186,8 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -1501,7 +1501,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 380, y: 80}
+  m_SizeDelta: {x: 350, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2148311396888930085
 CanvasRenderer:
@@ -1558,12 +1558,12 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 4
   m_StartCorner: 0
-  m_StartAxis: 0
-  m_CellSize: {x: 100, y: 50}
-  m_Spacing: {x: 3, y: 3}
-  m_Constraint: 0
+  m_StartAxis: 1
+  m_CellSize: {x: 200, y: 50}
+  m_Spacing: {x: 3, y: 2}
+  m_Constraint: 1
   m_ConstraintCount: 2
 --- !u!1 &4693994012995586807
 GameObject:
@@ -1600,7 +1600,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0.16}
-  m_AnchoredPosition: {x: 1.9000244, y: 25.999878}
+  m_AnchoredPosition: {x: 1.8999023, y: 25.999878}
   m_SizeDelta: {x: -26.199987, y: 5.0001774}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &648554884150865118
@@ -1676,7 +1676,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 102.6, y: 25.8}
+  m_SizeDelta: {x: 200, y: 25.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2799551826852115886
 CanvasRenderer:
@@ -1740,8 +1740,8 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -1843,7 +1843,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '        GRAVEDAD'
+  m_text: GRAVEDAD
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e456cd7ca3c7bf47a10c77f22dbf4bc, type: 2}
   m_sharedMaterial: {fileID: 8415137813554053878, guid: 2e456cd7ca3c7bf47a10c77f22dbf4bc, type: 2}
@@ -1877,8 +1877,8 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -1980,7 +1980,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '        DISTANCIA AL SOL'
+  m_text: DISTANCIA AL SOL
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e456cd7ca3c7bf47a10c77f22dbf4bc, type: 2}
   m_sharedMaterial: {fileID: 8415137813554053878, guid: 2e456cd7ca3c7bf47a10c77f22dbf4bc, type: 2}
@@ -2014,8 +2014,8 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -2283,7 +2283,7 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 170, y: 60}
+  m_CellSize: {x: 220, y: 60}
   m_Spacing: {x: 8, y: 8}
   m_Constraint: 1
   m_ConstraintCount: 3
@@ -2318,7 +2318,7 @@ RectTransform:
   m_GameObject: {fileID: 6715141012830743106}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
+  m_LocalScale: {x: 0.0015, y: 0.0015, z: 0.0015}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7862476141973420474}
@@ -2327,10 +2327,10 @@ RectTransform:
   - {fileID: 8621166490027253748}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 600.5, y: 634.5}
+  m_SizeDelta: {x: 1200, y: 900}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &4295249657668176645
 Canvas:
@@ -2377,7 +2377,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &8566049185601954723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2801,8 +2801,8 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -3043,7 +3043,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 1
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -3249,7 +3249,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "        DURACI\xD3N DEL D\xCDA"
+  m_text: "DURACI\xD3N DEL D\xCDA"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e456cd7ca3c7bf47a10c77f22dbf4bc, type: 2}
   m_sharedMaterial: {fileID: 8415137813554053878, guid: 2e456cd7ca3c7bf47a10c77f22dbf4bc, type: 2}
@@ -3283,8 +3283,8 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -3460,7 +3460,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 102.6, y: 25.8}
+  m_SizeDelta: {x: 170, y: 25.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2391497632993409976
 CanvasRenderer:
@@ -3524,8 +3524,8 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -3664,7 +3664,7 @@ MonoBehaviour:
   m_fontSizeMax: 0
   m_fontStyle: 1
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
