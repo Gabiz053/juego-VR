@@ -18,9 +18,12 @@ namespace _Project.Scripts.Core
         [Tooltip("Referencia al WristMenuController del XR Rig.")]
         [SerializeField] private WristMenuController _wristMenuController;
 
+        [Tooltip("Controlador de pausa de orbitas de la escena.")]
+        [SerializeField] private OrbitalPauseController _orbitalPauseController;
+
         [Header("Scene Settings")]
         [Tooltip("Nombre exacto de la escena del menu principal (debe estar en Build Settings).")]
-        [SerializeField] private string _mainMenuSceneName = "Menu";
+        [SerializeField] private string _mainMenuSceneName = "Main_VR";
 
         #endregion
 
@@ -77,8 +80,16 @@ namespace _Project.Scripts.Core
 
         private void HandlePausePressed()
         {
-            // TODO: conectar al sistema de pausa cuando este implementado
-            Debug.Log("[SolarSystemSceneConnector] Pause pressed -- pending implementation.");
+            if (_orbitalPauseController == null)
+            {
+                Debug.LogWarning("[SolarSystemSceneConnector] _orbitalPauseController is not assigned.", this);
+                return;
+            }
+
+            _orbitalPauseController.TogglePause();
+            _wristMenuController.SetPauseIcon(_orbitalPauseController.IsPaused);
+
+            Debug.Log($"[SolarSystemSceneConnector] Pause toggled -- paused: {_orbitalPauseController.IsPaused}.");
         }
 
         private void HandleToggleOrbitsPressed()
@@ -95,6 +106,9 @@ namespace _Project.Scripts.Core
         {
             if (_wristMenuController == null)
                 Debug.LogWarning("[SolarSystemSceneConnector] _wristMenuController is not assigned.", this);
+
+            if (_orbitalPauseController == null)
+                Debug.LogWarning("[SolarSystemSceneConnector] _orbitalPauseController is not assigned.", this);
 
             if (string.IsNullOrWhiteSpace(_mainMenuSceneName))
                 Debug.LogWarning("[SolarSystemSceneConnector] _mainMenuSceneName is not assigned.", this);

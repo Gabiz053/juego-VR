@@ -1033,6 +1033,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 208292428}
   m_CullTransparentMesh: 1
+--- !u!114 &215609499 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1220952243686117973, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
+  m_PrefabInstance: {fileID: 1707798593}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &221924787
 GameObject:
   m_ObjectHideFlags: 0
@@ -7262,6 +7273,10 @@ PrefabInstance:
       propertyPath: m_PresetInfoIsWorld
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1220952243686117973, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
+      propertyPath: m_PreserveAspect
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1782322548416687588, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -7419,6 +7434,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1707798596}
     - target: {fileID: 7431832797338046406, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
+      propertyPath: _iconPlay
+      value: 
+      objectReference: {fileID: 21300000, guid: abc9a7b606890a24ab93af27d4886321, type: 3}
+    - target: {fileID: 7431832797338046406, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
+      propertyPath: _iconPause
+      value: 
+      objectReference: {fileID: 21300000, guid: 4ea8ba5807fecd54b8602eb8aa3bf33d, type: 3}
+    - target: {fileID: 7431832797338046406, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
       propertyPath: _canvasGroup
       value: 
       objectReference: {fileID: 1707798600}
@@ -7446,6 +7469,10 @@ PrefabInstance:
       propertyPath: _cameraTransform
       value: 
       objectReference: {fileID: 2137273651}
+    - target: {fileID: 7431832797338046406, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
+      propertyPath: _pauseButtonIcon
+      value: 
+      objectReference: {fileID: 215609499}
     - target: {fileID: 8131727972920384187, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
       propertyPath: m_Camera
       value: 
@@ -7647,6 +7674,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1829900470}
   - component: {fileID: 1829900469}
+  - component: {fileID: 1829900471}
   m_Layer: 0
   m_Name: Svc_SceneConnector
   m_TagString: Untagged
@@ -7667,6 +7695,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _wristMenuController: {fileID: 1707798601}
+  _orbitalPauseController: {fileID: 1829900471}
   _mainMenuSceneName: Main_VR
 --- !u!4 &1829900470
 Transform:
@@ -7683,6 +7712,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1829900471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1829900468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd5d80dce632fce418c26cd53b9ad953, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1843172473 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1526814149960808, guid: 7e4bfb3c6ba1d4bc4ba31d585abdae0f, type: 3}

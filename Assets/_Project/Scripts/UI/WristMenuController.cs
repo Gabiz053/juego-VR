@@ -53,6 +53,16 @@ namespace _Project.Scripts.UI
         [Tooltip("Boton para mostrar u ocultar las lineas de orbita.")]
         [SerializeField] private Button _btnToggleOrbits;
 
+        [Header("Pause Button Icons")]
+        [Tooltip("Icono que se muestra cuando las orbitas estan en marcha (indica que se puede pausar).")]
+        [SerializeField] private Sprite _iconPause;
+
+        [Tooltip("Icono que se muestra cuando las orbitas estan pausadas (indica que se puede reanudar).")]
+        [SerializeField] private Sprite _iconPlay;
+
+        [Tooltip("Componente Image del icono dentro de Btn_Pause. Arrastra Icon_Pause aqui.")]
+        [SerializeField] private Image _pauseButtonIcon;
+
         #endregion
 
         #region Events
@@ -79,6 +89,18 @@ namespace _Project.Scripts.UI
 
         /// <summary>Indica si el menu de muneca esta visible en este momento.</summary>
         public bool IsVisible => _isVisible;
+
+        /// <summary>
+        /// Actualiza el icono del boton Pause segun el estado de pausa actual.
+        /// Llamar desde SolarSystemSceneConnector tras cada toggle.
+        /// </summary>
+        public void SetPauseIcon(bool isPaused)
+        {
+            if (_pauseButtonIcon == null)
+                return;
+
+            _pauseButtonIcon.sprite = isPaused ? _iconPlay : _iconPause;
+        }
 
         #endregion
 
@@ -113,27 +135,14 @@ namespace _Project.Scripts.UI
 
         #region Internals
 
-        /// <summary>
-        /// Calcula si el jugador esta mirando la muneca usando Vector3.Dot.
-        /// Condicion 1: el vector camara->palma apunta hacia la camara (dot > umbral).
-        /// Condicion 2: la palma esta suficientemente cerca de la cabeza.
-        /// </summary>
         private void EvaluateVisibility()
         {
             if (_cameraTransform == null || _palmTransform == null)
                 return;
 
-            // Vector desde la palma hacia la camara, normalizado
             Vector3 palmToCam = (_cameraTransform.position - _palmTransform.position).normalized;
-
-            // Normal de la palma: el eje que apunta "hacia arriba" desde la palma
-            // En XR Toolkit el eje forward del controller apunta hacia donde mira la palma
             Vector3 palmNormal = _palmTransform.forward;
-
-            // Dot product: 1 = alineados perfectamente, 0 = perpendiculares, -1 = opuestos
             float dot = Vector3.Dot(palmNormal, palmToCam);
-
-            // Distancia palma-cabeza para evitar falsos positivos con el brazo estirado
             float distance = Vector3.Distance(_palmTransform.position, _cameraTransform.position);
 
             bool shouldShow = dot >= _dotThreshold && distance <= _maxDistance;
@@ -149,9 +158,6 @@ namespace _Project.Scripts.UI
             }
         }
 
-        /// <summary>
-        /// Suaviza la transicion de opacidad del CanvasGroup usando Lerp.
-        /// </summary>
         private void ApplyFade()
         {
             if (_canvasGroup == null)
@@ -232,6 +238,15 @@ namespace _Project.Scripts.UI
 
             if (_btnToggleOrbits == null)
                 Debug.LogWarning("[WristMenuController] _btnToggleOrbits is not assigned.", this);
+
+            if (_iconPause == null)
+                Debug.LogWarning("[WristMenuController] _iconPause is not assigned.", this);
+
+            if (_iconPlay == null)
+                Debug.LogWarning("[WristMenuController] _iconPlay is not assigned.", this);
+
+            if (_pauseButtonIcon == null)
+                Debug.LogWarning("[WristMenuController] _pauseButtonIcon is not assigned.", this);
         }
 
         #endregion
