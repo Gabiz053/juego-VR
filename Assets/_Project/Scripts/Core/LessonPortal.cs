@@ -49,6 +49,11 @@ namespace _Project.Scripts.Core
         [Tooltip("Maximum volume of the ambient hum (0-1).")]
         [SerializeField, Range(0f, 1f)] private float _humMaxVolume = 0.5f;
 
+        [Header("Return Spawn")]
+        [Tooltip("Punto donde aparece el jugador al volver de esta leccion a Main_VR. " +
+         "Arrastra el [PlayerSpawnPoint] de Main_VR aqui.")]
+        [SerializeField] private Transform _returnSpawnPoint;
+
         #endregion
 
         #region Events ----------------------------------------------------------
@@ -135,6 +140,14 @@ namespace _Project.Scripts.Core
             if (_humSource != null) _humSource.Stop();
             AudioManager.Instance?.PlayPortalTeleportSound(transform.position);
             OnPortalEntered?.Invoke(this);
+
+            if (_returnSpawnPoint != null)
+            {
+                SessionContext.MainMenuSpawnPosition = _returnSpawnPoint.position;
+                SessionContext.MainMenuSpawnRotation = _returnSpawnPoint.rotation;
+            }
+
+            SceneController.Instance.LoadScene(_targetSceneName, _targetGameState);
 
             Debug.Log($"{LOG_TAG} Portal entered -- '{_lessonLabel}', loading '{_targetSceneName}'.");
             SceneController.Instance.LoadScene(_targetSceneName, _targetGameState);
