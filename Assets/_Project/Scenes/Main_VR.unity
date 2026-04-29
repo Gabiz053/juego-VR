@@ -2421,6 +2421,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1731795359}
     m_Modifications:
+    - target: {fileID: 3028594362197528694, guid: ecdb324c5051d2c46ae24b4cdde62555, type: 3}
+      propertyPath: _targetSceneName
+      value: GravityLab
+      objectReference: {fileID: 0}
+    - target: {fileID: 3028594362197528694, guid: ecdb324c5051d2c46ae24b4cdde62555, type: 3}
+      propertyPath: _returnSpawnPoint
+      value: 
+      objectReference: {fileID: 211625414}
     - target: {fileID: 3052698345397841721, guid: ecdb324c5051d2c46ae24b4cdde62555, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
