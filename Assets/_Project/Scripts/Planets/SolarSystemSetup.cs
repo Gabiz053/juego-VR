@@ -34,15 +34,15 @@ public class SolarSystemSetup : MonoBehaviour
         sun.position = Vector3.zero;
 
         // Planeta: (escala, radio de órbita)
-        SetupPlanet(mercury,  0.3f,  6f);
-        SetupPlanet(venus,    0.45f, 9f);
-        SetupPlanet(earth,    0.5f,  13f);
-        SetupPlanet(moon,     0.15f, 2.5f, true); // Luna en órbita alrededor de la Tierra
-        SetupPlanet(mars,     0.35f, 17f);
-        SetupPlanet(jupiter,  1.8f,  26f);
-        SetupPlanet(saturn,   1.5f,  36f);
-        SetupPlanet(uranus,   1.0f,  45f);
-        SetupPlanet(neptune,  0.95f, 54f);
+        SetupPlanet(mercury, 0.55f, 6f);
+        SetupPlanet(venus, 0.85f, 9f);
+        SetupPlanet(earth, 0.9f, 13f);
+        SetupPlanet(moon, 0.4f, 2.5f, true);
+        SetupPlanet(mars, 0.65f, 17f);
+        SetupPlanet(jupiter, 3.2f, 26f);
+        SetupPlanet(saturn, 2.7f, 36f);
+        SetupPlanet(uranus, 1.8f, 45f);
+        SetupPlanet(neptune, 1.7f, 54f);
     }
 
     void SetupPlanet(Transform planet, float scale, float orbitRadius, bool isLocal = false)
