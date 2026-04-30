@@ -2459,7 +2459,7 @@ MonoBehaviour:
   _atmPillPrefab: {fileID: 7866881826121585901, guid: 09e6856700aea3845ac0f893d0627441, type: 3}
   _txtCuriosity: {fileID: 5522611852638201202}
   _rightHand: {fileID: 0}
-  _handOffset: {x: 0.5, y: 0, z: 0.5}
+  _handOffset: {x: 1.25, y: 0.5, z: 1}
   _canvas: {fileID: 4295249657668176645}
 --- !u!1 &6727993141726880396
 GameObject:
