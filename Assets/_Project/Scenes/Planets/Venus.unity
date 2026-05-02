@@ -299,8 +299,38 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2014722765107282614, guid: 0c9eaf88f022b4af6b7b3aedfe2a3750, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 126889122}
   m_SourcePrefab: {fileID: 100100000, guid: 0c9eaf88f022b4af6b7b3aedfe2a3750, type: 3}
+--- !u!1 &126889121 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2014722765107282614, guid: 0c9eaf88f022b4af6b7b3aedfe2a3750, type: 3}
+  m_PrefabInstance: {fileID: 126889120}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &126889122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 126889121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0dcd596e86746169017e3f1abad7b6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cubeSize: 0.3
+  _cubeMaterial: {fileID: 0}
+  _cubeColor: {r: 0.2, g: 0.6, b: 1, a: 1}
+  _surfaceY: 0
+  _heightAboveSurface: 1.5
+  _horizontalOffset: {x: 0, y: 0, z: 1}
+  _mass: 1
+  _drag: 0
+  _angularDrag: 0.05
+  _throwOnRelease: 1
 --- !u!1001 &1036186079
 PrefabInstance:
   m_ObjectHideFlags: 0
