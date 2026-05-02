@@ -16,10 +16,10 @@ public class OrbitLineRenderer : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        Debug.Log($"Posición Tierra: {transform.position}");
-    }
+    // void Update()
+    // {
+    //     Debug.Log($"Posición Tierra: {transform.position}");
+    // }
 
     IEnumerator WaitAndDraw()
     {
