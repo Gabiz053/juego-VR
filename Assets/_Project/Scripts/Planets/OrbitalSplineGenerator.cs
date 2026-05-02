@@ -6,34 +6,57 @@ using System.Collections;
 [RequireComponent(typeof(SplineContainer))]
 public class OrbitalSplineGenerator : MonoBehaviour
 {
-    [Header("Parámetros de la órbita")]
-    public float semiMajorAxis = 10f;  // radio mayor (a)
-    public float eccentricity = 0.2f;  // 0 = círculo, 1 = parábola
+    [Header("Parametros de la orbita")]
+    public float semiMajorAxis = 10f;
+    public float eccentricity = 0.2f;
     public int resolution = 64;
+    [Tooltip("True en SolarSystem (genera al inicio). False en KeplerLab (genera al soltar el planeta).")]
+    public bool generateOnStart = true;
 
     [Header("Referencias")]
     public Transform sun;
 
     private SplineContainer _splineContainer;
+    private SplineAnimate _splineAnimate;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         _splineContainer = GetComponent<SplineContainer>();
-        // Espera al final del frame para que todo esté posicionado
-        StartCoroutine(GenerateOrbitNextFrame());
+
+        // Desactivar SplineAnimate hasta que la spline este lista
+        _splineAnimate = GetComponentInChildren<SplineAnimate>();
+        if (_splineAnimate != null)
+            _splineAnimate.enabled = false;
     }
 
-    // Update is called once per frame
-    void Update()
+    void Start()
     {
-        
+        if (generateOnStart)
+            StartCoroutine(GenerateOrbitNextFrame());
     }
 
     IEnumerator GenerateOrbitNextFrame()
     {
         yield return new WaitForEndOfFrame();
         GenerateOrbit();
+
+        // Activar SplineAnimate ahora que la spline tiene knots
+        if (_splineAnimate != null)
+            _splineAnimate.enabled = true;
+    }
+
+    public void UpdateOrbit(float newA, float newE)
+    {
+        semiMajorAxis = newA;
+        eccentricity = Mathf.Clamp(newE, 0f, 0.99f);
+        if (_splineContainer == null)
+            _splineContainer = GetComponent<SplineContainer>();
+        GenerateOrbit();
+    }
+
+    public void UpdateOrbit(float newA, float newE, Vector3 periapsisDir)
+    {
+        UpdateOrbit(newA, newE);
     }
 
     void GenerateOrbit()
@@ -52,7 +75,6 @@ public class OrbitalSplineGenerator : MonoBehaviour
             float angle = (float)i / resolution * 2f * Mathf.PI;
             float x = Mathf.Cos(angle) * a - c;
             float z = Mathf.Sin(angle) * b;
-
             var position = new float3(sunPos.x + x, sunPos.y, sunPos.z + z);
             spline.Add(new BezierKnot(position), TangentMode.AutoSmooth);
         }

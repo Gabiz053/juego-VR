@@ -9,25 +9,40 @@ public class OrbitLineRenderer : MonoBehaviour
     public int resolution = 128;
     public float lineWidth = 0.05f;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private LineRenderer _lr;
+
     void Start()
     {
+        _lr = GetComponent<LineRenderer>();
         StartCoroutine(WaitAndDraw());
     }
 
-    // Update is called once per frame
-    // void Update()
-    // {
-    //     Debug.Log($"Posición Tierra: {transform.position}");
-    // }
+    public void Redraw()
+    {
+        if (splineContainer == null || splineContainer.Spline.Count == 0) return;
+        StartCoroutine(RedrawNextFrame());
+    }
+
+    IEnumerator RedrawNextFrame()
+    {
+        yield return null;
+        if (_lr == null) _lr = GetComponent<LineRenderer>();
+        _lr.enabled = true;
+        DrawOrbit();
+    }
+
+    public void Hide()
+    {
+        if (_lr == null) _lr = GetComponent<LineRenderer>();
+        _lr.enabled = false;
+    }
 
     IEnumerator WaitAndDraw()
     {
         while (splineContainer == null || splineContainer.Spline.Count == 0)
-        {
             yield return null;
-        }
-        yield return null; // un frame extra de seguridad
+
+        yield return null;
         DrawOrbit();
     }
 
@@ -36,22 +51,19 @@ public class OrbitLineRenderer : MonoBehaviour
         if (splineContainer == null) return;
         if (splineContainer.Spline.Count == 0) return;
 
-        var lr = GetComponent<LineRenderer>();
-        lr.loop = true;
-        lr.useWorldSpace = true;
-        lr.positionCount = resolution;
-        lr.startWidth = lineWidth;
-        lr.endWidth = lineWidth;
+        _lr.loop = true;
+        _lr.useWorldSpace = true;
+        _lr.positionCount = resolution;
+        _lr.startWidth = lineWidth;
+        _lr.endWidth = lineWidth;
 
         for (int i = 0; i < resolution; i++)
         {
             float t = (float)i / resolution;
             splineContainer.Evaluate(t, out var pos, out var tan, out var up);
-            lr.SetPosition(i, new Vector3(pos.x, pos.y, pos.z));
+            _lr.SetPosition(i, new Vector3(pos.x, pos.y, pos.z));
         }
 
-        // Añade esto al final
-        Vector3 firstPoint = lr.GetPosition(0);
-        Debug.Log($"Primera posición de órbita: {firstPoint}");
+        Debug.Log($"[OrbitLineRenderer] Orbit drawn -- first point: {_lr.GetPosition(0)}.");
     }
 }

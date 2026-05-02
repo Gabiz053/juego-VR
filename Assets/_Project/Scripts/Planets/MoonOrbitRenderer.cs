@@ -17,13 +17,13 @@ public class MoonOrbitRenderer : MonoBehaviour
         lineRenderer.positionCount = segments;
         lineRenderer.startWidth = 0.05f;
         lineRenderer.endWidth = 0.05f;
+        lineRenderer.useWorldSpace = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        float worldRadius = orbitRadius * earth.localScale.x;
-        
+        float worldRadius = orbitRadius * earth.lossyScale.x;
         for (int i = 0; i < segments; i++)
         {
             float angle = (360f / segments) * i * Mathf.Deg2Rad;
