@@ -491,11 +491,17 @@ MonoBehaviour:
   _palmTransform: {fileID: 0}
   _wristCanvas: {fileID: 0}
   _canvasGroup: {fileID: 0}
-  _dotThreshold: 0.7
-  _maxDistance: 0.5
+  _dotThreshold: 0.85
+  _maxDistance: 0.35
   _btnBack: {fileID: 0}
   _btnPause: {fileID: 0}
   _btnToggleOrbits: {fileID: 0}
+  _iconPause: {fileID: 0}
+  _iconPlay: {fileID: 0}
+  _pauseButtonIcon: {fileID: 0}
+  _iconOrbitVisible: {fileID: 0}
+  _iconOrbitHidden: {fileID: 0}
+  _orbitButtonIcon: {fileID: 0}
 --- !u!1 &5658154578116637753
 GameObject:
   m_ObjectHideFlags: 0
