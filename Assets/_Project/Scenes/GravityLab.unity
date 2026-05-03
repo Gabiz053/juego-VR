@@ -119,6 +119,37 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &156750763
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 156750764}
+  m_Layer: 0
+  m_Name: PalmAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &156750764
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 156750763}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1661740676}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!114 &215609499 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1220952243686117973, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
@@ -346,6 +377,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 202364688, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1707798594}
+    - targetCorrespondingSourceObject: {fileID: 8366379412631108205, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+      insertIndex: 0
+      addedObject: {fileID: 156750764}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1767192433, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
       insertIndex: -1
@@ -589,7 +623,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1782322548416687588, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.02
+      value: -0.1
       objectReference: {fileID: 0}
     - target: {fileID: 1782322548416687588, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
       propertyPath: m_LocalRotation.w
@@ -613,7 +647,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1782322548416687588, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.05
+      value: 0.07
       objectReference: {fileID: 0}
     - target: {fileID: 1782322548416687588, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -705,7 +739,7 @@ PrefabInstance:
       objectReference: {fileID: 1707798600}
     - target: {fileID: 7431832797338046406, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
       propertyPath: _maxDistance
-      value: 1
+      value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: 7431832797338046406, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
       propertyPath: _wristCanvas
@@ -713,12 +747,12 @@ PrefabInstance:
       objectReference: {fileID: 1707798599}
     - target: {fileID: 7431832797338046406, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
       propertyPath: _dotThreshold
-      value: 0
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 7431832797338046406, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
       propertyPath: _palmTransform
       value: 
-      objectReference: {fileID: 1661740676}
+      objectReference: {fileID: 156750764}
     - target: {fileID: 7431832797338046406, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
       propertyPath: _btnToggleOrbits
       value: 
@@ -883,7 +917,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _wristMenuController: {fileID: 1707798601}
   _orbitalPauseController: {fileID: 1829900471}
-  _mainMenuSceneName: Main_VR
+  _mainMenuSceneName: GravityLab
   _orbitVisibilityController: {fileID: 1829900472}
 --- !u!4 &1829900470
 Transform:

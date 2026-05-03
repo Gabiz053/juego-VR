@@ -378,6 +378,16 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!4 &47491071 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8366379412631108205, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+  m_PrefabInstance: {fileID: 889939281}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &47491072 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1767192434, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+  m_PrefabInstance: {fileID: 889939281}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &115084322
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -590,6 +600,54 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7431832797338046406, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
+      propertyPath: _btnBack
+      value: 
+      objectReference: {fileID: 115084329}
+    - target: {fileID: 7431832797338046406, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
+      propertyPath: _btnPause
+      value: 
+      objectReference: {fileID: 115084328}
+    - target: {fileID: 7431832797338046406, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
+      propertyPath: _iconPlay
+      value: 
+      objectReference: {fileID: 21300000, guid: abc9a7b606890a24ab93af27d4886321, type: 3}
+    - target: {fileID: 7431832797338046406, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
+      propertyPath: _iconPause
+      value: 
+      objectReference: {fileID: 21300000, guid: 4ea8ba5807fecd54b8602eb8aa3bf33d, type: 3}
+    - target: {fileID: 7431832797338046406, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
+      propertyPath: _wristCanvas
+      value: 
+      objectReference: {fileID: 115084330}
+    - target: {fileID: 7431832797338046406, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
+      propertyPath: _palmTransform
+      value: 
+      objectReference: {fileID: 826587939}
+    - target: {fileID: 7431832797338046406, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
+      propertyPath: _btnToggleOrbits
+      value: 
+      objectReference: {fileID: 115084327}
+    - target: {fileID: 7431832797338046406, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
+      propertyPath: _cameraTransform
+      value: 
+      objectReference: {fileID: 47491072}
+    - target: {fileID: 7431832797338046406, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
+      propertyPath: _iconOrbitHidden
+      value: 
+      objectReference: {fileID: 21300000, guid: 6d418b7c87330234bb6f0395faf3bb75, type: 3}
+    - target: {fileID: 7431832797338046406, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
+      propertyPath: _orbitButtonIcon
+      value: 
+      objectReference: {fileID: 115084325}
+    - target: {fileID: 7431832797338046406, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
+      propertyPath: _pauseButtonIcon
+      value: 
+      objectReference: {fileID: 115084326}
+    - target: {fileID: 7431832797338046406, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
+      propertyPath: _iconOrbitVisible
+      value: 
+      objectReference: {fileID: 21300000, guid: a853574891f9dcd41bfc2772adb51cd7, type: 3}
     - target: {fileID: 8267914906724594743, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -646,6 +704,77 @@ PrefabInstance:
 --- !u!224 &115084323 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1782322548416687588, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
+  m_PrefabInstance: {fileID: 115084322}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &115084324 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7431832797338046406, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
+  m_PrefabInstance: {fileID: 115084322}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cdb74fcdd11cb147bd24210e0399815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &115084325 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4369859984187300521, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
+  m_PrefabInstance: {fileID: 115084322}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &115084326 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1220952243686117973, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
+  m_PrefabInstance: {fileID: 115084322}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &115084327 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6614013089425082372, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
+  m_PrefabInstance: {fileID: 115084322}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &115084328 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7911462940311859641, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
+  m_PrefabInstance: {fileID: 115084322}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &115084329 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4364873938794708129, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
+  m_PrefabInstance: {fileID: 115084322}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!223 &115084330 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 8131727972920384187, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
   m_PrefabInstance: {fileID: 115084322}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &612012728 stripped
@@ -830,6 +959,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &826587938
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 826587939}
+  m_Layer: 0
+  m_Name: PalmAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &826587939
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 826587938}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 47491071}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1001 &889939281
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -888,6 +1048,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 202364688, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 115084323}
+    - targetCorrespondingSourceObject: {fileID: 8366379412631108205, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+      insertIndex: 0
+      addedObject: {fileID: 826587939}
     - targetCorrespondingSourceObject: {fileID: 1670256625, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1169391613}
@@ -1883,7 +2046,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 479779c07fe546845997e56d3cc90b09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _wristMenuController: {fileID: 0}
+  _wristMenuController: {fileID: 115084324}
   _orbitalPauseController: {fileID: 1829900471}
   _mainMenuSceneName: Main_VR
   _orbitVisibilityController: {fileID: 1829900472}
