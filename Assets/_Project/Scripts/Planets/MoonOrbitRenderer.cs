@@ -1,35 +1,44 @@
 using UnityEngine;
+using UnityEngine.Splines;
+using System.Collections;
 
 [RequireComponent(typeof(LineRenderer))]
 public class MoonOrbitRenderer : MonoBehaviour
 {
-    public Transform earth;
-    public float orbitRadius = 2.5f;
+    public SplineContainer splineContainer;
     public int segments = 64;
-
     private LineRenderer lineRenderer;
+    private bool _ready = false;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        lineRenderer = GetComponent<LineRenderer>(); // Obtener el componente LineRenderer
+        lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.loop = true;
         lineRenderer.positionCount = segments;
         lineRenderer.startWidth = 0.05f;
         lineRenderer.endWidth = 0.05f;
         lineRenderer.useWorldSpace = true;
+        StartCoroutine(WaitAndDraw());
     }
 
-    // Update is called once per frame
+    IEnumerator WaitAndDraw()
+    {
+        while (splineContainer == null || splineContainer.Spline.Count == 0)
+            yield return null;
+        yield return null;
+        _ready = true;
+    }
+
     void Update()
     {
-        float worldRadius = orbitRadius * earth.lossyScale.x;
+        if (!_ready) return;
+        if (splineContainer == null || splineContainer.Spline.Count == 0) return;
+
         for (int i = 0; i < segments; i++)
         {
-            float angle = (360f / segments) * i * Mathf.Deg2Rad;
-            float x = Mathf.Cos(angle) * worldRadius;
-            float z = Mathf.Sin(angle) * worldRadius;
-            lineRenderer.SetPosition(i, earth.position + new Vector3(x, 0, z));
+            float t = (float)i / segments;
+            splineContainer.Evaluate(t, out var pos, out var tan, out var up);
+            lineRenderer.SetPosition(i, new Vector3(pos.x, pos.y, pos.z));
         }
     }
 }
