@@ -32,6 +32,11 @@ public class PlanetSceneSetup : MonoBehaviour
 
     // ------------------------------------------------------------------ //
 
+    /// <summary>The PlanetConfig asset assigned to this scene setup.</summary>
+    public PlanetConfig Config => _config;
+
+    // ------------------------------------------------------------------ //
+
     private void Awake()
     {
         if (_config == null)

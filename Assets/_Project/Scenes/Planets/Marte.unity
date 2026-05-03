@@ -406,6 +406,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2014722765107282614, guid: 0c9eaf88f022b4af6b7b3aedfe2a3750, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2026308000}
+    - targetCorrespondingSourceObject: {fileID: 2014722765107282614, guid: 0c9eaf88f022b4af6b7b3aedfe2a3750, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2026308001}
   m_SourcePrefab: {fileID: 100100000, guid: 0c9eaf88f022b4af6b7b3aedfe2a3750, type: 3}
 --- !u!1 &2026307999 stripped
 GameObject:
@@ -434,6 +437,29 @@ MonoBehaviour:
   _drag: 0
   _angularDrag: 0.05
   _throwOnRelease: 1
+--- !u!114 &2026308001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2026307999}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 058edbd2c540042fab58cab901e5047b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _config: {fileID: 0}
+  _distanceFromCamera: 2
+  _verticalOffset: 0.2
+  _panelWidth: 0.7
+  _panelHeight: 0.22
+  _fadeInDuration: 0.8
+  _holdDuration: 5
+  _fadeOutDuration: 1.2
+  _backgroundColour: {r: 0, g: 0, b: 0, a: 0.65}
+  _planetNameColour: {r: 1, g: 1, b: 1, a: 1}
+  _gravityColour: {r: 1, g: 0.92, b: 0.35, a: 1}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
