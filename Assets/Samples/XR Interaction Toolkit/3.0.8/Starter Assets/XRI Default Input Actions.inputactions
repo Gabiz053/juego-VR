@@ -2053,7 +2053,7 @@
                 {
                     "name": "",
                     "id": "1ce80054-410d-4112-a332-50faa7fb4f23",
-                    "path": "<XRController>{RightHand}/{TriggerButton}",
+                    "path": "<XRController>{RightHand}/{GripButton}",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
