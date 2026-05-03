@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 
 /// <summary>
@@ -209,16 +210,12 @@ public class PlanetSceneSetup : MonoBehaviour
         if (teleportArea == null)
             teleportArea = platform.AddComponent<TeleportationArea>();
 
-        // The Teleport Interactor in the XR Rig requires the "Teleport" XR Interaction
-        // Layer. Setting it explicitly here ensures it works whether the TeleportationArea
-        // came from the prefab or was just added — a mismatch is what causes the red ray.
-        // Set all interaction layer bits so the platform accepts any interactor,
-        // including the Teleport Interactor which uses the custom "Teleport" XR layer.
-        var iLayers = teleportArea.interactionLayers;
-        iLayers.value = ~0;
-        teleportArea.interactionLayers = iLayers;
+        // Restrict the platform to the "Teleport" XR Interaction Layer only.
+        // Using ~0 (all bits) previously allowed grab interactors to also select
+        // the floor — now only the Teleport interactor can interact with it.
+        teleportArea.interactionLayers = InteractionLayerMask.GetMask("Teleport");
 
-        Debug.Log("[PlanetSceneSetup] TeleportationArea configured on platform (layer: Teleport).");
+        Debug.Log("[PlanetSceneSetup] TeleportationArea configured on platform (layer: Teleport only — floor is no longer grabbable).");
     }
 
 #if UNITY_EDITOR

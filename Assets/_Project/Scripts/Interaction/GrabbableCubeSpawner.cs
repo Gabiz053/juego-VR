@@ -4,28 +4,45 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 namespace _Project.Scripts.Interaction
 {
     /// <summary>
-    /// Spawns a grabbable, physics-driven cube a fixed height above a reference surface.
+    /// Spawns a grabbable, physics-driven object a fixed height above a reference surface.
     ///
     /// HOW TO USE
     /// ──────────
     /// 1. Add this component to any persistent scene GameObject (e.g. the Scene Manager).
-    /// 2. Tune the Inspector parameters below.
-    /// 3. Press Play — the cube is created in Start(), inheriting the scene's gravity
+    /// 2. Assign a GrabbableCube prefab (or any other prefab) to the _cubePrefab field.
+    ///    Leave it empty to fall back to the legacy runtime-built primitive cube.
+    /// 3. Tune the Inspector parameters below.
+    /// 4. Press Play — the object is created in Start(), inheriting the scene's gravity
     ///    (set by PlanetSceneSetup or LocalGravityModifier).
+    ///
+    /// SWAPPING THE OBJECT
+    /// ───────────────────
+    /// Drag any prefab into the "Cube Prefab" slot and it will be instantiated instead
+    /// of the default cube. The prefab is responsible for its own components (Rigidbody,
+    /// XRGrabInteractable, etc.); only its position is controlled by this spawner.
     ///
     /// REQUIREMENTS
     /// ────────────
     /// • XR Interaction Toolkit must be present in the project (already satisfied).
-    /// • No prefab needed — the cube is built from a Unity primitive at runtime.
     /// </summary>
     [AddComponentMenu("ProyectoVR/Interaction/Grabbable Cube Spawner")]
     public sealed class GrabbableCubeSpawner : MonoBehaviour
     {
         // ------------------------------------------------------------------ //
-        // Inspector — Cube shape & appearance
+        // Inspector — Prefab (primary path)
         // ------------------------------------------------------------------ //
 
-        [Header("Cube Shape")]
+        [Header("Cube Prefab")]
+        [Tooltip("Prefab to instantiate as the grabbable object. " +
+                 "Swap this to change what appears in the scene. " +
+                 "Leave empty to use the legacy runtime-built primitive cube.")]
+        [SerializeField] private GameObject _cubePrefab;
+
+        // ------------------------------------------------------------------ //
+        // Inspector — Cube shape & appearance (legacy / fallback only)
+        // ------------------------------------------------------------------ //
+
+        [Header("Cube Shape (fallback — used only when no prefab is assigned)")]
         [Tooltip("Side length of the cube in world units.")]
         [SerializeField] private float _cubeSize = 0.3f;
 
@@ -92,54 +109,71 @@ namespace _Project.Scripts.Interaction
 
         private void SpawnCube()
         {
-            // ── 1. Create the primitive ───────────────────────────────────
-            _spawnedCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            _spawnedCube.name = "GrabbableCube";
-
-            // ── 2. Position — a bit above the surface ────────────────────
+            // ── Shared spawn position ─────────────────────────────────────
             float spawnY = _surfaceY + _heightAboveSurface + _cubeSize * 0.5f;
-            _spawnedCube.transform.position = new Vector3(
+            Vector3 spawnPos = new Vector3(
                 _horizontalOffset.x,
                 spawnY + _horizontalOffset.y,
                 _horizontalOffset.z);
 
-            // ── 3. Scale ──────────────────────────────────────────────────
-            _spawnedCube.transform.localScale = Vector3.one * _cubeSize;
-
-            // ── 4. Material / colour ──────────────────────────────────────
-            Renderer rend = _spawnedCube.GetComponent<Renderer>();
-            if (_cubeMaterial != null)
+            if (_cubePrefab != null)
             {
-                rend.sharedMaterial = _cubeMaterial;
+                // ── Prefab path ───────────────────────────────────────────
+                // Instantiate the assigned prefab; it carries its own components
+                // (Rigidbody, XRGrabInteractable, etc.) — we only set position.
+                _spawnedCube = Instantiate(_cubePrefab, spawnPos, Quaternion.identity);
+                _spawnedCube.name = "GrabbableCube";
+
+                Debug.Log($"[GrabbableCubeSpawner] Prefab '{_cubePrefab.name}' spawned at y={spawnY:F2} " +
+                          $"(surface={_surfaceY:F2} + offset={_heightAboveSurface:F2}), " +
+                          $"gravity={Physics.gravity.y:F2} m/s².");
             }
             else
             {
-                Shader shader = Shader.Find("Universal Render Pipeline/Lit")
-                             ?? Shader.Find("Standard");
+                // ── Legacy fallback: build a cube from scratch ────────────
+                _spawnedCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                _spawnedCube.name = "GrabbableCube";
 
-                if (shader != null)
+                // Position
+                _spawnedCube.transform.position = spawnPos;
+
+                // Scale
+                _spawnedCube.transform.localScale = Vector3.one * _cubeSize;
+
+                // Material / colour
+                Renderer rend = _spawnedCube.GetComponent<Renderer>();
+                if (_cubeMaterial != null)
                 {
-                    Material mat = new Material(shader) { name = "GrabbableCubeMat" };
-                    mat.color = _cubeColor;
-                    rend.sharedMaterial = mat;
+                    rend.sharedMaterial = _cubeMaterial;
                 }
+                else
+                {
+                    Shader shader = Shader.Find("Universal Render Pipeline/Lit")
+                                 ?? Shader.Find("Standard");
+                    if (shader != null)
+                    {
+                        Material mat = new Material(shader) { name = "GrabbableCubeMat" };
+                        mat.color = _cubeColor;
+                        rend.sharedMaterial = mat;
+                    }
+                }
+
+                // Rigidbody — gravity enabled (falls according to Physics.gravity set per planet)
+                Rigidbody rb = _spawnedCube.AddComponent<Rigidbody>();
+                rb.mass            = _mass;
+                rb.linearDamping   = _drag;
+                rb.angularDamping  = _angularDrag;
+                rb.useGravity      = true;
+                rb.isKinematic     = false;
+
+                // XRGrabInteractable — VR hand grabbing
+                XRGrabInteractable grab = _spawnedCube.AddComponent<XRGrabInteractable>();
+                grab.throwOnDetach = _throwOnRelease;
+
+                Debug.Log($"[GrabbableCubeSpawner] Primitive cube spawned at y={spawnY:F2} " +
+                          $"(surface={_surfaceY:F2} + offset={_heightAboveSurface:F2}), " +
+                          $"gravity={Physics.gravity.y:F2} m/s².");
             }
-
-            // ── 5. Rigidbody — gravity enabled ────────────────────────────
-            Rigidbody rb = _spawnedCube.AddComponent<Rigidbody>();
-            rb.mass        = _mass;
-            rb.linearDamping   = _drag;
-            rb.angularDamping  = _angularDrag;
-            rb.useGravity  = true;    // falls according to Physics.gravity (set per planet)
-            rb.isKinematic = false;
-
-            // ── 6. XRGrabInteractable — VR hand grabbing ──────────────────
-            XRGrabInteractable grab = _spawnedCube.AddComponent<XRGrabInteractable>();
-            grab.throwOnDetach = _throwOnRelease;
-
-            Debug.Log($"[GrabbableCubeSpawner] Cube spawned at y={spawnY:F2} " +
-                      $"(surface={_surfaceY:F2} + offset={_heightAboveSurface:F2}), " +
-                      $"gravity={Physics.gravity.y:F2} m/s².");
         }
 
         // ------------------------------------------------------------------ //
