@@ -438,6 +438,7 @@ MonoBehaviour:
   _drag: 0
   _angularDrag: 0.05
   _throwOnRelease: 1
+  _fallThreshold: -5
 --- !u!114 &2026308001
 MonoBehaviour:
   m_ObjectHideFlags: 0

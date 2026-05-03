@@ -18,8 +18,9 @@ namespace _Project.Scripts.Interaction
     /// SWAPPING THE OBJECT
     /// ───────────────────
     /// Drag any prefab into the "Cube Prefab" slot and it will be instantiated instead
-    /// of the default cube. The prefab is responsible for its own components (Rigidbody,
-    /// XRGrabInteractable, etc.); only its position is controlled by this spawner.
+    /// of the default cube. The prefab defines the visual appearance (mesh, material,
+    /// scale, collider). Physics (Rigidbody) and grab interaction (XRGrabInteractable)
+    /// are always added programmatically so grabbing is guaranteed to work.
     ///
     /// REQUIREMENTS
     /// ────────────
@@ -89,10 +90,19 @@ namespace _Project.Scripts.Interaction
         [SerializeField] private bool _throwOnRelease = true;
 
         // ------------------------------------------------------------------ //
-        // Runtime reference
+        // Inspector — Out-of-bounds respawn
+        // ------------------------------------------------------------------ //
+
+        [Header("Out-of-Bounds Respawn")]
+        [Tooltip("If the cube's Y position drops below this value it is teleported back to its spawn position.")]
+        [SerializeField] private float _fallThreshold = -10f;
+
+        // ------------------------------------------------------------------ //
+        // Runtime references
         // ------------------------------------------------------------------ //
 
         private GameObject _spawnedCube;
+        private Vector3    _spawnPosition;
 
         // ------------------------------------------------------------------ //
         // Unity lifecycle
@@ -103,6 +113,14 @@ namespace _Project.Scripts.Interaction
             SpawnCube();
         }
 
+        private void Update()
+        {
+            if (_spawnedCube == null) return;
+
+            if (_spawnedCube.transform.position.y <= _fallThreshold)
+                RespawnToOrigin();
+        }
+
         // ------------------------------------------------------------------ //
         // Core logic
         // ------------------------------------------------------------------ //
@@ -111,18 +129,35 @@ namespace _Project.Scripts.Interaction
         {
             // ── Shared spawn position ─────────────────────────────────────
             float spawnY = _surfaceY + _heightAboveSurface + _cubeSize * 0.5f;
-            Vector3 spawnPos = new Vector3(
+            _spawnPosition = new Vector3(
                 _horizontalOffset.x,
                 spawnY + _horizontalOffset.y,
                 _horizontalOffset.z);
+            Vector3 spawnPos = _spawnPosition;
 
             if (_cubePrefab != null)
             {
                 // ── Prefab path ───────────────────────────────────────────
-                // Instantiate the assigned prefab; it carries its own components
-                // (Rigidbody, XRGrabInteractable, etc.) — we only set position.
+                // Instantiate the prefab for its visual/collider components,
+                // then add Rigidbody and XRGrabInteractable programmatically
+                // so grab interaction is guaranteed to initialise correctly.
                 _spawnedCube = Instantiate(_cubePrefab, spawnPos, Quaternion.identity);
                 _spawnedCube.name = "GrabbableCube";
+
+                // Physics
+                Rigidbody rb = _spawnedCube.GetComponent<Rigidbody>();
+                if (rb == null) rb = _spawnedCube.AddComponent<Rigidbody>();
+                rb.mass           = _mass;
+                rb.linearDamping  = _drag;
+                rb.angularDamping = _angularDrag;
+                rb.useGravity     = true;
+                rb.isKinematic    = false;
+
+                // XR grab interaction
+                XRGrabInteractable grab = _spawnedCube.GetComponent<XRGrabInteractable>();
+                if (grab == null) grab = _spawnedCube.AddComponent<XRGrabInteractable>();
+                grab.throwOnDetach    = _throwOnRelease;
+                grab.useDynamicAttach = true; // required for far/ray grab with NearFarInteractor
 
                 Debug.Log($"[GrabbableCubeSpawner] Prefab '{_cubePrefab.name}' spawned at y={spawnY:F2} " +
                           $"(surface={_surfaceY:F2} + offset={_heightAboveSurface:F2}), " +
@@ -168,12 +203,37 @@ namespace _Project.Scripts.Interaction
 
                 // XRGrabInteractable — VR hand grabbing
                 XRGrabInteractable grab = _spawnedCube.AddComponent<XRGrabInteractable>();
-                grab.throwOnDetach = _throwOnRelease;
+                grab.throwOnDetach    = _throwOnRelease;
+                grab.useDynamicAttach = true; // required for far/ray grab with NearFarInteractor
 
                 Debug.Log($"[GrabbableCubeSpawner] Primitive cube spawned at y={spawnY:F2} " +
                           $"(surface={_surfaceY:F2} + offset={_heightAboveSurface:F2}), " +
                           $"gravity={Physics.gravity.y:F2} m/s².");
             }
+        }
+
+        // ------------------------------------------------------------------ //
+        // Out-of-bounds respawn
+        // ------------------------------------------------------------------ //
+
+        /// <summary>
+        /// Teleports the cube back to its original spawn position and zeroes its velocity.
+        /// Called automatically by Update() when the cube falls below _fallThreshold.
+        /// </summary>
+        private void RespawnToOrigin()
+        {
+            // Stop any in-flight motion so the cube doesn't immediately fly off again.
+            Rigidbody rb = _spawnedCube.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.linearVelocity        = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+            }
+
+            _spawnedCube.transform.position = _spawnPosition;
+            _spawnedCube.transform.rotation = Quaternion.identity;
+
+            Debug.Log($"[GrabbableCubeSpawner] Cube fell below y={_fallThreshold} — reset to {_spawnPosition}.");
         }
 
         // ------------------------------------------------------------------ //
