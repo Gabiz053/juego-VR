@@ -130,24 +130,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &268478159 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5057366938677763404, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
-  m_PrefabInstance: {fileID: 1846828126038186936}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &268478160
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 268478159}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7799e94760d4b41d0a967d9286ee0997, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneName: Urano
 --- !u!4 &612012728 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 202364688, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
@@ -210,6 +192,42 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d5e7ab94bacce222d860fa185b39899c, type: 3}
+--- !u!1 &691971892 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4136318173675835770, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+  m_PrefabInstance: {fileID: 1846828126038186936}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &691971893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 691971892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7799e94760d4b41d0a967d9286ee0997, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneName: Jupiter
+--- !u!1 &700207980 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2506571893801445724, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+  m_PrefabInstance: {fileID: 1846828126038186936}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &700207981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 700207980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7799e94760d4b41d0a967d9286ee0997, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneName: Tierra
 --- !u!114 &756956274
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -429,42 +447,6 @@ MonoBehaviour:
   _triggerAction: {fileID: 756956274}
   _fallbackKey: 19
   _allowMouseClick: 1
---- !u!1 &980135646 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1828619040408384332, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
-  m_PrefabInstance: {fileID: 1846828126038186936}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &980135647
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 980135646}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7799e94760d4b41d0a967d9286ee0997, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneName: Jupiter
---- !u!1 &997050302 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 466952992321879958, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
-  m_PrefabInstance: {fileID: 1846828126038186936}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &997050303
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 997050302}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7799e94760d4b41d0a967d9286ee0997, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneName: Neptuno
 --- !u!1 &1137760972
 GameObject:
   m_ObjectHideFlags: 0
@@ -514,6 +496,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1598577544 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8986153637178255203, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+  m_PrefabInstance: {fileID: 1846828126038186936}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1598577545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1598577544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7799e94760d4b41d0a967d9286ee0997, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneName: Marte
 --- !u!4 &1661740676 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8366379412631108205, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
@@ -924,24 +924,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 111bc8506515f514a9becfa3e48d52c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1874891019 stripped
+--- !u!1 &1955714913 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 5806814775080360186, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+  m_CorrespondingSourceObject: {fileID: 2633600368803233898, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
   m_PrefabInstance: {fileID: 1846828126038186936}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1874891020
+--- !u!114 &1955714914
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1874891019}
+  m_GameObject: {fileID: 1955714913}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7799e94760d4b41d0a967d9286ee0997, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: Saturno
+  sceneName: Venus
 --- !u!1 &1962012650
 GameObject:
   m_ObjectHideFlags: 0
@@ -1029,6 +1029,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1968237813 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7928636189660790354, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+  m_PrefabInstance: {fileID: 1846828126038186936}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1968237814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1968237813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7799e94760d4b41d0a967d9286ee0997, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneName: Mercurio
 --- !u!114 &1995645549 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4369859984187300521, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
@@ -1058,6 +1076,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 405246073038696174, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 405246073038696174, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 405246073038696174, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 464140037066372730, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1067,6 +1097,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 464140037066372730, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 859698306002138939, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 859698306002138939, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 859698306002138939, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
@@ -1134,6 +1176,18 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1790002961197535272, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1790002961197535272, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1790002961197535272, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1831753912029797776, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1162,6 +1216,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: SolarSystem
       objectReference: {fileID: 0}
+    - target: {fileID: 3926814485699448276, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3926814485699448276, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3926814485699448276, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4133662200595093763, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4133662200595093763, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4133662200595093763, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5061472301695777446, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1195,6 +1273,42 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5801069287532447890, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6412102754470574226, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6412102754470574226, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6412102754470574226, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6987946834372348475, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6987946834372348475, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6987946834372348475, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8308078379955222135, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8308078379955222135, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8308078379955222135, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
@@ -1211,34 +1325,34 @@ PrefabInstance:
     - {fileID: 44925655752339079, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1387820029576131930, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 7928636189660790354, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1846828126038186938}
-    - targetCorrespondingSourceObject: {fileID: 1633250291215826952, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      addedObject: {fileID: 1968237814}
+    - targetCorrespondingSourceObject: {fileID: 2633600368803233898, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1955714914}
+    - targetCorrespondingSourceObject: {fileID: 2506571893801445724, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 700207981}
+    - targetCorrespondingSourceObject: {fileID: 8986153637178255203, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1598577545}
+    - targetCorrespondingSourceObject: {fileID: 4136318173675835770, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 691971893}
+    - targetCorrespondingSourceObject: {fileID: 3230936353802216003, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1846828126038186942}
+    - targetCorrespondingSourceObject: {fileID: 3195126178060164582, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1846828126038186940}
-    - targetCorrespondingSourceObject: {fileID: 3199563514678889352, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 5562404074823582749, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1846828126038186944}
-    - targetCorrespondingSourceObject: {fileID: 5796911425651889337, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1846828126038186943}
-    - targetCorrespondingSourceObject: {fileID: 1828619040408384332, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 980135647}
-    - targetCorrespondingSourceObject: {fileID: 5806814775080360186, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1874891020}
-    - targetCorrespondingSourceObject: {fileID: 5057366938677763404, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 268478160}
-    - targetCorrespondingSourceObject: {fileID: 466952992321879958, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 997050303}
+      addedObject: {fileID: 1846828126038186938}
   m_SourcePrefab: {fileID: 100100000, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
 --- !u!1 &1846828126038186937 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 1387820029576131930, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+  m_CorrespondingSourceObject: {fileID: 5562404074823582749, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
   m_PrefabInstance: {fileID: 1846828126038186936}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1846828126038186938
@@ -1253,10 +1367,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7799e94760d4b41d0a967d9286ee0997, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: Mercurio
+  sceneName: Neptuno
 --- !u!1 &1846828126038186939 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 1633250291215826952, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+  m_CorrespondingSourceObject: {fileID: 3195126178060164582, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
   m_PrefabInstance: {fileID: 1846828126038186936}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1846828126038186940
@@ -1271,18 +1385,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7799e94760d4b41d0a967d9286ee0997, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: Venus
+  sceneName: Urano
 --- !u!1 &1846828126038186941 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 5796911425651889337, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+  m_CorrespondingSourceObject: {fileID: 3230936353802216003, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
   m_PrefabInstance: {fileID: 1846828126038186936}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1846828126038186942 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3199563514678889352, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
-  m_PrefabInstance: {fileID: 1846828126038186936}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1846828126038186943
+--- !u!114 &1846828126038186942
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1294,20 +1403,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7799e94760d4b41d0a967d9286ee0997, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: Marte
---- !u!114 &1846828126038186944
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1846828126038186942}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7799e94760d4b41d0a967d9286ee0997, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneName: Tierra
+  sceneName: Saturno
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
