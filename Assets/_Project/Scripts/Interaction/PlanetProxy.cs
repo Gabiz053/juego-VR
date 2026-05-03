@@ -98,7 +98,9 @@ namespace _Project.Scripts.Interaction
         private void Start()
         {
             ValidateReferences();
+#if UNITY_EDITOR
             Debug.Log($"{LOG_TAG} '{gameObject.name}' ready.");
+#endif
         }
 
         #endregion

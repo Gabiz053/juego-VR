@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ namespace _Project.Scripts.Core
         #region Constants -------------------------------------------------------
 
         private const string LOG_TAG = "[LessonPortal]";
+        private const float CAMERA_RETRY_INTERVAL = 0.5f;
 
         #endregion
 
@@ -69,6 +71,9 @@ namespace _Project.Scripts.Core
         private AudioSource _humSource;
         private bool _isActivated;
         private float _currentHumVolume;
+        private float _proximityRadiusSqr;
+        private Coroutine _cameraRetryCoroutine;
+        private readonly WaitForSecondsRealtime _cameraRetryWait = new(CAMERA_RETRY_INTERVAL);
 
         #endregion
 
@@ -94,10 +99,11 @@ namespace _Project.Scripts.Core
 
         private void Start()
         {
-            // Camera.main may be null in Awake with XR — safe here after all Awakes run.
-            _mainCamera = Camera.main;
+            TryCacheMainCamera();
+            EnsureCameraRetryCoroutine();
 
             ConfigureHumFromAudioManager();
+            _proximityRadiusSqr = _proximityRadius * _proximityRadius;
 
             if (_labelText != null)
                 _labelText.text = _lessonLabel;
@@ -107,21 +113,20 @@ namespace _Project.Scripts.Core
 
         private void Update()
         {
-            // Lazy camera cache — XR camera might not be tagged MainCamera until after Start.
-            if (_mainCamera == null)
-                _mainCamera = Camera.main;
-
             if (_isActivated || _mainCamera == null) return;
 
             var cameraPos = _mainCamera.transform.position;
-            float dist = Vector3.Distance(cameraPos, transform.position);
+            float sqrDistance = (cameraPos - transform.position).sqrMagnitude;
 
-            UpdateProximityHum(dist);
+            UpdateProximityHum(sqrDistance);
             CheckActivation(cameraPos);
         }
 
         private void OnDestroy()
         {
+            if (_cameraRetryCoroutine != null)
+                StopCoroutine(_cameraRetryCoroutine);
+
             if (_humSource != null)
                 Destroy(_humSource.gameObject);
         }
@@ -143,8 +148,7 @@ namespace _Project.Scripts.Core
 
             if (_returnSpawnPoint != null)
             {
-                SessionContext.MainMenuSpawnPosition = _returnSpawnPoint.position;
-                SessionContext.MainMenuSpawnRotation = _returnSpawnPoint.rotation;
+                SessionContext.SetMainMenuSpawn(_returnSpawnPoint.position, _returnSpawnPoint.rotation);
             }
 
             Debug.Log($"{LOG_TAG} Portal entered -- '{_lessonLabel}', loading '{_targetSceneName}'.");
@@ -161,17 +165,17 @@ namespace _Project.Scripts.Core
                     Mathf.Abs(sphere.transform.lossyScale.y),
                     Mathf.Abs(sphere.transform.lossyScale.z));
                 var worldCenter = sphere.transform.TransformPoint(sphere.center);
-                return Vector3.Distance(point, worldCenter) <= worldRadius;
+                return (point - worldCenter).sqrMagnitude <= worldRadius * worldRadius;
             }
 
             return _activationZone.bounds.Contains(point);
         }
 
-        private void UpdateProximityHum(float distanceToPortal)
+        private void UpdateProximityHum(float squaredDistanceToPortal)
         {
             if (_humSource == null) return;
 
-            float target = distanceToPortal < _proximityRadius ? _humMaxVolume : 0f;
+            float target = squaredDistanceToPortal < _proximityRadiusSqr ? _humMaxVolume : 0f;
             float step   = _humFadeDuration > 0f ? Time.deltaTime / _humFadeDuration : 1f;
             _currentHumVolume = Mathf.MoveTowards(_currentHumVolume, target, step);
             _humSource.volume = _currentHumVolume;
@@ -215,6 +219,36 @@ namespace _Project.Scripts.Core
             Debug.Log($"{LOG_TAG} Portal hum started -- '{clip.name}'.");
         }
 
+        private void TryCacheMainCamera()
+        {
+            if (_mainCamera != null)
+                return;
+
+            _mainCamera = Camera.main;
+        }
+
+        private void EnsureCameraRetryCoroutine()
+        {
+            if (_mainCamera != null || _cameraRetryCoroutine != null)
+                return;
+
+            _cameraRetryCoroutine = StartCoroutine(RetryMainCameraRoutine());
+        }
+
+        private IEnumerator RetryMainCameraRoutine()
+        {
+            while (_mainCamera == null)
+            {
+                _mainCamera = Camera.main;
+                if (_mainCamera != null)
+                    break;
+
+                yield return _cameraRetryWait;
+            }
+
+            _cameraRetryCoroutine = null;
+        }
+
         #endregion
 
         #region Validation ------------------------------------------------------
@@ -226,7 +260,7 @@ namespace _Project.Scripts.Core
             if (_activationZone == null)
                 Debug.LogWarning($"{LOG_TAG} _activationZone is not assigned.", this);
             if (_mainCamera == null)
-                Debug.LogWarning($"{LOG_TAG} Main Camera not found — will retry each frame.", this);
+                Debug.LogWarning($"{LOG_TAG} Main Camera not found -- background retry enabled.", this);
             if (_labelText == null)
                 Debug.LogWarning($"{LOG_TAG} _labelText is not assigned — create a 3D Text (TextMeshPro) child and assign it.", this);
         }

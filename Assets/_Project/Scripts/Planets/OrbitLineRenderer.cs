@@ -17,6 +17,7 @@ namespace _Project.Scripts.Planets
         #region Constants
 
         private const string LOG_TAG = "[OrbitLineRenderer]";
+        private const int MIN_RESOLUTION = 3;
 
         #endregion
 
@@ -41,6 +42,7 @@ namespace _Project.Scripts.Planets
         #region Cached Components
 
         private LineRenderer _lr;
+        private Coroutine _redrawCoroutine;
 
         #endregion
 
@@ -50,7 +52,11 @@ namespace _Project.Scripts.Planets
         public void Redraw()
         {
             if (splineContainer == null || splineContainer.Spline.Count == 0) return;
-            StartCoroutine(RedrawNextFrame());
+
+            if (_redrawCoroutine != null)
+                StopCoroutine(_redrawCoroutine);
+
+            _redrawCoroutine = StartCoroutine(RedrawNextFrame());
         }
 
         /// <summary>Hides the orbit line without destroying it.</summary>
@@ -90,22 +96,26 @@ namespace _Project.Scripts.Planets
             if (_lr == null) _lr = GetComponent<LineRenderer>();
             _lr.enabled = true;
             DrawOrbit();
+            _redrawCoroutine = null;
         }
 
         private void DrawOrbit()
         {
             if (splineContainer == null) return;
             if (splineContainer.Spline.Count == 0) return;
+            if (_lr == null) _lr = GetComponent<LineRenderer>();
+
+            int pointCount = Mathf.Max(resolution, MIN_RESOLUTION);
 
             _lr.loop          = true;
             _lr.useWorldSpace = true;
-            _lr.positionCount = resolution;
+            _lr.positionCount = pointCount;
             _lr.startWidth    = lineWidth;
             _lr.endWidth      = lineWidth;
 
-            for (int i = 0; i < resolution; i++)
+            for (int i = 0; i < pointCount; i++)
             {
-                float t = (float)i / resolution;
+                float t = (float)i / pointCount;
                 splineContainer.Evaluate(t, out var pos, out _, out _);
                 _lr.SetPosition(i, new Vector3(pos.x, pos.y, pos.z));
             }
@@ -119,6 +129,8 @@ namespace _Project.Scripts.Planets
         {
             if (splineContainer == null)
                 Debug.LogWarning($"{LOG_TAG} splineContainer is not assigned.", this);
+            if (resolution < MIN_RESOLUTION)
+                Debug.LogWarning($"{LOG_TAG} resolution is below {MIN_RESOLUTION} -- it will be clamped at runtime.", this);
         }
 
         #endregion

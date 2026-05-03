@@ -16,6 +16,8 @@ namespace _Project.Scripts.Planets
         #region Constants
 
         private const string LOG_TAG = "[MoonOrbitRenderer]";
+        private const int MIN_SEGMENTS = 3;
+        private const float ORBIT_LINE_WIDTH = 0.05f;
 
         #endregion
 
@@ -36,8 +38,9 @@ namespace _Project.Scripts.Planets
 
         #region Cached Components
 
-        private LineRenderer lineRenderer;
+        private LineRenderer _lineRenderer;
         private bool _ready;
+        private int _segmentCount;
 
         #endregion
 
@@ -48,12 +51,14 @@ namespace _Project.Scripts.Planets
 
         private void Start()
         {
-            lineRenderer              = GetComponent<LineRenderer>();
-            lineRenderer.loop         = true;
-            lineRenderer.positionCount = segments;
-            lineRenderer.startWidth   = 0.05f;
-            lineRenderer.endWidth     = 0.05f;
-            lineRenderer.useWorldSpace = true;
+            _segmentCount = Mathf.Max(segments, MIN_SEGMENTS);
+
+            _lineRenderer               = GetComponent<LineRenderer>();
+            _lineRenderer.loop          = true;
+            _lineRenderer.positionCount = _segmentCount;
+            _lineRenderer.startWidth    = ORBIT_LINE_WIDTH;
+            _lineRenderer.endWidth      = ORBIT_LINE_WIDTH;
+            _lineRenderer.useWorldSpace = true;
 
             StartCoroutine(WaitAndDraw());
             ValidateReferences();
@@ -64,11 +69,11 @@ namespace _Project.Scripts.Planets
             if (!_ready) return;
             if (splineContainer == null || splineContainer.Spline.Count == 0) return;
 
-            for (int i = 0; i < segments; i++)
+            for (int i = 0; i < _segmentCount; i++)
             {
-                float t = (float)i / segments;
+                float t = (float)i / _segmentCount;
                 splineContainer.Evaluate(t, out var pos, out _, out _);
-                lineRenderer.SetPosition(i, new Vector3(pos.x, pos.y, pos.z));
+                _lineRenderer.SetPosition(i, new Vector3(pos.x, pos.y, pos.z));
             }
         }
 
@@ -92,6 +97,8 @@ namespace _Project.Scripts.Planets
         {
             if (splineContainer == null)
                 Debug.LogWarning($"{LOG_TAG} splineContainer is not assigned.", this);
+            if (segments < MIN_SEGMENTS)
+                Debug.LogWarning($"{LOG_TAG} segments is below {MIN_SEGMENTS} -- it will be clamped at runtime.", this);
         }
 
         #endregion

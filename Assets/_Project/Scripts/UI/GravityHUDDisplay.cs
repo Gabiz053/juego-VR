@@ -8,8 +8,8 @@ namespace _Project.Scripts.UI
 {
     /// <summary>
     /// Shows a world-space VR title when a planet scene is loaded.
-    /// Attach to the SceneManager GameObject in each planet scene alongside LocalGravityModifier.
-    /// Assign the same PlanetConfig used by LocalGravityModifier; the canvas is built at runtime.
+    /// Attach to the SceneManager GameObject in each planet scene alongside PlanetSceneSetup.
+    /// Assign the same PlanetConfig used by PlanetSceneSetup; the canvas is built at runtime.
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("ProyectoVR/UI/Gravity HUD Display")]
@@ -26,7 +26,7 @@ namespace _Project.Scripts.UI
         #region Inspector
 
         [Header("Data Source")]
-        [Tooltip("Planet config asset — same one used by LocalGravityModifier in this scene. " +
+        [Tooltip("Planet config asset — same one used by PlanetSceneSetup in this scene. " +
                  "Leave empty to auto-detect from PlanetSceneSetup or fall back to Physics.gravity.")]
         [SerializeField] private PlanetConfig _config;
 
@@ -71,6 +71,7 @@ namespace _Project.Scripts.UI
         #region Cached Components
 
         private CanvasGroup _canvasGroup;
+        private WaitForSeconds _holdWait;
 
         #endregion
 
@@ -82,6 +83,9 @@ namespace _Project.Scripts.UI
         private void Start()
         {
             ValidateReferences();
+            if (_holdDuration > 0f)
+                _holdWait = new WaitForSeconds(_holdDuration);
+
             StartCoroutine(InitNextFrame());
         }
 
@@ -206,7 +210,7 @@ namespace _Project.Scripts.UI
 
             if (_holdDuration <= 0f) yield break;
 
-            yield return new WaitForSeconds(_holdDuration);
+            yield return _holdWait;
 
             for (float t = 0f; t < _fadeOutDuration; t += Time.deltaTime)
             {

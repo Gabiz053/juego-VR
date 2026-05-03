@@ -21,6 +21,8 @@ namespace _Project.Scripts.Planets
         private const float TWO_PI = 2f * Mathf.PI;
         private const float MIN_RADIUS = 0.01f;
         private const float MIN_SPEED = 0.01f;
+        private const float MIN_GM = 0.001f;
+        private const float MIN_SQR_MAGNITUDE = 1e-6f;
 
         #endregion
 
@@ -50,6 +52,7 @@ namespace _Project.Scripts.Planets
         private OrbitalMover       _orbitalMover;
         private XRGrabInteractable _grabInteractable;
         private Rigidbody          _rigidbody;
+        private Renderer _sunRenderer;
 
         #endregion
 
@@ -67,7 +70,12 @@ namespace _Project.Scripts.Planets
 
         private void Start()
         {
+            TryResolveSunReference();
+            CacheSunRenderer();
             ValidateReferences();
+            if (_grabInteractable == null)
+                return;
+
             _grabInteractable.selectEntered.AddListener(OnGrabbed);
             _grabInteractable.selectExited.AddListener(OnReleased);
         }
@@ -85,22 +93,43 @@ namespace _Project.Scripts.Planets
 
         private void OnGrabbed(SelectEnterEventArgs args)
         {
-            _orbitalMover.StopOrbit();
+            if (_orbitalMover != null)
+                _orbitalMover.StopOrbit();
+
+            if (_rigidbody == null)
+            {
+                Debug.LogWarning($"{LOG_TAG} _rigidbody is not assigned.", this);
+                return;
+            }
+
             _rigidbody.isKinematic = false;
             Debug.Log($"{LOG_TAG} Planet grabbed -- orbit stopped.");
         }
 
         private void OnReleased(SelectExitEventArgs args)
         {
+            if (_rigidbody == null)
+            {
+                Debug.LogWarning($"{LOG_TAG} _rigidbody is not assigned.", this);
+                return;
+            }
+
             Vector3 releasePosition = transform.position;
             Vector3 releaseVelocity = _rigidbody.linearVelocity;
             _rigidbody.isKinematic  = true;
+
+            if (_sunTransform == null || _orbitalMover == null)
+            {
+                Debug.LogWarning($"{LOG_TAG} Missing references -- orbit launch aborted.", this);
+                return;
+            }
+
             ComputeAndBeginOrbit(releasePosition, releaseVelocity);
         }
 
         private void ComputeAndBeginOrbit(Vector3 worldPosition, Vector3 worldVelocity)
         {
-            Vector3 sunPos = _sunTransform.position;
+            Vector3 sunPos = GetSunFocusPosition();
             Vector3 r      = worldPosition - sunPos;
             float   rMag   = Mathf.Max(r.magnitude, MIN_RADIUS);
 
@@ -112,14 +141,18 @@ namespace _Project.Scripts.Planets
             }
 
             float vMag = worldVelocity.magnitude;
-            float gm   = _autoComputeGM ? vMag * vMag * rMag : _sunGM;
+            float gm   = _autoComputeGM
+                ? Mathf.Max(vMag * vMag * rMag, MIN_GM)
+                : Mathf.Max(_sunGM, MIN_GM);
 
             if (vMag < MIN_SPEED)
             {
-                gm            = _sunGM > 0 ? _sunGM : rMag * rMag;
+                gm            = Mathf.Max(_sunGM > 0f ? _sunGM : rMag * rMag, MIN_GM);
                 worldVelocity = CircularVelocity(r, rMag, gm);
                 vMag          = worldVelocity.magnitude;
-                gm            = _autoComputeGM ? vMag * vMag * rMag : _sunGM;
+                gm            = _autoComputeGM
+                    ? Mathf.Max(vMag * vMag * rMag, MIN_GM)
+                    : Mathf.Max(_sunGM, MIN_GM);
                 Debug.Log($"{LOG_TAG} Low release speed -- computing circular orbit.");
             }
 
@@ -137,11 +170,11 @@ namespace _Project.Scripts.Planets
 
             if (energy >= 0f)
             {
-                gm     = vMag * vMag * rMag * 1.1f;
+                gm     = Mathf.Max(vMag * vMag * rMag * 1.1f, MIN_GM);
                 energy = 0.5f * vMag * vMag - gm / rMag;
             }
 
-            float   semiMajorAxis = -gm / (2f * energy);
+            float   semiMajorAxis = Mathf.Max(-gm / (2f * energy), MIN_RADIUS);
             float   rdotv         = Vector3.Dot(r, v);
             Vector3 eVec          = (1f / gm) * ((vMag * vMag - gm / rMag) * r - rdotv * v);
             float   eccentricity  = Mathf.Clamp(eVec.magnitude, 0f, 0.99f);
@@ -175,6 +208,13 @@ namespace _Project.Scripts.Planets
             Vector3 tangent = _forceXZPlane
                 ? new Vector3(-relativePosition.z, 0f, relativePosition.x).normalized
                 : Vector3.Cross(Vector3.up, relativePosition).normalized;
+
+            if (tangent.sqrMagnitude < MIN_SQR_MAGNITUDE)
+                tangent = Vector3.Cross(Vector3.right, relativePosition).normalized;
+
+            if (tangent.sqrMagnitude < MIN_SQR_MAGNITUDE)
+                tangent = Vector3.forward;
+
             return tangent * speed;
         }
 
@@ -182,6 +222,61 @@ namespace _Project.Scripts.Planets
         {
             Vector3 candidate = Mathf.Abs(v.x) < 0.9f ? Vector3.right : Vector3.up;
             return Vector3.Cross(v, candidate).normalized;
+        }
+
+        private void TryResolveSunReference()
+        {
+            if (_sunTransform != null)
+                return;
+
+            Transform[] sceneTransforms = FindObjectsByType<Transform>(FindObjectsSortMode.None);
+            Transform fallback = null;
+
+            for (int i = 0; i < sceneTransforms.Length; i++)
+            {
+                Transform candidate = sceneTransforms[i];
+                string candidateName = candidate.name.ToLowerInvariant();
+                bool isLikelySun =
+                    candidateName == "sun" ||
+                    candidateName == "sol" ||
+                    candidateName.Contains("sun") ||
+                    candidateName.Contains("sol");
+
+                if (!isLikelySun)
+                    continue;
+
+                if (candidate.GetComponentInChildren<Renderer>() != null)
+                {
+                    _sunTransform = candidate;
+                    Debug.Log($"{LOG_TAG} Auto-assigned _sunTransform: {_sunTransform.name}.");
+                    return;
+                }
+
+                if (fallback == null)
+                    fallback = candidate;
+            }
+
+            if (fallback != null)
+            {
+                _sunTransform = fallback;
+                Debug.Log($"{LOG_TAG} Auto-assigned fallback _sunTransform: {_sunTransform.name}.");
+            }
+        }
+
+        private void CacheSunRenderer()
+        {
+            _sunRenderer = _sunTransform != null ? _sunTransform.GetComponentInChildren<Renderer>() : null;
+        }
+
+        private Vector3 GetSunFocusPosition()
+        {
+            if (_sunTransform == null)
+                return Vector3.zero;
+
+            if (_sunRenderer == null)
+                CacheSunRenderer();
+
+            return _sunRenderer != null ? _sunRenderer.bounds.center : _sunTransform.position;
         }
 
         #endregion

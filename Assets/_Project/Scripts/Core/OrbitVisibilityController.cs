@@ -42,6 +42,8 @@ namespace _Project.Scripts.Core
         /// <summary>Toggles between showing and hiding all orbit lines.</summary>
         public void ToggleVisibility()
         {
+            EnsureLineRenderersCache();
+
             if (_isVisible)
                 HideOrbits();
             else
@@ -69,6 +71,14 @@ namespace _Project.Scripts.Core
             var found = FindObjectsByType<LineRenderer>(FindObjectsSortMode.None);
             foreach (var lr in found)
                 _lineRenderers.Add(lr);
+        }
+
+        private void EnsureLineRenderersCache()
+        {
+            _lineRenderers.RemoveAll(lr => lr == null);
+
+            if (_lineRenderers.Count == 0)
+                CacheLineRenderers();
         }
 
         private void HideOrbits()

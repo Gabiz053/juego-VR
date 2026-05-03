@@ -55,6 +55,8 @@ namespace _Project.Scripts.Core
         private bool _isTransitioning;
         private CanvasGroup _canvasGroup;
         private Transform _fadeCanvasTransform;
+        private Camera _mainCamera;
+        private Transform _mainCameraTransform;
         private readonly WaitForSecondsRealtime _fadeHoldWait = new(FADE_HOLD_DURATION);
 
         #endregion
@@ -196,12 +198,30 @@ namespace _Project.Scripts.Core
 
         private void UpdateFadeCanvasPosition()
         {
-            if (Camera.main == null)
+            if (!TryResolveMainCameraTransform(out var cameraTransform))
                 return;
 
-            var cam = Camera.main.transform;
-            _fadeCanvasTransform.position = cam.position + cam.forward * FADE_CANVAS_DISTANCE;
-            _fadeCanvasTransform.rotation = cam.rotation;
+            _fadeCanvasTransform.position = cameraTransform.position + cameraTransform.forward * FADE_CANVAS_DISTANCE;
+            _fadeCanvasTransform.rotation = cameraTransform.rotation;
+        }
+
+        private bool TryResolveMainCameraTransform(out Transform cameraTransform)
+        {
+            if (_mainCamera == null)
+                _mainCamera = Camera.main;
+
+            if (_mainCamera == null)
+            {
+                _mainCameraTransform = null;
+                cameraTransform = null;
+                return false;
+            }
+
+            if (_mainCameraTransform == null || _mainCameraTransform != _mainCamera.transform)
+                _mainCameraTransform = _mainCamera.transform;
+
+            cameraTransform = _mainCameraTransform;
+            return true;
         }
 
         /// <summary>

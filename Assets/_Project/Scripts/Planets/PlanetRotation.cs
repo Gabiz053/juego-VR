@@ -31,6 +31,10 @@ namespace _Project.Scripts.Planets
         #endregion
 
         #region Cached Components
+
+        private bool _hasValidAxis;
+        private Vector3 _normalizedAxis;
+
         #endregion
 
         #region Public API
@@ -38,9 +42,20 @@ namespace _Project.Scripts.Planets
 
         #region Unity Lifecycle
 
+        private void Start()
+        {
+            ValidateReferences();
+            _hasValidAxis = rotationAxis.sqrMagnitude > 0f;
+            if (_hasValidAxis)
+                _normalizedAxis = rotationAxis.normalized;
+        }
+
         private void Update()
         {
-            transform.Rotate(rotationAxis, rotationSpeed * Time.deltaTime, Space.Self);
+            if (!_hasValidAxis || Mathf.Approximately(rotationSpeed, 0f))
+                return;
+
+            transform.Rotate(_normalizedAxis, rotationSpeed * Time.deltaTime, Space.Self);
         }
 
         #endregion
@@ -49,11 +64,6 @@ namespace _Project.Scripts.Planets
         #endregion
 
         #region Validation
-
-        private void Start()
-        {
-            ValidateReferences();
-        }
 
         private void ValidateReferences()
         {

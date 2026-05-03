@@ -15,6 +15,7 @@ namespace _Project.Scripts.UI
     {
         #region Constants
 
+        private const string LOG_TAG = "[WristMenuController]";
         private const float FADE_SPEED = 8f;
 
         #endregion
@@ -88,6 +89,9 @@ namespace _Project.Scripts.UI
 
         #endregion
 
+        #region Cached Components
+        #endregion
+
         #region State
 
         private bool _isVisible;
@@ -133,12 +137,16 @@ namespace _Project.Scripts.UI
             ValidateReferences();
             RegisterButtonListeners();
 
-            _canvasGroup.alpha = 0f;
-            _canvasGroup.interactable = false;
-            _canvasGroup.blocksRaycasts = false;
+            if (_canvasGroup != null)
+            {
+                _canvasGroup.alpha = 0f;
+                _canvasGroup.interactable = false;
+                _canvasGroup.blocksRaycasts = false;
+            }
+
             _isVisible = false;
 
-            Debug.Log("[WristMenuController] Initialized -- wrist menu ready.");
+            Debug.Log($"{LOG_TAG} Initialized -- wrist menu ready.");
         }
 
         private void Update()
@@ -161,21 +169,26 @@ namespace _Project.Scripts.UI
             if (_cameraTransform == null || _palmTransform == null)
                 return;
 
-            Vector3 palmToCam = (_cameraTransform.position - _palmTransform.position).normalized;
+            Vector3 cameraOffset = _cameraTransform.position - _palmTransform.position;
+            Vector3 palmToCam = cameraOffset.normalized;
             Vector3 palmNormal = _palmTransform.forward;
             float dot = Vector3.Dot(palmNormal, palmToCam);
-            float distance = Vector3.Distance(_palmTransform.position, _cameraTransform.position);
+            float distanceSqr = cameraOffset.sqrMagnitude;
+            float maxDistanceSqr = _maxDistance * _maxDistance;
 
-            bool shouldShow = dot >= _dotThreshold && distance <= _maxDistance;
+            bool shouldShow = dot >= _dotThreshold && distanceSqr <= maxDistanceSqr;
 
             if (shouldShow != _isVisible)
             {
                 _isVisible = shouldShow;
                 _targetAlpha = _isVisible ? 1f : 0f;
-                _canvasGroup.interactable = _isVisible;
-                _canvasGroup.blocksRaycasts = _isVisible;
+                if (_canvasGroup != null)
+                {
+                    _canvasGroup.interactable = _isVisible;
+                    _canvasGroup.blocksRaycasts = _isVisible;
+                }
 
-                Debug.Log($"[WristMenuController] Menu {(_isVisible ? "ON" : "OFF")} -- dot: {dot:F2}, dist: {distance:F2}.");
+                Debug.Log($"{LOG_TAG} Menu {(_isVisible ? "ON" : "OFF")} -- dot: {dot:F2}, distSqr: {distanceSqr:F3}.");
             }
         }
 
@@ -217,19 +230,19 @@ namespace _Project.Scripts.UI
 
         private void HandleBackPressed()
         {
-            Debug.Log("[WristMenuController] Back button pressed.");
+            Debug.Log($"{LOG_TAG} Back button pressed.");
             OnBackPressed?.Invoke();
         }
 
         private void HandlePausePressed()
         {
-            Debug.Log("[WristMenuController] Pause button pressed.");
+            Debug.Log($"{LOG_TAG} Pause button pressed.");
             OnPausePressed?.Invoke();
         }
 
         private void HandleToggleOrbitsPressed()
         {
-            Debug.Log("[WristMenuController] Toggle orbits button pressed.");
+            Debug.Log($"{LOG_TAG} Toggle orbits button pressed.");
             OnToggleOrbitsPressed?.Invoke();
         }
 
@@ -240,43 +253,43 @@ namespace _Project.Scripts.UI
         private void ValidateReferences()
         {
             if (_cameraTransform == null)
-                Debug.LogWarning("[WristMenuController] _cameraTransform is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _cameraTransform is not assigned.", this);
 
             if (_palmTransform == null)
-                Debug.LogWarning("[WristMenuController] _palmTransform is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _palmTransform is not assigned.", this);
 
             if (_wristCanvas == null)
-                Debug.LogWarning("[WristMenuController] _wristCanvas is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _wristCanvas is not assigned.", this);
 
             if (_canvasGroup == null)
-                Debug.LogWarning("[WristMenuController] _canvasGroup is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _canvasGroup is not assigned.", this);
 
             if (_btnBack == null)
-                Debug.LogWarning("[WristMenuController] _btnBack is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _btnBack is not assigned.", this);
 
             if (_btnPause == null)
-                Debug.LogWarning("[WristMenuController] _btnPause is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _btnPause is not assigned.", this);
 
             if (_btnToggleOrbits == null)
-                Debug.LogWarning("[WristMenuController] _btnToggleOrbits is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _btnToggleOrbits is not assigned.", this);
 
             if (_iconPause == null)
-                Debug.LogWarning("[WristMenuController] _iconPause is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _iconPause is not assigned.", this);
 
             if (_iconPlay == null)
-                Debug.LogWarning("[WristMenuController] _iconPlay is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _iconPlay is not assigned.", this);
 
             if (_pauseButtonIcon == null)
-                Debug.LogWarning("[WristMenuController] _pauseButtonIcon is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _pauseButtonIcon is not assigned.", this);
 
             if (_iconOrbitVisible == null)
-                Debug.LogWarning("[WristMenuController] _iconOrbitVisible is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _iconOrbitVisible is not assigned.", this);
 
             if (_iconOrbitHidden == null)
-                Debug.LogWarning("[WristMenuController] _iconOrbitHidden is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _iconOrbitHidden is not assigned.", this);
 
             if (_orbitButtonIcon == null)
-                Debug.LogWarning("[WristMenuController] _orbitButtonIcon is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _orbitButtonIcon is not assigned.", this);
         }
 
         #endregion

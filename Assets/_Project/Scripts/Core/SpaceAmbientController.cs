@@ -16,6 +16,9 @@ namespace _Project.Scripts.Core
 
         private const string LOG_TAG = "[SpaceAmbientController]";
         private const string SKYBOX_ROTATION_PROP = "_Rotation";
+        private const float MIN_ASTEROID_SPEED = 0.1f;
+        private const float MIN_ASTEROID_SCALE = 0.05f;
+        private const float MIN_DIRECTION_SQR_MAGNITUDE = 0.0001f;
 
         #endregion
 
@@ -86,6 +89,7 @@ namespace _Project.Scripts.Core
 
         private void Start()
         {
+            SanitizeConfiguration();
             SetupSkybox();
             ValidateReferences();
 
@@ -181,8 +185,11 @@ namespace _Project.Scripts.Core
             float sideShift = _platformExclusionRadius * UnityEngine.Random.Range(1.5f, 2.5f);
             var destination = -origin + perp * sideShift
                               + UnityEngine.Random.insideUnitSphere * (_spawnRadius * 0.15f);
-            var direction   = (destination - origin).normalized;
-            float speed     = UnityEngine.Random.Range(_asteroidSpeedRange.x, _asteroidSpeedRange.y);
+            var pathVector = destination - origin;
+            var direction = pathVector.sqrMagnitude < MIN_DIRECTION_SQR_MAGNITUDE
+                ? -origin.normalized
+                : pathVector.normalized;
+            float speed = Mathf.Max(MIN_ASTEROID_SPEED, UnityEngine.Random.Range(_asteroidSpeedRange.x, _asteroidSpeedRange.y));
             float lifetime  = (destination - origin).magnitude / speed + 5f;
 
             GameObject go;
@@ -209,7 +216,8 @@ namespace _Project.Scripts.Core
                 if (go.TryGetComponent<Collider>(out var col)) Destroy(col);
             }
 
-            go.transform.localScale = Vector3.one * UnityEngine.Random.Range(_asteroidScaleRange.x, _asteroidScaleRange.y);
+            float scale = Mathf.Max(MIN_ASTEROID_SCALE, UnityEngine.Random.Range(_asteroidScaleRange.x, _asteroidScaleRange.y));
+            go.transform.localScale = Vector3.one * scale;
 
             if (!go.TryGetComponent<AsteroidFlyBy>(out var flyBy))
                 flyBy = go.AddComponent<AsteroidFlyBy>();
@@ -224,6 +232,27 @@ namespace _Project.Scripts.Core
             _activeAsteroidCount = Mathf.Max(0, _activeAsteroidCount - 1);
         }
 
+        private void SanitizeConfiguration()
+        {
+            if (_minSpawnInterval > _maxSpawnInterval)
+                (_minSpawnInterval, _maxSpawnInterval) = (_maxSpawnInterval, _minSpawnInterval);
+
+            if (_asteroidSpeedRange.x > _asteroidSpeedRange.y)
+                (_asteroidSpeedRange.x, _asteroidSpeedRange.y) = (_asteroidSpeedRange.y, _asteroidSpeedRange.x);
+
+            if (_asteroidScaleRange.x > _asteroidScaleRange.y)
+                (_asteroidScaleRange.x, _asteroidScaleRange.y) = (_asteroidScaleRange.y, _asteroidScaleRange.x);
+
+            _asteroidSpeedRange.x = Mathf.Max(MIN_ASTEROID_SPEED, _asteroidSpeedRange.x);
+            _asteroidSpeedRange.y = Mathf.Max(_asteroidSpeedRange.x, _asteroidSpeedRange.y);
+
+            _asteroidScaleRange.x = Mathf.Max(MIN_ASTEROID_SCALE, _asteroidScaleRange.x);
+            _asteroidScaleRange.y = Mathf.Max(_asteroidScaleRange.x, _asteroidScaleRange.y);
+
+            _spawnRadius = Mathf.Max(1f, _spawnRadius);
+            _maxConcurrentAsteroids = Mathf.Max(1, _maxConcurrentAsteroids);
+        }
+
         #endregion
 
         #region Validation ------------------------------------------------------
@@ -234,6 +263,8 @@ namespace _Project.Scripts.Core
                 Debug.LogWarning($"{LOG_TAG} _blackHole is not assigned.", this);
             if (_asteroidPrefabs == null || _asteroidPrefabs.Length == 0)
                 Debug.LogWarning($"{LOG_TAG} _asteroidPrefabs is empty -- using primitive spheres as fallback.", this);
+            if (_platformExclusionRadius >= _spawnRadius)
+                Debug.LogWarning($"{LOG_TAG} _platformExclusionRadius is greater than or equal to _spawnRadius -- trajectories may be unstable.", this);
         }
 
         #endregion

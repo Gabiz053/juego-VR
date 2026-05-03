@@ -15,6 +15,10 @@ namespace _Project.Scripts.Interaction
         #region Constants
 
         private const string LOG_TAG = "[GrabbableCubeSpawner]";
+        private const string URP_LIT_SHADER_NAME = "Universal Render Pipeline/Lit";
+        private const string STANDARD_SHADER_NAME = "Standard";
+
+        private static Shader _cachedFallbackShader;
 
         #endregion
 
@@ -106,6 +110,7 @@ namespace _Project.Scripts.Interaction
             {
                 _spawnedCube      = Instantiate(_cubePrefab, _spawnPosition, Quaternion.identity);
                 _spawnedCube.name = "GrabbableCube";
+                EnsureCollider(_spawnedCube);
 
                 _spawnedRb = _spawnedCube.GetComponent<Rigidbody>();
                 if (_spawnedRb == null) _spawnedRb = _spawnedCube.AddComponent<Rigidbody>();
@@ -128,10 +133,10 @@ namespace _Project.Scripts.Interaction
                 _spawnedCube.name                   = "GrabbableCube";
                 _spawnedCube.transform.position     = _spawnPosition;
                 _spawnedCube.transform.localScale   = Vector3.one * _cubeSize;
+                EnsureCollider(_spawnedCube);
 
                 Renderer rend      = _spawnedCube.GetComponent<Renderer>();
-                Shader   litShader = Shader.Find("Universal Render Pipeline/Lit")
-                                  ?? Shader.Find("Standard");
+                Shader   litShader = GetFallbackShader();
                 if (_cubeMaterial != null)
                 {
                     rend.sharedMaterial = _cubeMaterial;
@@ -160,6 +165,12 @@ namespace _Project.Scripts.Interaction
 
         private void RespawnToOrigin()
         {
+            if (_spawnedCube == null)
+            {
+                Debug.LogWarning($"{LOG_TAG} Cannot respawn because _spawnedCube is null.", this);
+                return;
+            }
+
             if (_spawnedRb != null)
             {
                 _spawnedRb.linearVelocity  = Vector3.zero;
@@ -170,6 +181,30 @@ namespace _Project.Scripts.Interaction
             _spawnedCube.transform.rotation = Quaternion.identity;
 
             Debug.Log($"{LOG_TAG} Cube fell below y={_fallThreshold:F1} -- reset to {_spawnPosition}.");
+        }
+
+        private static Shader GetFallbackShader()
+        {
+            if (_cachedFallbackShader == null)
+                _cachedFallbackShader = Shader.Find(URP_LIT_SHADER_NAME) ?? Shader.Find(STANDARD_SHADER_NAME);
+
+            return _cachedFallbackShader;
+        }
+
+        private void EnsureCollider(GameObject targetObject)
+        {
+            if (targetObject == null)
+            {
+                Debug.LogWarning($"{LOG_TAG} Cannot validate collider because target object is null.", this);
+                return;
+            }
+
+            Collider existingCollider = targetObject.GetComponent<Collider>();
+            if (existingCollider != null)
+                return;
+
+            targetObject.AddComponent<BoxCollider>();
+            Debug.LogWarning($"{LOG_TAG} '{targetObject.name}' had no Collider -- added BoxCollider fallback.", targetObject);
         }
 
         #endregion

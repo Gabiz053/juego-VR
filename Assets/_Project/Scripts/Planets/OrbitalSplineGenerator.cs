@@ -18,6 +18,8 @@ namespace _Project.Scripts.Planets
         #region Constants
 
         private const string LOG_TAG = "[OrbitalSplineGenerator]";
+        private const int MIN_RESOLUTION = 8;
+        private const float MIN_SEMI_MAJOR_AXIS = 0.01f;
 
         #endregion
 
@@ -50,6 +52,8 @@ namespace _Project.Scripts.Planets
 
         private SplineContainer _splineContainer;
         private SplineAnimate   _splineAnimate;
+        private Renderer _sunRenderer;
+        private readonly WaitForEndOfFrame _waitForEndOfFrame = new WaitForEndOfFrame();
 
         #endregion
 
@@ -81,6 +85,8 @@ namespace _Project.Scripts.Planets
         private void Awake()
         {
             _splineContainer = GetComponent<SplineContainer>();
+            TryResolveSunReference();
+            CacheSunRenderer();
 
             _splineAnimate = GetComponentInChildren<SplineAnimate>();
             if (_splineAnimate != null)
@@ -100,7 +106,7 @@ namespace _Project.Scripts.Planets
 
         private IEnumerator GenerateOrbitNextFrame()
         {
-            yield return new WaitForEndOfFrame();
+            yield return _waitForEndOfFrame;
             GenerateOrbit();
 
             if (_splineAnimate != null)
@@ -109,19 +115,26 @@ namespace _Project.Scripts.Planets
 
         private void GenerateOrbit()
         {
-            float a = semiMajorAxis;
-            float b = a * Mathf.Sqrt(1f - eccentricity * eccentricity);
-            float c = a * eccentricity;
+            if (_splineContainer == null)
+            {
+                Debug.LogWarning($"{LOG_TAG} _splineContainer is not assigned.", this);
+                return;
+            }
 
-            // Use world position — localPosition breaks if the Sun has a parent or moves.
-            Vector3 sunPos = sun != null ? sun.position : Vector3.zero;
+            int knotCount = Mathf.Max(resolution, MIN_RESOLUTION);
+            float e = Mathf.Clamp(eccentricity, 0f, 0.99f);
+            float a = Mathf.Max(semiMajorAxis, MIN_SEMI_MAJOR_AXIS);
+            float b = a * Mathf.Sqrt(1f - e * e);
+            float c = a * e;
+
+            Vector3 sunPos = GetSunFocusPosition();
 
             var spline = _splineContainer.Spline;
             spline.Clear();
 
-            for (int i = 0; i < resolution; i++)
+            for (int i = 0; i < knotCount; i++)
             {
-                float angle    = (float)i / resolution * 2f * Mathf.PI;
+                float angle    = (float)i / knotCount * 2f * Mathf.PI;
                 float x        = Mathf.Cos(angle) * a - c;
                 float z        = Mathf.Sin(angle) * b;
                 var   position = new float3(sunPos.x + x, sunPos.y, sunPos.z + z);
@@ -129,6 +142,61 @@ namespace _Project.Scripts.Planets
             }
 
             spline.Closed = true;
+        }
+
+        private void TryResolveSunReference()
+        {
+            if (sun != null)
+                return;
+
+            Transform[] sceneTransforms = FindObjectsByType<Transform>(FindObjectsSortMode.None);
+            Transform fallback = null;
+
+            for (int i = 0; i < sceneTransforms.Length; i++)
+            {
+                Transform candidate = sceneTransforms[i];
+                string candidateName = candidate.name.ToLowerInvariant();
+                bool isLikelySun =
+                    candidateName == "sun" ||
+                    candidateName == "sol" ||
+                    candidateName.Contains("sun") ||
+                    candidateName.Contains("sol");
+
+                if (!isLikelySun)
+                    continue;
+
+                if (candidate.GetComponentInChildren<Renderer>() != null)
+                {
+                    sun = candidate;
+                    Debug.Log($"{LOG_TAG} Auto-assigned sun reference: {sun.name}.");
+                    return;
+                }
+
+                if (fallback == null)
+                    fallback = candidate;
+            }
+
+            if (fallback != null)
+            {
+                sun = fallback;
+                Debug.Log($"{LOG_TAG} Auto-assigned fallback sun reference: {sun.name}.");
+            }
+        }
+
+        private void CacheSunRenderer()
+        {
+            _sunRenderer = sun != null ? sun.GetComponentInChildren<Renderer>() : null;
+        }
+
+        private Vector3 GetSunFocusPosition()
+        {
+            if (sun == null)
+                return Vector3.zero;
+
+            if (_sunRenderer == null)
+                CacheSunRenderer();
+
+            return _sunRenderer != null ? _sunRenderer.bounds.center : sun.position;
         }
 
         #endregion
@@ -139,6 +207,8 @@ namespace _Project.Scripts.Planets
         {
             if (sun == null)
                 Debug.LogWarning($"{LOG_TAG} sun is not assigned -- orbit will be centered at world origin.", this);
+            if (resolution < MIN_RESOLUTION)
+                Debug.LogWarning($"{LOG_TAG} resolution is below {MIN_RESOLUTION} -- it will be clamped at runtime.", this);
         }
 
         #endregion

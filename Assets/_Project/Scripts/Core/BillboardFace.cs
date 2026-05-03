@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace _Project.Scripts.Core
@@ -13,6 +14,7 @@ namespace _Project.Scripts.Core
         #region Constants -------------------------------------------------------
 
         private const string LOG_TAG = "[BillboardFace]";
+        private const float CAMERA_RETRY_INTERVAL = 0.5f;
 
         #endregion
 
@@ -31,6 +33,8 @@ namespace _Project.Scripts.Core
         #region Cached Components -----------------------------------------------
 
         private Camera _mainCamera;
+        private Coroutine _cameraRetryCoroutine;
+        private readonly WaitForSecondsRealtime _cameraRetryWait = new(CAMERA_RETRY_INTERVAL);
 
         #endregion
 
@@ -42,15 +46,13 @@ namespace _Project.Scripts.Core
 
         private void Start()
         {
-            _mainCamera = Camera.main;
+            TryCacheMainCamera();
+            EnsureCameraRetryCoroutine();
             ValidateReferences();
         }
 
         private void LateUpdate()
         {
-            if (_mainCamera == null)
-                _mainCamera = Camera.main;
-
             if (_mainCamera == null) return;
 
             // Direction FROM camera TO this object — makes forward point AWAY from camera
@@ -65,10 +67,46 @@ namespace _Project.Scripts.Core
             transform.rotation = Quaternion.LookRotation(dir);
         }
 
+        private void OnDestroy()
+        {
+            if (_cameraRetryCoroutine != null)
+                StopCoroutine(_cameraRetryCoroutine);
+        }
+
         #endregion
 
         #region Internals -------------------------------------------------------
-        // No internals.
+
+        private void TryCacheMainCamera()
+        {
+            if (_mainCamera != null)
+                return;
+
+            _mainCamera = Camera.main;
+        }
+
+        private void EnsureCameraRetryCoroutine()
+        {
+            if (_mainCamera != null || _cameraRetryCoroutine != null)
+                return;
+
+            _cameraRetryCoroutine = StartCoroutine(RetryMainCameraRoutine());
+        }
+
+        private IEnumerator RetryMainCameraRoutine()
+        {
+            while (_mainCamera == null)
+            {
+                _mainCamera = Camera.main;
+                if (_mainCamera != null)
+                    break;
+
+                yield return _cameraRetryWait;
+            }
+
+            _cameraRetryCoroutine = null;
+        }
+
         #endregion
 
         #region Validation ------------------------------------------------------
@@ -76,7 +114,7 @@ namespace _Project.Scripts.Core
         private void ValidateReferences()
         {
             if (_mainCamera == null)
-                Debug.LogWarning($"{LOG_TAG} Camera.main not found -- will retry each frame.", this);
+                Debug.LogWarning($"{LOG_TAG} Camera.main not found -- background retry enabled.", this);
         }
 
         #endregion

@@ -15,6 +15,7 @@ namespace _Project.Scripts.Core
         #region Constants
 
         private const string LOG_TAG = "[KeplerSceneConnector]";
+        private const float MIN_SPAWN_DISTANCE = 0.1f;
 
         #endregion
 
@@ -59,6 +60,10 @@ namespace _Project.Scripts.Core
 
         private void Start()
         {
+            if (_cameraTransform == null && Camera.main != null)
+                _cameraTransform = Camera.main.transform;
+
+            _spawnDistance = Mathf.Max(MIN_SPAWN_DISTANCE, _spawnDistance);
             ValidateReferences();
             SubscribeEvents();
             Debug.Log($"{LOG_TAG} Initialized -- events subscribed.");
@@ -140,6 +145,9 @@ namespace _Project.Scripts.Core
                 Debug.LogWarning($"{LOG_TAG} _planetPrefab is not assigned.", this);
                 return;
             }
+
+            if (_cameraTransform == null && Camera.main != null)
+                _cameraTransform = Camera.main.transform;
 
             if (_cameraTransform == null)
             {

@@ -28,6 +28,10 @@ namespace _Project.Scripts.Core
         #endregion
 
         #region Cached Components
+
+        private Unity.XR.CoreUtils.XROrigin _xrOrigin;
+        private bool _isSubscribed;
+
         #endregion
 
         #region Public API
@@ -37,19 +41,24 @@ namespace _Project.Scripts.Core
 
         private void Awake()
         {
-            if (SceneController.Instance != null)
-                SceneController.Instance.OnTransitionCompleted += RepositionPlayer;
+            SubscribeToSceneController();
         }
 
         private void OnDisable()
         {
-            if (SceneController.Instance != null)
-                SceneController.Instance.OnTransitionCompleted -= RepositionPlayer;
+            UnsubscribeFromSceneController();
         }
 
         private void Start()
         {
             ValidateReferences();
+
+            if (!_isSubscribed)
+                SubscribeToSceneController();
+
+            if (!SessionContext.HasMainMenuSpawnOverride && _spawnPoint != null)
+                SessionContext.SetMainMenuSpawn(_spawnPoint.position, _spawnPoint.rotation);
+
             RepositionPlayer();
         }
 
@@ -59,24 +68,58 @@ namespace _Project.Scripts.Core
 
         private void RepositionPlayer()
         {
-            var xrOrigin = FindFirstObjectByType<Unity.XR.CoreUtils.XROrigin>();
-            if (xrOrigin == null)
+            if (!TryGetXROrigin(out var xrOrigin))
             {
                 Debug.LogWarning($"{LOG_TAG} XROrigin not found.", this);
                 return;
             }
 
+            Vector3 targetPosition = SessionContext.MainMenuSpawnPosition;
+            Quaternion targetRotation = SessionContext.MainMenuSpawnRotation;
+
+            if (!SessionContext.HasMainMenuSpawnOverride && _spawnPoint != null)
+            {
+                targetPosition = _spawnPoint.position;
+                targetRotation = _spawnPoint.rotation;
+            }
+
             var cc = xrOrigin.GetComponent<CharacterController>();
             if (cc != null) cc.enabled = false;
 
-            xrOrigin.transform.SetPositionAndRotation(
-                SessionContext.MainMenuSpawnPosition,
-                SessionContext.MainMenuSpawnRotation
-            );
+            xrOrigin.transform.SetPositionAndRotation(targetPosition, targetRotation);
 
             if (cc != null) cc.enabled = true;
 
-            Debug.Log($"{LOG_TAG} Player repositioned -- {SessionContext.MainMenuSpawnPosition}.");
+            Debug.Log($"{LOG_TAG} Player repositioned -- {targetPosition}.");
+        }
+
+        private void SubscribeToSceneController()
+        {
+            if (_isSubscribed || SceneController.Instance == null)
+                return;
+
+            SceneController.Instance.OnTransitionCompleted += RepositionPlayer;
+            _isSubscribed = true;
+        }
+
+        private void UnsubscribeFromSceneController()
+        {
+            if (!_isSubscribed)
+                return;
+
+            if (SceneController.Instance != null)
+                SceneController.Instance.OnTransitionCompleted -= RepositionPlayer;
+
+            _isSubscribed = false;
+        }
+
+        private bool TryGetXROrigin(out Unity.XR.CoreUtils.XROrigin xrOrigin)
+        {
+            if (_xrOrigin == null)
+                _xrOrigin = FindFirstObjectByType<Unity.XR.CoreUtils.XROrigin>();
+
+            xrOrigin = _xrOrigin;
+            return xrOrigin != null;
         }
 
         #endregion

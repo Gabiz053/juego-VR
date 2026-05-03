@@ -23,6 +23,7 @@ namespace _Project.Scripts.Core
 
         // Slight randomised pitch offset on every SFX for an organic, non-robotic feel.
         private const float PITCH_VARIATION = 0.08f;
+        private const float MIN_FADE_DURATION = 0.01f;
 
         #endregion
 
@@ -188,13 +189,19 @@ namespace _Project.Scripts.Core
             }
 
             BuildShuffledOrder();
+            if (_shuffledTrackOrder == null || _shuffledTrackOrder.Length == 0)
+            {
+                Debug.LogWarning($"{LOG_TAG} _backgroundTracks contains no valid clips.", this);
+                return;
+            }
+
             RestartMusicCoroutine(MusicShuffleLoopRoutine());
         }
 
         /// <summary>Fades out and stops background music over <paramref name="fadeDuration"/> seconds.</summary>
         public void StopMusic(float fadeDuration = 1f)
         {
-            RestartMusicCoroutine(FadeOutMusicRoutine(fadeDuration));
+            RestartMusicCoroutine(FadeOutMusicRoutine(Mathf.Max(0f, fadeDuration)));
         }
 
         // ── 2D SFX ────────────────────────────────────────────────────────────
@@ -203,6 +210,7 @@ namespace _Project.Scripts.Core
         public void PlaySFX2D(AudioClip clip, float volume = 1f)
         {
             if (clip == null) return;
+            if (_sfx2dSource == null) return;
 
             _sfx2dSource.pitch = 1f + UnityEngine.Random.Range(-PITCH_VARIATION, PITCH_VARIATION);
             _sfx2dSource.PlayOneShot(clip, volume * _sfxVolume * _masterVolume);
@@ -360,6 +368,7 @@ namespace _Project.Scripts.Core
             _musicSourceA = BuildAudioSource("MusicSourceA", spatialBlend: 0f);
             _musicSourceB = BuildAudioSource("MusicSourceB", spatialBlend: 0f);
             _sfx2dSource  = BuildAudioSource("SFX2DSource",  spatialBlend: 0f);
+            _sfx2dSource.volume = 1f;
         }
 
         private AudioSource BuildAudioSource(string goName, float spatialBlend)
@@ -390,6 +399,7 @@ namespace _Project.Scripts.Core
 
             float targetVolume = _musicVolume * _masterVolume;
             float outgoingStart = outgoing.volume;
+            float fadeDuration = Mathf.Max(MIN_FADE_DURATION, _musicFadeDuration);
 
             incoming.clip = clip;
             incoming.loop = loop;
@@ -397,9 +407,9 @@ namespace _Project.Scripts.Core
             incoming.Play();
 
             float elapsed = 0f;
-            while (elapsed < _musicFadeDuration)
+            while (elapsed < fadeDuration)
             {
-                float t = elapsed / _musicFadeDuration;
+                float t = elapsed / fadeDuration;
                 incoming.volume = Mathf.Lerp(0f, targetVolume, t);
                 outgoing.volume = Mathf.Lerp(outgoingStart, 0f, t);
                 elapsed += Time.unscaledDeltaTime;
@@ -418,12 +428,21 @@ namespace _Project.Scripts.Core
         // Minecraft-style loop: play → fade out → silence → play → repeat.
         private IEnumerator MusicShuffleLoopRoutine()
         {
+            if (_shuffledTrackOrder == null || _shuffledTrackOrder.Length == 0)
+                yield break;
+
             // Small random initial delay before the first track, like Minecraft.
             yield return new WaitForSecondsRealtime(UnityEngine.Random.Range(2f, 8f));
 
             while (true)
             {
                 var clip = _backgroundTracks[_shuffledTrackOrder[_shufflePosition]];
+                if (clip == null)
+                {
+                    AdvanceShufflePosition();
+                    continue;
+                }
+
                 yield return StartCoroutine(PlayTrackWithFadesRoutine(clip));
 
                 AdvanceShufflePosition();
@@ -441,8 +460,12 @@ namespace _Project.Scripts.Core
         // Fades in a track, waits for it to finish, fades out. No overlap with next track.
         private IEnumerator PlayTrackWithFadesRoutine(AudioClip clip)
         {
+            if (clip == null)
+                yield break;
+
             var source = _isMusicSourceAActive ? _musicSourceA : _musicSourceB;
             float targetVolume = _musicVolume * _masterVolume;
+            float fadeDuration = Mathf.Max(MIN_FADE_DURATION, _musicFadeDuration);
 
             source.clip = clip;
             source.loop = false;
@@ -451,9 +474,9 @@ namespace _Project.Scripts.Core
 
             // Fade in.
             float elapsed = 0f;
-            while (elapsed < _musicFadeDuration)
+            while (elapsed < fadeDuration)
             {
-                source.volume = Mathf.Lerp(0f, targetVolume, elapsed / _musicFadeDuration);
+                source.volume = Mathf.Lerp(0f, targetVolume, elapsed / fadeDuration);
                 elapsed += Time.unscaledDeltaTime;
                 yield return null;
             }
@@ -463,15 +486,15 @@ namespace _Project.Scripts.Core
             Debug.Log($"{LOG_TAG} Music track -- '{clip.name}'.");
 
             // Wait until near the end to start the fade-out.
-            float playDuration = Mathf.Max(0f, clip.length - _musicFadeDuration - 0.1f);
+            float playDuration = Mathf.Max(0f, clip.length - fadeDuration - 0.1f);
             yield return new WaitForSecondsRealtime(playDuration);
 
             // Fade out.
             float startVolume = source.volume;
             elapsed = 0f;
-            while (elapsed < _musicFadeDuration)
+            while (elapsed < fadeDuration)
             {
-                source.volume = Mathf.Lerp(startVolume, 0f, elapsed / _musicFadeDuration);
+                source.volume = Mathf.Lerp(startVolume, 0f, elapsed / fadeDuration);
                 elapsed += Time.unscaledDeltaTime;
                 yield return null;
             }
@@ -514,27 +537,54 @@ namespace _Project.Scripts.Core
             src.playOnAwake = false;
             src.Play();
 
-            // Wait for the clip to finish (accounting for pitch-shifted duration).
-            yield return new WaitForSeconds(clip.length / Mathf.Abs(src.pitch) + 0.05f);
+            // Wait for the clip to finish even while timescale is paused.
+            float duration = clip.length / Mathf.Abs(src.pitch) + 0.05f;
+            yield return new WaitForSecondsRealtime(duration);
 
-            _activeSfx3dCount--;
-            Destroy(go);
+            _activeSfx3dCount = Mathf.Max(0, _activeSfx3dCount - 1);
+            if (go != null)
+                Destroy(go);
         }
 
         private void RefreshSourceVolumes()
         {
-            var activeMusic = _isMusicSourceAActive ? _musicSourceA : _musicSourceB;
-            if (activeMusic != null && activeMusic.isPlaying)
-                activeMusic.volume = _musicVolume * _masterVolume;
+            float targetMusicVolume = _musicVolume * _masterVolume;
+            if (_musicSourceA != null && _musicSourceA.isPlaying)
+                _musicSourceA.volume = targetMusicVolume;
+            if (_musicSourceB != null && _musicSourceB.isPlaying)
+                _musicSourceB.volume = targetMusicVolume;
+
+            if (_sfx2dSource != null)
+                _sfx2dSource.volume = 1f;
         }
 
         private void BuildShuffledOrder()
         {
-            int count = _backgroundTracks.Length;
-            _shuffledTrackOrder = new int[count];
+            int validCount = 0;
+            for (int i = 0; i < _backgroundTracks.Length; i++)
+            {
+                if (_backgroundTracks[i] != null)
+                    validCount++;
+            }
 
-            for (int i = 0; i < count; i++)
-                _shuffledTrackOrder[i] = i;
+            _shuffledTrackOrder = new int[validCount];
+            int insertIndex = 0;
+            for (int i = 0; i < _backgroundTracks.Length; i++)
+            {
+                if (_backgroundTracks[i] == null)
+                    continue;
+
+                _shuffledTrackOrder[insertIndex] = i;
+                insertIndex++;
+            }
+
+            if (_shuffledTrackOrder.Length == 0)
+            {
+                _shufflePosition = 0;
+                return;
+            }
+
+            int count = _shuffledTrackOrder.Length;
 
             // Fisher-Yates shuffle — every permutation equally likely.
             for (int i = count - 1; i > 0; i--)

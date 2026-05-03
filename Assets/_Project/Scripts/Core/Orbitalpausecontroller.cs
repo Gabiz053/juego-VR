@@ -43,6 +43,8 @@ namespace _Project.Scripts.Core
         /// <summary>Toggles between pausing and resuming all orbits.</summary>
         public void TogglePause()
         {
+            EnsureAnimatorsCache();
+
             if (_isPaused)
                 ResumeOrbits();
             else
@@ -70,6 +72,14 @@ namespace _Project.Scripts.Core
             var found = FindObjectsByType<SplineAnimate>(FindObjectsSortMode.None);
             foreach (var anim in found)
                 _animators.Add(anim);
+        }
+
+        private void EnsureAnimatorsCache()
+        {
+            _animators.RemoveAll(anim => anim == null);
+
+            if (_animators.Count == 0)
+                CacheAnimators();
         }
 
         private void PauseOrbits()
