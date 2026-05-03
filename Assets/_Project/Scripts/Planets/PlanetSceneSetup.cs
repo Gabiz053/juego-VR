@@ -2,235 +2,233 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 
-/// <summary>
-/// Drop this MonoBehaviour onto a Scene Manager GameObject.
-/// Assign the PlanetConfig asset in the Inspector and it will:
-///   1. Set gravity from the config.
-///   2. Paint the sky using Unity's built-in Procedural Skybox.
-///   3. Colour and set the intensity of the scene's Directional Light (sun).
-///   4. Enable / disable fog and apply fog colour + density.
-///   5. Spawn a platform (prefab or default cube) with a TeleportationArea.
-/// </summary>
-[DisallowMultipleComponent]
-public class PlanetSceneSetup : MonoBehaviour
+namespace _Project.Scripts.Planets
 {
-    [Tooltip("Planet configuration asset (e.g. PlanetConfig_Earth)")]
-    [SerializeField] private PlanetConfig _config;
-
-    [Header("Platform settings")]
-    [Tooltip("Optional prefab to instantiate as the platform. Leave empty to use a default flat cube.")]
-    [SerializeField] private GameObject _platformPrefab;
-    [Tooltip("Width and depth of the platform in world units (only used when no prefab is assigned)")]
-    [SerializeField] private float _platformSize   = 30f;
-    [Tooltip("Thickness of the platform cube (only used when no prefab is assigned)")]
-    [SerializeField] private float _platformHeight = 1f;
-    [Tooltip("Y position of the platform top surface (players stand here)")]
-    [SerializeField] private float _platformY      = 0f;
-
-    [Header("Sun override (optional)")]
-    [Tooltip("Leave empty to find the first Directional Light automatically")]
-    [SerializeField] private Light _sunLight;
-
-    // ------------------------------------------------------------------ //
-
-    /// <summary>The PlanetConfig asset assigned to this scene setup.</summary>
-    public PlanetConfig Config => _config;
-
-    // ------------------------------------------------------------------ //
-
-    private void Awake()
+    /// <summary>
+    /// Drop this MonoBehaviour onto the SceneManager GameObject in each planet scene.
+    /// Assign a PlanetConfig asset in the Inspector; on Awake it applies gravity, sky,
+    /// directional light, fog, and spawns a teleportable platform.
+    /// </summary>
+    [DisallowMultipleComponent]
+    [AddComponentMenu("ProyectoVR/Planets/Planet Scene Setup")]
+    public class PlanetSceneSetup : MonoBehaviour
     {
-        if (_config == null)
+        #region Constants
+
+        private const string LOG_TAG = "[PlanetSceneSetup]";
+
+        #endregion
+
+        #region Inspector
+
+        [Header("Config")]
+        [Tooltip("Planet configuration asset (e.g. PlanetConfig_Earth).")]
+        [SerializeField] private PlanetConfig _config;
+
+        [Header("Platform Settings")]
+        [Tooltip("Optional prefab to instantiate as the platform. Leave empty to use a default flat cube.")]
+        [SerializeField] private GameObject _platformPrefab;
+
+        [Tooltip("Width and depth of the platform in world units (only used when no prefab is assigned).")]
+        [SerializeField] private float _platformSize = 30f;
+
+        [Tooltip("Thickness of the platform cube (only used when no prefab is assigned).")]
+        [SerializeField] private float _platformHeight = 1f;
+
+        [Tooltip("Y position of the platform top surface where players stand.")]
+        [SerializeField] private float _platformY = 0f;
+
+        [Header("Sun Override (optional)")]
+        [Tooltip("Leave empty to find the first Directional Light automatically.")]
+        [SerializeField] private Light _sunLight;
+
+        #endregion
+
+        #region Events
+        #endregion
+
+        #region Cached Components
+        #endregion
+
+        #region Public API
+
+        /// <summary>The PlanetConfig asset assigned to this scene setup.</summary>
+        public PlanetConfig Config => _config;
+
+        #endregion
+
+        #region Unity Lifecycle
+
+        private void Awake()
         {
-            Debug.LogError("[PlanetSceneSetup] No PlanetConfig assigned!", this);
-            return;
-        }
-
-        ApplyGravity();
-        ApplySky();
-        ApplySun();
-        ApplyFog();
-    }
-
-    private void Start()
-    {
-        if (_config == null) return;
-        SpawnPlatform();
-    }
-
-    // ------------------------------------------------------------------ //
-    // Gravity
-    // ------------------------------------------------------------------ //
-
-    private void ApplyGravity()
-    {
-        Physics.gravity = new Vector3(0f, _config._gravityY, 0f);
-        Debug.Log($"[PlanetSceneSetup] Gravity set to {_config._gravityY} m/s²");
-    }
-
-    // ------------------------------------------------------------------ //
-    // Sky  (Unity built-in Procedural Skybox)
-    // ------------------------------------------------------------------ //
-
-    private void ApplySky()
-    {
-        // Create a new instance so we don't permanently mutate a shared asset.
-        Shader skyShader = Shader.Find("Skybox/Procedural");
-        if (skyShader == null)
-        {
-            Debug.LogWarning("[PlanetSceneSetup] 'Skybox/Procedural' shader not found. " +
-                             "Make sure it is included in Graphics Settings.");
-            return;
-        }
-        Material skyMat = new Material(skyShader);
-
-        skyMat.name = $"Skybox_{_config._displayNameEn}";
-
-        // Map PlanetConfig fields → Procedural Skybox shader properties
-        skyMat.SetColor("_SkyTint",    _config._skyTint);
-        skyMat.SetColor("_GroundColor", _config._skyGroundTint);
-        skyMat.SetFloat("_AtmosphereThickness", _config._atmosphereThickness);
-        skyMat.SetFloat("_Exposure",            _config._skyExposure);
-
-        // Keep the sun disc visible (mode 2 = High Quality)
-        skyMat.SetFloat("_SunDisk", 2f);
-
-        RenderSettings.skybox = skyMat;
-
-        // Request an ambient light refresh so IBL probes update immediately.
-        DynamicGI.UpdateEnvironment();
-
-        Debug.Log("[PlanetSceneSetup] Skybox applied.");
-    }
-
-    // ------------------------------------------------------------------ //
-    // Sun (Directional Light)
-    // ------------------------------------------------------------------ //
-
-    private void ApplySun()
-    {
-        if (_sunLight == null)
-        {
-            // Try to locate the scene's directional light automatically.
-            Light[] lights = FindObjectsByType<Light>(FindObjectsSortMode.None);
-            foreach (Light l in lights)
+            if (_config == null)
             {
-                if (l.type == LightType.Directional)
+                Debug.LogWarning($"{LOG_TAG} No PlanetConfig assigned!", this);
+                return;
+            }
+
+            ApplyGravity();
+            ApplySky();
+            ApplySun();
+            ApplyFog();
+        }
+
+        private void Start()
+        {
+            ValidateReferences();
+            if (_config == null) return;
+            SpawnPlatform();
+        }
+
+        #endregion
+
+        #region Internals
+
+        private void ApplyGravity()
+        {
+            Physics.gravity = new Vector3(0f, _config._gravityY, 0f);
+            Debug.Log($"{LOG_TAG} Gravity set to {_config._gravityY} m/s².");
+        }
+
+        private void ApplySky()
+        {
+            Shader skyShader = Shader.Find("Skybox/Procedural");
+            if (skyShader == null)
+            {
+                Debug.LogWarning($"{LOG_TAG} 'Skybox/Procedural' shader not found. " +
+                                 "Make sure it is included in Graphics Settings.");
+                return;
+            }
+
+            Material skyMat = new Material(skyShader)
+            {
+                name = $"Skybox_{_config._displayNameEn}"
+            };
+
+            skyMat.SetColor("_SkyTint",             _config._skyTint);
+            skyMat.SetColor("_GroundColor",          _config._skyGroundTint);
+            skyMat.SetFloat("_AtmosphereThickness",  _config._atmosphereThickness);
+            skyMat.SetFloat("_Exposure",             _config._skyExposure);
+            skyMat.SetFloat("_SunDisk", 2f);
+
+            RenderSettings.skybox = skyMat;
+            DynamicGI.UpdateEnvironment();
+
+            Debug.Log($"{LOG_TAG} Skybox applied.");
+        }
+
+        private void ApplySun()
+        {
+            if (_sunLight == null)
+            {
+                Light[] lights = FindObjectsByType<Light>(FindObjectsSortMode.None);
+                foreach (Light l in lights)
                 {
-                    _sunLight = l;
-                    break;
+                    if (l.type == LightType.Directional)
+                    {
+                        _sunLight = l;
+                        break;
+                    }
                 }
             }
-        }
 
-        if (_sunLight == null)
-        {
-            Debug.LogWarning("[PlanetSceneSetup] No Directional Light found in the scene. " +
-                             "Sun colour/intensity not applied.");
-            return;
-        }
-
-        _sunLight.color     = _config._sunColor;
-        _sunLight.intensity = _config._sunIntensity;
-
-        Debug.Log($"[PlanetSceneSetup] Sun: colour={_config._sunColor}, intensity={_config._sunIntensity}");
-    }
-
-    // ------------------------------------------------------------------ //
-    // Fog
-    // ------------------------------------------------------------------ //
-
-    private void ApplyFog()
-    {
-        RenderSettings.fog         = _config._fogEnabled;
-        RenderSettings.fogColor    = _config._fogColor;
-        RenderSettings.fogDensity  = _config._fogDensity;
-        RenderSettings.fogMode     = FogMode.Exponential;
-
-        Debug.Log($"[PlanetSceneSetup] Fog: enabled={_config._fogEnabled}, density={_config._fogDensity}");
-    }
-
-    // ------------------------------------------------------------------ //
-    // Platform
-    // ------------------------------------------------------------------ //
-
-    private void SpawnPlatform()
-    {
-        GameObject platform;
-        float halfH = _platformHeight * 0.5f;
-        Vector3 spawnPos = new Vector3(0f, _platformY - halfH, 0f);
-
-        if (_platformPrefab != null)
-        {
-            // ── Prefab path ──────────────────────────────────────────────
-            platform = Instantiate(_platformPrefab, spawnPos, Quaternion.identity);
-            platform.name = "Platform";
-            Debug.Log($"[PlanetSceneSetup] Platform instantiated from prefab '{_platformPrefab.name}'.");
-        }
-        else
-        {
-            // ── Default cube path ─────────────────────────────────────────
-            platform = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            platform.name = "Platform";
-            platform.transform.position   = spawnPos;
-            platform.transform.localScale = new Vector3(_platformSize, _platformHeight, _platformSize);
-
-            // Tint the cube with a planet-specific material.
-            Renderer rend = platform.GetComponent<Renderer>();
-
-            // Check shaders before constructing Material — Shader.Find returns null
-            // when the shader is not available, and new Material(null) throws.
-            Shader litShader = Shader.Find("Universal Render Pipeline/Lit")
-                            ?? Shader.Find("Standard")
-                            ?? Shader.Find("Diffuse");
-
-            if (litShader != null)
+            if (_sunLight == null)
             {
-                Material mat = new Material(litShader) { name = "PlatformMaterial" };
-                mat.color = _config._platformTint;
-                rend.sharedMaterial = mat;
+                Debug.LogWarning($"{LOG_TAG} No Directional Light found -- sun colour/intensity not applied.");
+                return;
+            }
+
+            _sunLight.color     = _config._sunColor;
+            _sunLight.intensity = _config._sunIntensity;
+
+            Debug.Log($"{LOG_TAG} Sun: colour={_config._sunColor}, intensity={_config._sunIntensity}.");
+        }
+
+        private void ApplyFog()
+        {
+            RenderSettings.fog        = _config._fogEnabled;
+            RenderSettings.fogColor   = _config._fogColor;
+            RenderSettings.fogDensity = _config._fogDensity;
+            RenderSettings.fogMode    = FogMode.Exponential;
+
+            Debug.Log($"{LOG_TAG} Fog: enabled={_config._fogEnabled}, density={_config._fogDensity}.");
+        }
+
+        private void SpawnPlatform()
+        {
+            float     halfH      = _platformHeight * 0.5f;
+            Vector3   spawnPos   = new Vector3(0f, _platformY - halfH, 0f);
+            GameObject platform;
+
+            if (_platformPrefab != null)
+            {
+                platform      = Instantiate(_platformPrefab, spawnPos, Quaternion.identity);
+                platform.name = "Platform";
+                Debug.Log($"{LOG_TAG} Platform instantiated from prefab '{_platformPrefab.name}'.");
             }
             else
             {
-                Debug.LogWarning("[PlanetSceneSetup] No suitable shader found — platform will use the default material.");
+                platform                        = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                platform.name                   = "Platform";
+                platform.transform.position     = spawnPos;
+                platform.transform.localScale   = new Vector3(_platformSize, _platformHeight, _platformSize);
+
+                Renderer rend      = platform.GetComponent<Renderer>();
+                Shader   litShader = Shader.Find("Universal Render Pipeline/Lit")
+                                  ?? Shader.Find("Standard")
+                                  ?? Shader.Find("Diffuse");
+
+                if (litShader != null)
+                {
+                    Material mat = new Material(litShader) { name = "PlatformMaterial" };
+                    mat.color            = _config._platformTint;
+                    rend.sharedMaterial  = mat;
+                }
+                else
+                {
+                    Debug.LogWarning($"{LOG_TAG} No suitable shader found -- platform will use the default material.");
+                }
+
+                Debug.Log($"{LOG_TAG} Platform created -- size={_platformSize}, tint={_config._platformTint}.");
             }
 
-            Debug.Log($"[PlanetSceneSetup] Platform created — size={_platformSize}, tint={_config._platformTint}");
+            if (platform.GetComponent<Collider>() == null)
+            {
+                platform.AddComponent<BoxCollider>();
+                Debug.LogWarning($"{LOG_TAG} Platform prefab had no Collider -- added BoxCollider for TeleportationArea.");
+            }
+
+            TeleportationArea teleportArea = platform.GetComponent<TeleportationArea>();
+            if (teleportArea == null)
+                teleportArea = platform.AddComponent<TeleportationArea>();
+
+            teleportArea.interactionLayers = InteractionLayerMask.GetMask("Teleport");
+
+            Debug.Log($"{LOG_TAG} TeleportationArea configured on platform (layer: Teleport only).");
         }
 
-        // ── TeleportationArea ─────────────────────────────────────────────
-        // Requires a Collider. Primitive cubes have one; warn if a prefab doesn't.
-        if (platform.GetComponent<Collider>() == null)
+        #endregion
+
+        #region Validation
+
+        private void ValidateReferences()
         {
-            platform.AddComponent<BoxCollider>();
-            Debug.LogWarning("[PlanetSceneSetup] Platform prefab had no Collider — added BoxCollider for TeleportationArea.");
+            if (_config == null)
+                Debug.LogWarning($"{LOG_TAG} _config is not assigned.", this);
         }
 
-        TeleportationArea teleportArea = platform.GetComponent<TeleportationArea>();
-        if (teleportArea == null)
-            teleportArea = platform.AddComponent<TeleportationArea>();
-
-        // Restrict the platform to the "Teleport" XR Interaction Layer only.
-        // Using ~0 (all bits) previously allowed grab interactors to also select
-        // the floor — now only the Teleport interactor can interact with it.
-        teleportArea.interactionLayers = InteractionLayerMask.GetMask("Teleport");
-
-        Debug.Log("[PlanetSceneSetup] TeleportationArea configured on platform (layer: Teleport only — floor is no longer grabbable).");
-    }
+        #endregion
 
 #if UNITY_EDITOR
-    // ------------------------------------------------------------------ //
-    // Editor helper: preview the setup without entering Play Mode.
-    // ------------------------------------------------------------------ //
-
-    [ContextMenu("Preview Setup (Editor Only)")]
-    private void PreviewInEditor()
-    {
-        if (_config == null) { Debug.LogError("Assign a PlanetConfig first."); return; }
-        ApplySky();
-        ApplySun();
-        ApplyFog();
-        Debug.Log("[PlanetSceneSetup] Preview applied (gravity & platform require Play Mode).");
-    }
+        [ContextMenu("Preview Setup (Editor Only)")]
+        private void PreviewInEditor()
+        {
+            if (_config == null) { Debug.LogWarning($"{LOG_TAG} Assign a PlanetConfig first."); return; }
+            ApplySky();
+            ApplySun();
+            ApplyFog();
+            Debug.Log($"{LOG_TAG} Preview applied (gravity and platform require Play Mode).");
+        }
 #endif
+    }
 }

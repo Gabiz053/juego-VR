@@ -5,14 +5,29 @@ using UnityEngine.Splines;
 namespace _Project.Scripts.Core
 {
     /// <summary>
-    /// Pausa y reanuda el movimiento orbital de todos los planetas de la escena.
-    /// Busca todos los SplineAnimate activos y los controla en bloque.
-    /// Adjuntar al mismo GameObject que SolarSystemSceneConnector.
+    /// Pauses and resumes the orbital movement of all planets in the scene.
+    /// Finds all SplineAnimate components at Start and controls them as a group.
+    /// Attach to the same GameObject as SolarSystemSceneConnector.
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("ProyectoVR/Core/Orbital Pause Controller")]
     public sealed class OrbitalPauseController : MonoBehaviour
     {
+        #region Constants
+
+        private const string LOG_TAG = "[OrbitalPauseController]";
+
+        #endregion
+
+        #region Inspector
+        #endregion
+
+        #region Events
+        #endregion
+
+        #region Cached Components
+        #endregion
+
         #region State
 
         private readonly List<SplineAnimate> _animators = new();
@@ -22,10 +37,10 @@ namespace _Project.Scripts.Core
 
         #region Public API
 
-        /// <summary>Indica si las orbitas estan pausadas.</summary>
+        /// <summary>True while orbits are paused.</summary>
         public bool IsPaused => _isPaused;
 
-        /// <summary>Alterna entre pausar y reanudar todas las orbitas.</summary>
+        /// <summary>Toggles between pausing and resuming all orbits.</summary>
         public void TogglePause()
         {
             if (_isPaused)
@@ -40,8 +55,9 @@ namespace _Project.Scripts.Core
 
         private void Start()
         {
+            ValidateReferences();
             CacheAnimators();
-            Debug.Log($"[OrbitalPauseController] Initialized -- {_animators.Count} orbital animators found.");
+            Debug.Log($"{LOG_TAG} Initialized -- {_animators.Count} orbital animators found.");
         }
 
         #endregion
@@ -62,7 +78,7 @@ namespace _Project.Scripts.Core
                 if (anim != null) anim.Pause();
 
             _isPaused = true;
-            Debug.Log("[OrbitalPauseController] Orbits paused.");
+            Debug.Log($"{LOG_TAG} Orbits paused.");
         }
 
         private void ResumeOrbits()
@@ -71,8 +87,14 @@ namespace _Project.Scripts.Core
                 if (anim != null) anim.Play();
 
             _isPaused = false;
-            Debug.Log("[OrbitalPauseController] Orbits resumed.");
+            Debug.Log($"{LOG_TAG} Orbits resumed.");
         }
+
+        #endregion
+
+        #region Validation
+
+        private void ValidateReferences() { }
 
         #endregion
     }

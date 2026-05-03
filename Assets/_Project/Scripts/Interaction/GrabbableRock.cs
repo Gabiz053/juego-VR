@@ -7,18 +7,49 @@ namespace _Project.Scripts.Interaction
     /// <summary>
     /// Marker component for grabbable rocks in planet scenes.
     /// Requires Rigidbody and XRGrabInteractable on the same GameObject.
-    /// The rock will fall according to whatever Physics.gravity is set to
-    /// (configured per-planet by LocalGravityModifier or PlanetSceneSetup).
+    /// The rock falls according to Physics.gravity set per-planet by LocalGravityModifier.
     /// </summary>
+    [DisallowMultipleComponent]
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(XRGrabInteractable))]
-    [DisallowMultipleComponent]
     [AddComponentMenu("ProyectoVR/Interaction/Grabbable Rock")]
     public sealed class GrabbableRock : MonoBehaviour
     {
+        #region Constants
+
+        private const string LOG_TAG = "[GrabbableRock]";
+
+        #endregion
+
+        #region Inspector
+        #endregion
+
+        #region Events
+        #endregion
+
+        #region Cached Components
+        #endregion
+
+        #region Public API
+        #endregion
+
+        #region Unity Lifecycle
+
         private void Start()
         {
-            Debug.Log($"[GrabbableRock] '{gameObject.name}' ready — gravity: {Physics.gravity.y:F2} m/s².");
+            ValidateReferences();
+            Debug.Log($"{LOG_TAG} '{gameObject.name}' ready -- gravity: {Physics.gravity.y:F2} m/s².");
         }
+
+        #endregion
+
+        #region Internals
+        #endregion
+
+        #region Validation
+
+        private void ValidateReferences() { }
+
+        #endregion
     }
 }

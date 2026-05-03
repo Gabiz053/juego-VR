@@ -6,127 +6,152 @@ using _Project.Scripts.Interaction;
 namespace _Project.Scripts.UI
 {
     /// <summary>
-    /// Panel flotante world-space que muestra los datos de un planeta.
-    /// Colocar el Canvas como hijo de la mano derecha del XR Rig en la jerarquia.
-    /// Llamar a UpdateData() cuando el raycast apunte a un planeta.
+    /// World-space floating panel that shows planet data.
+    /// Place the Canvas as a child of the right hand in the XR Rig hierarchy.
+    /// Call UpdateData() when the ray hits a planet; call Hide() when it leaves.
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("ProyectoVR/UI/Planet Data Card")]
     public class PlanetDataCard : MonoBehaviour
     {
+        #region Constants
+
+        private const string LOG_TAG = "[PlanetDataCard]";
+
+        #endregion
+
         #region Inspector
 
         [Header("Header")]
-        [Tooltip("Imagen del icono del planeta.")]
+        [Tooltip("Planet icon image.")]
         [SerializeField] private Image _planetIcon;
 
-        [Tooltip("Texto con el nombre del planeta.")]
+        [Tooltip("Planet name label.")]
         [SerializeField] private TextMeshProUGUI _txtPlanetName;
 
-        [Tooltip("Texto con el tipo de planeta.")]
+        [Tooltip("Planet type label.")]
         [SerializeField] private TextMeshProUGUI _txtPlanetType;
 
         [Header("Stats Grid")]
-        [Tooltip("Valor de distancia al Sol.")]
+        [Tooltip("Distance to the Sun value label.")]
         [SerializeField] private TextMeshProUGUI _txtDistSol;
 
-        [Tooltip("Valor del diametro.")]
+        [Tooltip("Diameter value label.")]
         [SerializeField] private TextMeshProUGUI _txtDiametro;
 
-        [Tooltip("Valor de duracion del dia.")]
+        [Tooltip("Day duration value label.")]
         [SerializeField] private TextMeshProUGUI _txtDurDia;
 
-        [Tooltip("Valor de duracion del año.")]
+        [Tooltip("Year duration value label.")]
         [SerializeField] private TextMeshProUGUI _txtDurAnio;
 
-        [Tooltip("Valor de temperatura media.")]
+        [Tooltip("Average temperature value label.")]
         [SerializeField] private TextMeshProUGUI _txtTMedia;
 
-        [Tooltip("Valor del rango de temperatura.")]
+        [Tooltip("Temperature range value label.")]
         [SerializeField] private TextMeshProUGUI _txtRangoTemp;
 
-        [Tooltip("Valor de gravedad superficial.")]
+        [Tooltip("Surface gravity value label.")]
         [SerializeField] private TextMeshProUGUI _txtGravedad;
 
         [Header("Atmosphere")]
-        [Tooltip("Contenedor de pills de atmosfera.")]
+        [Tooltip("Container that holds the atmosphere gas pills.")]
         [SerializeField] private Transform _pillContainer;
 
-        [Tooltip("Prefab de una pill de gas con TextMeshProUGUI dentro.")]
+        [Tooltip("Prefab for a single gas pill â€” must have a TextMeshProUGUI child.")]
         [SerializeField] private GameObject _atmPillPrefab;
 
         [Header("Curiosity")]
-        [Tooltip("Texto de la curiosidad del planeta.")]
+        [Tooltip("Curiosity text label.")]
         [SerializeField] private TextMeshProUGUI _txtCuriosity;
 
-        [Header("Posicion en mano")]
-        [Tooltip("Transform de la mano derecha del XR Rig. El Canvas flotara 15cm delante de ella.")]
+        [Header("Hand Position")]
+        [Tooltip("Right hand Transform of the XR Rig. The canvas floats relative to it.")]
         [SerializeField] private Transform _rightHand;
 
-        [Tooltip("Offset local respecto a la mano derecha (en metros). Por defecto 15cm hacia arriba.")]
+        [Tooltip("Local offset from the right hand in metres. Default: 15 cm upward.")]
         [SerializeField] private Vector3 _handOffset = new Vector3(0f, 0.15f, 0f);
 
         [Header("Canvas")]
-        [Tooltip("Canvas world-space raiz del panel.")]
+        [Tooltip("Root world-space Canvas of the panel.")]
         [SerializeField] private Canvas _canvas;
 
         #endregion
 
-        #region Unity Lifecycle
+        #region Events
+        #endregion
 
-        private void Start()
-        {
-            ValidateReferences();
-            DisableRaycasts();
-            gameObject.SetActive(false);
-            Debug.Log("[PlanetDataCard] Initialized.");
-        }
+        #region Cached Components
 
-        private void LateUpdate()
-        {
-            if (_rightHand == null) return;
-
-            transform.position = _rightHand.TransformPoint(_handOffset);
-
-            transform.LookAt(Camera.main.transform);
-            transform.Rotate(0f, 180f, 0f);
-        }
+        private Camera _mainCamera;
 
         #endregion
 
         #region Public API
 
         /// <summary>
-        /// Rellena todos los campos del panel con los datos del PlanetProxy apuntado.
+        /// Fills all panel fields with data from the PlanetProxy being pointed at.
         /// </summary>
         public void UpdateData(PlanetProxy proxy)
         {
             if (_planetIcon != null && proxy.PlanetIcon != null)
                 _planetIcon.sprite = proxy.PlanetIcon;
+
             SetText(_txtPlanetName, proxy.PlanetName);
             SetText(_txtPlanetType, proxy.PlanetType);
-            SetText(_txtDistSol, $"{proxy.DistanceSunMKm:F1} mill. km");
-            SetText(_txtDiametro, $"{proxy.DiameterKm:N0} km");
-            SetText(_txtDurDia, proxy.DayDuration);
-            SetText(_txtDurAnio, proxy.OrbitalPeriod);
-            SetText(_txtTMedia, $"{proxy.AvgTempC:F0} °C");
-            SetText(_txtRangoTemp, $"{proxy.MinTempC:F0} °C a {proxy.MaxTempC:F0} °C");
-            SetText(_txtGravedad, $"{proxy.Gravity:F1} m/s²");
-            SetText(_txtCuriosity, proxy.Curiosity);
+            SetText(_txtDistSol,    $"{proxy.DistanceSunMKm:F1} mill. km");
+            SetText(_txtDiametro,   $"{proxy.DiameterKm:N0} km");
+            SetText(_txtDurDia,     proxy.DayDuration);
+            SetText(_txtDurAnio,    proxy.OrbitalPeriod);
+            SetText(_txtTMedia,     $"{proxy.AvgTempC:F0} Â°C");
+            SetText(_txtRangoTemp,  $"{proxy.MinTempC:F0} Â°C to {proxy.MaxTempC:F0} Â°C");
+            SetText(_txtGravedad,   $"{proxy.Gravity:F1} m/sÂ²");
+            SetText(_txtCuriosity,  proxy.Curiosity);
 
             BuildAtmospherePills(proxy.AtmosphereGases);
 
             gameObject.SetActive(true);
-            Debug.Log($"[PlanetDataCard] UpdateData -- planet: {proxy.PlanetName}.");
+            Debug.Log($"{LOG_TAG} Showing data for: {proxy.PlanetName}.");
         }
 
         /// <summary>
-        /// Oculta el panel cuando el raycast deja de apuntar a un planeta.
+        /// Hides the panel when the ray no longer points at a planet.
         /// </summary>
         public void Hide()
         {
             gameObject.SetActive(false);
-            Debug.Log("[PlanetDataCard] Hidden.");
+        }
+
+        #endregion
+
+        #region Unity Lifecycle
+
+        private void Awake()
+        {
+            _mainCamera = Camera.main;
+        }
+
+        private void Start()
+        {
+            ValidateReferences();
+            DisableRaycasts();
+            gameObject.SetActive(false);
+            Debug.Log($"{LOG_TAG} Initialized.");
+        }
+
+        private void LateUpdate()
+        {
+            if (_rightHand == null) return;
+
+            if (_mainCamera == null)
+            {
+                _mainCamera = Camera.main;
+                if (_mainCamera == null) return;
+            }
+
+            transform.position = _rightHand.TransformPoint(_handOffset);
+            transform.LookAt(_mainCamera.transform);
+            transform.Rotate(0f, 180f, 0f);
         }
 
         #endregion
@@ -160,11 +185,9 @@ namespace _Project.Scripts.UI
         private void DisableRaycasts()
         {
             if (_canvas == null) return;
-            var raycaster = _canvas.GetComponent<UnityEngine.UI.GraphicRaycaster>();
+            var raycaster = _canvas.GetComponent<GraphicRaycaster>();
             if (raycaster != null)
                 raycaster.enabled = false;
-
-            Debug.Log("[PlanetDataCard] GraphicRaycaster disabled.");
         }
 
         #endregion
@@ -173,36 +196,38 @@ namespace _Project.Scripts.UI
 
         private void ValidateReferences()
         {
+            if (_mainCamera == null)
+                Debug.LogWarning($"{LOG_TAG} No Main Camera found -- panel will not face camera.", this);
             if (_planetIcon == null)
-                Debug.LogWarning("[PlanetDataCard] _planetIcon is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _planetIcon is not assigned.", this);
             if (_txtPlanetName == null)
-                Debug.LogWarning("[PlanetDataCard] _txtPlanetName is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _txtPlanetName is not assigned.", this);
             if (_txtPlanetType == null)
-                Debug.LogWarning("[PlanetDataCard] _txtPlanetType is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _txtPlanetType is not assigned.", this);
             if (_txtDistSol == null)
-                Debug.LogWarning("[PlanetDataCard] _txtDistSol is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _txtDistSol is not assigned.", this);
             if (_txtDiametro == null)
-                Debug.LogWarning("[PlanetDataCard] _txtDiametro is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _txtDiametro is not assigned.", this);
             if (_txtDurDia == null)
-                Debug.LogWarning("[PlanetDataCard] _txtDurDia is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _txtDurDia is not assigned.", this);
             if (_txtDurAnio == null)
-                Debug.LogWarning("[PlanetDataCard] _txtDurAnio is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _txtDurAnio is not assigned.", this);
             if (_txtTMedia == null)
-                Debug.LogWarning("[PlanetDataCard] _txtTMedia is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _txtTMedia is not assigned.", this);
             if (_txtRangoTemp == null)
-                Debug.LogWarning("[PlanetDataCard] _txtRangoTemp is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _txtRangoTemp is not assigned.", this);
             if (_txtGravedad == null)
-                Debug.LogWarning("[PlanetDataCard] _txtGravedad is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _txtGravedad is not assigned.", this);
             if (_pillContainer == null)
-                Debug.LogWarning("[PlanetDataCard] _pillContainer is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _pillContainer is not assigned.", this);
             if (_atmPillPrefab == null)
-                Debug.LogWarning("[PlanetDataCard] _atmPillPrefab is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _atmPillPrefab is not assigned.", this);
             if (_txtCuriosity == null)
-                Debug.LogWarning("[PlanetDataCard] _txtCuriosity is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _txtCuriosity is not assigned.", this);
             if (_rightHand == null)
-                Debug.LogWarning("[PlanetDataCard] _rightHand is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _rightHand is not assigned.", this);
             if (_canvas == null)
-                Debug.LogWarning("[PlanetDataCard] _canvas is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _canvas is not assigned.", this);
         }
 
         #endregion

@@ -4,30 +4,45 @@ using _Project.Scripts.UI;
 namespace _Project.Scripts.Core
 {
     /// <summary>
-    /// Conecta los eventos del WristMenuController con los sistemas globales
-    /// (SceneController, GameManager) en la escena del sistema solar.
-    /// Coloca este script en un GameObject de servicio de la escena (Svc_SceneConnector).
+    /// Connects WristMenuController events to global systems (SceneController, GameManager)
+    /// within the solar system scene.
+    /// Place on a service GameObject in the scene (e.g. Svc_SceneConnector).
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("ProyectoVR/Core/Solar System Scene Connector")]
     public sealed class SolarSystemSceneConnector : MonoBehaviour
     {
+        #region Constants
+
+        private const string LOG_TAG = "[SolarSystemSceneConnector]";
+
+        #endregion
+
         #region Inspector
 
         [Header("Dependencies")]
-        [Tooltip("Referencia al WristMenuController del XR Rig.")]
+        [Tooltip("WristMenuController on the XR Rig.")]
         [SerializeField] private WristMenuController _wristMenuController;
 
-        [Tooltip("Controlador de pausa de orbitas de la escena.")]
+        [Tooltip("Orbital pause controller in the scene.")]
         [SerializeField] private OrbitalPauseController _orbitalPauseController;
 
-        [Header("Scene Settings")]
-        [Tooltip("Nombre exacto de la escena del menu principal (debe estar en Build Settings).")]
-        [SerializeField] private string _mainMenuSceneName = "Main_VR";
-
-        [Tooltip("Controlador de visibilidad de lineas de orbita.")]
+        [Tooltip("Orbit line visibility controller in the scene.")]
         [SerializeField] private OrbitVisibilityController _orbitVisibilityController;
 
+        [Header("Scene Settings")]
+        [Tooltip("Exact name of the main menu scene (must be in Build Settings).")]
+        [SerializeField] private string _mainMenuSceneName = "Main_VR";
+
+        #endregion
+
+        #region Events
+        #endregion
+
+        #region Cached Components
+        #endregion
+
+        #region Public API
         #endregion
 
         #region Unity Lifecycle
@@ -36,8 +51,7 @@ namespace _Project.Scripts.Core
         {
             ValidateReferences();
             SubscribeEvents();
-
-            Debug.Log("[SolarSystemSceneConnector] Initialized -- events subscribed.");
+            Debug.Log($"{LOG_TAG} Initialized -- events subscribed.");
         }
 
         private void OnDestroy()
@@ -51,33 +65,31 @@ namespace _Project.Scripts.Core
 
         private void SubscribeEvents()
         {
-            if (_wristMenuController == null)
-                return;
+            if (_wristMenuController == null) return;
 
-            _wristMenuController.OnBackPressed += HandleBackPressed;
-            _wristMenuController.OnPausePressed += HandlePausePressed;
-            _wristMenuController.OnToggleOrbitsPressed += HandleToggleOrbitsPressed;
+            _wristMenuController.OnBackPressed          += HandleBackPressed;
+            _wristMenuController.OnPausePressed         += HandlePausePressed;
+            _wristMenuController.OnToggleOrbitsPressed  += HandleToggleOrbitsPressed;
         }
 
         private void UnsubscribeEvents()
         {
-            if (_wristMenuController == null)
-                return;
+            if (_wristMenuController == null) return;
 
-            _wristMenuController.OnBackPressed -= HandleBackPressed;
-            _wristMenuController.OnPausePressed -= HandlePausePressed;
-            _wristMenuController.OnToggleOrbitsPressed -= HandleToggleOrbitsPressed;
+            _wristMenuController.OnBackPressed          -= HandleBackPressed;
+            _wristMenuController.OnPausePressed         -= HandlePausePressed;
+            _wristMenuController.OnToggleOrbitsPressed  -= HandleToggleOrbitsPressed;
         }
 
         private void HandleBackPressed()
         {
             if (SceneController.Instance == null)
             {
-                Debug.LogWarning("[SolarSystemSceneConnector] SceneController.Instance is null.", this);
+                Debug.LogWarning($"{LOG_TAG} SceneController.Instance is null.", this);
                 return;
             }
 
-            Debug.Log("[SolarSystemSceneConnector] Back pressed -- returning to main menu.");
+            Debug.Log($"{LOG_TAG} Back pressed -- returning to main menu.");
             SceneController.Instance.LoadScene(_mainMenuSceneName, GameState.MainMenu);
         }
 
@@ -85,28 +97,26 @@ namespace _Project.Scripts.Core
         {
             if (_orbitalPauseController == null)
             {
-                Debug.LogWarning("[SolarSystemSceneConnector] _orbitalPauseController is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _orbitalPauseController is not assigned.", this);
                 return;
             }
 
             _orbitalPauseController.TogglePause();
             _wristMenuController.SetPauseIcon(_orbitalPauseController.IsPaused);
-
-            Debug.Log($"[SolarSystemSceneConnector] Pause toggled -- paused: {_orbitalPauseController.IsPaused}.");
+            Debug.Log($"{LOG_TAG} Pause toggled -- paused: {_orbitalPauseController.IsPaused}.");
         }
 
         private void HandleToggleOrbitsPressed()
         {
             if (_orbitVisibilityController == null)
             {
-                Debug.LogWarning("[SolarSystemSceneConnector] _orbitVisibilityController is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _orbitVisibilityController is not assigned.", this);
                 return;
             }
 
             _orbitVisibilityController.ToggleVisibility();
             _wristMenuController.SetOrbitIcon(_orbitVisibilityController.IsVisible);
-
-            Debug.Log($"[SolarSystemSceneConnector] Orbits visible: {_orbitVisibilityController.IsVisible}.");
+            Debug.Log($"{LOG_TAG} Orbits visible: {_orbitVisibilityController.IsVisible}.");
         }
 
         #endregion
@@ -116,13 +126,13 @@ namespace _Project.Scripts.Core
         private void ValidateReferences()
         {
             if (_wristMenuController == null)
-                Debug.LogWarning("[SolarSystemSceneConnector] _wristMenuController is not assigned.", this);
-
+                Debug.LogWarning($"{LOG_TAG} _wristMenuController is not assigned.", this);
             if (_orbitalPauseController == null)
-                Debug.LogWarning("[SolarSystemSceneConnector] _orbitalPauseController is not assigned.", this);
-
+                Debug.LogWarning($"{LOG_TAG} _orbitalPauseController is not assigned.", this);
+            if (_orbitVisibilityController == null)
+                Debug.LogWarning($"{LOG_TAG} _orbitVisibilityController is not assigned.", this);
             if (string.IsNullOrWhiteSpace(_mainMenuSceneName))
-                Debug.LogWarning("[SolarSystemSceneConnector] _mainMenuSceneName is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _mainMenuSceneName is not assigned.", this);
         }
 
         #endregion

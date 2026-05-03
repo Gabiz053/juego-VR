@@ -5,34 +5,47 @@ using _Project.Scripts.Interaction;
 namespace _Project.Scripts.UI
 {
     /// <summary>
-    /// Lanza un raycast desde la mano derecha. Cuando apunta a un objeto
-    /// con PlanetProxy, muestra el PlanetDataCard y el nombre flotante 3D.
+    /// Casts a ray from the right hand. When it hits an object with a PlanetProxy,
+    /// the PlanetDataCard and the floating 3-D name label are shown.
+    /// GetComponent is only called when the ray target changes, never every frame.
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("ProyectoVR/UI/Planet Pointer")]
     public class PlanetPointer : MonoBehaviour
     {
+        #region Constants
+
+        private const string LOG_TAG = "[PlanetPointer]";
+
+        #endregion
+
         #region Inspector
 
         [Header("References")]
-        [Tooltip("El panel de datos que flota en la mano.")]
+        [Tooltip("Data panel that floats near the hand.")]
         [SerializeField] private PlanetDataCard _dataCard;
 
         [Header("Raycast")]
-        [Tooltip("Distancia maxima del raycast en metros.")]
+        [Tooltip("Maximum raycast distance in metres.")]
         [SerializeField] private float _rayDistance = 100f;
 
-        [Tooltip("Layer mask contra la que lanza el ray. Dejar en Everything si no tienes layer especifico.")]
+        [Tooltip("Layer mask the ray tests against. Leave Everything if no specific layer is set.")]
         [SerializeField] private LayerMask _layerMask = ~0;
 
         #endregion
 
+        #region Events
+        #endregion
+
         #region State
 
-        private GameObject _currentTarget;
-        private TextMeshProUGUI _currentLabel;
-        private GameObject _currentPlanetLabel;
+        private GameObject       _currentTarget;
+        private TextMeshProUGUI  _currentLabel;
+        private GameObject       _currentPlanetLabel;
 
+        #endregion
+
+        #region Public API
         #endregion
 
         #region Unity Lifecycle
@@ -40,7 +53,7 @@ namespace _Project.Scripts.UI
         private void Start()
         {
             ValidateReferences();
-            Debug.Log("[PlanetPointer] Initialized.");
+            Debug.Log($"{LOG_TAG} Initialized.");
         }
 
         private void Update()
@@ -59,49 +72,43 @@ namespace _Project.Scripts.UI
             if (Physics.Raycast(ray, out RaycastHit hit, _rayDistance, _layerMask))
             {
                 GameObject target = hit.collider.gameObject;
-                PlanetProxy proxy = target.GetComponent<PlanetProxy>();
 
+                if (_currentTarget == target) return;
+
+                PlanetProxy proxy = target.GetComponent<PlanetProxy>();
                 if (proxy != null)
                 {
-                    if (_currentTarget != target)
+                    HideCurrentLabel();
+                    _currentTarget = target;
+
+                    Canvas canvas = target.GetComponentInChildren<Canvas>(true);
+                    if (canvas != null)
                     {
-                        HideCurrentLabel();
+                        _currentPlanetLabel = canvas.gameObject;
+                        _currentPlanetLabel.SetActive(true);
 
-                        _currentTarget = target;
-
-                        // Buscar el Canvas PlanetLabel hijo del planeta
-                        Canvas canvas = target.GetComponentInChildren<Canvas>(true);
-                        if (canvas != null)
+                        TextMeshProUGUI label = canvas.GetComponentInChildren<TextMeshProUGUI>(true);
+                        if (label != null)
                         {
-                            _currentPlanetLabel = canvas.gameObject;
-                            _currentPlanetLabel.SetActive(true);
-
-                            // Buscar el TextMeshProUGUI dentro del boton
-                            TextMeshProUGUI label = canvas.GetComponentInChildren<TextMeshProUGUI>(true);
-                            if (label != null)
-                            {
-                                label.text = proxy.PlanetName;
-                                _currentLabel = label;
-                            }
+                            label.text   = proxy.PlanetName;
+                            _currentLabel = label;
                         }
-
-                        _dataCard.UpdateData(proxy);
-                        Debug.Log($"[PlanetPointer] Pointing at planet: {target.name}.");
                     }
+
+                    _dataCard.UpdateData(proxy);
+                    Debug.Log($"{LOG_TAG} Pointing at planet: {target.name}.");
                     return;
                 }
             }
 
-            // El ray no golpea ningun planeta
             if (_currentTarget != null)
             {
                 HideCurrentLabel();
                 _currentTarget = null;
                 _dataCard.Hide();
-                Debug.Log("[PlanetPointer] No planet targeted.");
+                Debug.Log($"{LOG_TAG} No planet targeted.");
             }
         }
-
 
         private void HideCurrentLabel()
         {
@@ -110,7 +117,7 @@ namespace _Project.Scripts.UI
                 _currentPlanetLabel.SetActive(false);
                 _currentPlanetLabel = null;
             }
-            _currentLabel = null;
+            _currentLabel  = null;
             _currentTarget = null;
         }
 
@@ -121,7 +128,7 @@ namespace _Project.Scripts.UI
         private void ValidateReferences()
         {
             if (_dataCard == null)
-                Debug.LogWarning("[PlanetPointer] _dataCard is not assigned.", this);
+                Debug.LogWarning($"{LOG_TAG} _dataCard is not assigned.", this);
         }
 
         #endregion

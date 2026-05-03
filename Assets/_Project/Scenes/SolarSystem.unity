@@ -1430,7 +1430,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1829900470}
   - component: {fileID: 1829900469}
-  - component: {fileID: 1829900471}
   - component: {fileID: 1829900472}
   m_Layer: 0
   m_Name: Svc_SceneConnector
@@ -1452,9 +1451,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _wristMenuController: {fileID: 1707798601}
-  _orbitalPauseController: {fileID: 1829900471}
-  _mainMenuSceneName: Main_VR
+  _orbitalPauseController: {fileID: 0}
   _orbitVisibilityController: {fileID: 1829900472}
+  _mainMenuSceneName: Main_VR
 --- !u!4 &1829900470
 Transform:
   m_ObjectHideFlags: 0
@@ -1470,18 +1469,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1829900471
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1829900468}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd5d80dce632fce418c26cd53b9ad953, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1829900472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1652,6 +1639,14 @@ PrefabInstance:
     - target: {fileID: 1627832538112665193, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
       propertyPath: _verticalSpread
       value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1980068226664984493, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2811846495757082676, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: _heightOffset
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 5266315445586285240, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
       propertyPath: m_LocalPosition.x

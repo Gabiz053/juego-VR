@@ -147,8 +147,6 @@ namespace _Project.Scripts.Core
                 SessionContext.MainMenuSpawnRotation = _returnSpawnPoint.rotation;
             }
 
-            SceneController.Instance.LoadScene(_targetSceneName, _targetGameState);
-
             Debug.Log($"{LOG_TAG} Portal entered -- '{_lessonLabel}', loading '{_targetSceneName}'.");
             SceneController.Instance.LoadScene(_targetSceneName, _targetGameState);
         }

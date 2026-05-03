@@ -4,14 +4,29 @@ using UnityEngine;
 namespace _Project.Scripts.Core
 {
     /// <summary>
-    /// Muestra y oculta las lineas de orbita de todos los planetas de la escena.
-    /// Busca todos los LineRenderer activos y los activa/desactiva en bloque.
-    /// Adjuntar al mismo GameObject que SolarSystemSceneConnector.
+    /// Shows and hides the orbit lines of all planets in the scene.
+    /// Finds all LineRenderer components at Start and toggles them as a group.
+    /// Attach to the same GameObject as SolarSystemSceneConnector.
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("ProyectoVR/Core/Orbit Visibility Controller")]
     public sealed class OrbitVisibilityController : MonoBehaviour
     {
+        #region Constants
+
+        private const string LOG_TAG = "[OrbitVisibilityController]";
+
+        #endregion
+
+        #region Inspector
+        #endregion
+
+        #region Events
+        #endregion
+
+        #region Cached Components
+        #endregion
+
         #region State
 
         private readonly List<LineRenderer> _lineRenderers = new();
@@ -21,10 +36,10 @@ namespace _Project.Scripts.Core
 
         #region Public API
 
-        /// <summary>Indica si las lineas de orbita estan visibles.</summary>
+        /// <summary>True while orbit lines are visible.</summary>
         public bool IsVisible => _isVisible;
 
-        /// <summary>Alterna entre mostrar y ocultar todas las lineas de orbita.</summary>
+        /// <summary>Toggles between showing and hiding all orbit lines.</summary>
         public void ToggleVisibility()
         {
             if (_isVisible)
@@ -39,8 +54,9 @@ namespace _Project.Scripts.Core
 
         private void Start()
         {
+            ValidateReferences();
             CacheLineRenderers();
-            Debug.Log($"[OrbitVisibilityController] Initialized -- {_lineRenderers.Count} orbit lines found.");
+            Debug.Log($"{LOG_TAG} Initialized -- {_lineRenderers.Count} orbit lines found.");
         }
 
         #endregion
@@ -61,7 +77,7 @@ namespace _Project.Scripts.Core
                 if (lr != null) lr.enabled = false;
 
             _isVisible = false;
-            Debug.Log("[OrbitVisibilityController] Orbits hidden.");
+            Debug.Log($"{LOG_TAG} Orbits hidden.");
         }
 
         private void ShowOrbits()
@@ -70,8 +86,14 @@ namespace _Project.Scripts.Core
                 if (lr != null) lr.enabled = true;
 
             _isVisible = true;
-            Debug.Log("[OrbitVisibilityController] Orbits visible.");
+            Debug.Log($"{LOG_TAG} Orbits visible.");
         }
+
+        #endregion
+
+        #region Validation
+
+        private void ValidateReferences() { }
 
         #endregion
     }

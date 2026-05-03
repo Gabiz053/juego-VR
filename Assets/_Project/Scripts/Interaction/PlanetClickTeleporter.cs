@@ -1,65 +1,54 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-
 using _Project.Scripts.Core;
 
 namespace _Project.Scripts.Interaction
 {
     /// <summary>
-    /// Attach to the Right-Hand XR Controller (the GameObject the user points
-    /// with — same one the existing ray-line/PlanetPointer is on).
-    ///
-    /// Casts a ray from <c>transform.position</c> along <c>transform.forward</c>
-    /// (same as <see cref="_Project.Scripts.UI.PlanetPointer"/>), but explicitly
-    /// uses <see cref="QueryTriggerInteraction.Collide"/> so it also detects the
-    /// trigger colliders that the planets use. This is the reason the
-    /// <see cref="PlanetTeleporter"/> + XRSimpleInteractable approach never
-    /// fired in practice: XRT 3.x's CurveInteractionCaster ignores triggers by
-    /// default.
-    ///
-    /// When the ray is pointing at a planet that has a <see cref="PlanetSceneLink"/>,
-    /// pressing the controller's trigger (or the keyboard fallback / left mouse
-    /// button while testing without a headset) loads that planet's scene.
-    ///
-    /// THIS COMPONENT ONLY HANDLES TELEPORTATION. It deliberately does NOT touch
-    /// the planet data card or the floating planet labels — that remains the job
-    /// of <see cref="_Project.Scripts.UI.PlanetPointer"/>, so both can coexist.
-    ///
-    /// SETUP
-    /// ─────
-    /// 1. Add this component to the Right-Hand XR Controller GameObject (same
-    ///    one that already has <c>PlanetPointer</c>).
-    /// 2. (Optional) Drag the XR Trigger input action into <c>_triggerAction</c>
-    ///    (e.g. <c>XRI Default Input Actions / XRI Right Interaction / Select</c>).
-    ///    Without it, the keyboard (<c>E</c>) and mouse fallbacks still work.
-    /// 3. On each planet you want to be teleport-able, add
-    ///    <see cref="PlanetSceneLink"/> and fill in the Build Settings scene
-    ///    name (e.g. "Tierra", "Marte", "Jupiter").
+    /// Attach to the Right-Hand XR Controller (same GameObject as PlanetPointer).
+    /// Casts a ray with QueryTriggerInteraction.Collide so it detects planet trigger
+    /// colliders — the XRSimpleInteractable approach failed because XRT 3.x's
+    /// CurveInteractionCaster ignores triggers by default.
+    /// When the ray hits a PlanetSceneLink and the player presses trigger (or E / left
+    /// mouse in the Device Simulator), loads that planet's scene.
+    /// Deliberately ignores the data card and floating labels — those are PlanetPointer's job.
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("ProyectoVR/Interaction/Planet Click Teleporter")]
     public sealed class PlanetClickTeleporter : MonoBehaviour
     {
+        #region Constants
+
+        private const string LOG_TAG = "[PlanetClickTeleporter]";
+
+        #endregion
+
         #region Inspector
 
         [Header("Ray")]
         [Tooltip("Maximum distance the ray travels (world units).")]
         [SerializeField] private float _rayDistance = 500f;
 
-        [Tooltip("Layers the ray can hit. Leave as Everything unless you want to restrict.")]
+        [Tooltip("Layers the ray can hit. Leave as Everything unless you need to restrict.")]
         [SerializeField] private LayerMask _layerMask = ~0;
 
         [Header("XR Input (optional)")]
-        [Tooltip("XR controller Trigger / Select action. Leave empty if you only want to use the keyboard / mouse fallback.")]
+        [Tooltip("XR controller Trigger / Select action. Leave empty to rely on keyboard / mouse fallback only.")]
         [SerializeField] private InputActionReference _triggerAction;
 
         [Header("Keyboard / Mouse Fallback")]
-        [Tooltip("Key that triggers teleport when pointing at a planet (handy in the Device Simulator).")]
+        [Tooltip("Key that triggers teleport when pointing at a planet (useful in the Device Simulator).")]
         [SerializeField] private Key _fallbackKey = Key.E;
 
         [Tooltip("Allow left mouse button to also trigger teleport while pointing at a planet.")]
         [SerializeField] private bool _allowMouseClick = true;
 
+        #endregion
+
+        #region Events
+        #endregion
+
+        #region Cached Components
         #endregion
 
         #region State
@@ -68,7 +57,16 @@ namespace _Project.Scripts.Interaction
 
         #endregion
 
+        #region Public API
+        #endregion
+
         #region Unity Lifecycle
+
+        private void Start()
+        {
+            ValidateReferences();
+            Debug.Log($"{LOG_TAG} Initialized.");
+        }
 
         private void OnEnable()
         {
@@ -99,26 +97,23 @@ namespace _Project.Scripts.Interaction
 
         private void UpdateCurrentTarget()
         {
-            // QueryTriggerInteraction.Collide is the key fix vs. the default
-            // Physics.Raycast behaviour: planets use trigger colliders.
+            // QueryTriggerInteraction.Collide is required: planet colliders are triggers
+            // and Physics.Raycast skips triggers by default.
             Ray ray = new Ray(transform.position, transform.forward);
 
             if (Physics.Raycast(ray, out RaycastHit hit, _rayDistance, _layerMask,
                     QueryTriggerInteraction.Collide))
             {
-                Collider hitCol = hit.collider;
-
-                // PlanetSceneLink may live on the planet root while the
-                // collider is on a child mesh — walk up the hierarchy.
-                PlanetSceneLink link = hitCol.GetComponent<PlanetSceneLink>()
-                                    ?? hitCol.GetComponentInParent<PlanetSceneLink>();
+                // PlanetSceneLink may live on the root while the collider is on a child mesh.
+                PlanetSceneLink link = hit.collider.GetComponent<PlanetSceneLink>()
+                                    ?? hit.collider.GetComponentInParent<PlanetSceneLink>();
 
                 if (link != null)
                 {
                     if (link != _currentTarget)
                     {
                         _currentTarget = link;
-                        Debug.Log($"[PlanetClickTeleporter] Targeting '{link.gameObject.name}' → scene '{link.sceneName}'.");
+                        Debug.Log($"{LOG_TAG} Targeting '{link.gameObject.name}' → scene '{link.SceneName}'.");
                     }
                     return;
                 }
@@ -147,28 +142,36 @@ namespace _Project.Scripts.Interaction
         {
             if (_currentTarget == null) return;
 
-            string scene = _currentTarget.sceneName;
+            string scene = _currentTarget.SceneName;
             if (string.IsNullOrWhiteSpace(scene))
             {
-                Debug.LogWarning($"[PlanetClickTeleporter] sceneName is empty on '{_currentTarget.gameObject.name}'." +
-                                 " Fill it in on the PlanetSceneLink component.", this);
+                Debug.LogWarning($"{LOG_TAG} SceneName is empty on '{_currentTarget.gameObject.name}' -- fill it in on the PlanetSceneLink component.", this);
                 return;
             }
 
-            // Consume the target so a second click during the fade doesn't re-trigger.
+            // Clear target before loading so a second press during the fade doesn't re-trigger.
             _currentTarget = null;
 
             if (SceneController.Instance == null)
             {
-                Debug.LogWarning("[PlanetClickTeleporter] SceneController.Instance is null — cannot teleport.", this);
+                Debug.LogWarning($"{LOG_TAG} SceneController.Instance is null -- cannot teleport.", this);
                 return;
             }
 
-            if (SceneController.Instance.IsTransitioning)
-                return;
+            if (SceneController.Instance.IsTransitioning) return;
 
-            Debug.Log($"[PlanetClickTeleporter] Teleporting to '{scene}'.");
+            Debug.Log($"{LOG_TAG} Teleporting to '{scene}'.");
             SceneController.Instance.LoadScene(scene, GameState.PlanetSurface);
+        }
+
+        #endregion
+
+        #region Validation
+
+        private void ValidateReferences()
+        {
+            if (_triggerAction == null)
+                Debug.LogWarning($"{LOG_TAG} _triggerAction is not assigned -- keyboard/mouse fallback only.", this);
         }
 
         #endregion
