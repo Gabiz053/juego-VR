@@ -43,7 +43,7 @@ namespace _Project.Scripts.Core
 
         [Header("Proximity Audio")]
         [Tooltip("Radius in metres at which the ambient hum starts playing.")]
-        [SerializeField, Range(1f, 20f)] private float _proximityRadius = 10f;
+        [SerializeField, Range(1f, 20f)] private float _proximityRadius = 1f;
 
         [Tooltip("Seconds to fade the hum in and out.")]
         [SerializeField, Range(0f, 3f)] private float _humFadeDuration = 1f;

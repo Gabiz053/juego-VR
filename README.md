@@ -73,20 +73,16 @@ Videojuego educativo VR del Sistema Solar para **Meta Quest 3** (Android Standal
 Assets/
 +-- _Project/
 |   +-- Assets/
-|   |   +-- Config/
-|   |   +-- Fonts/
 |   |   +-- ScriptableObjects/       <- PlanetConfig_*.asset (11 planetas)
 |   +-- Audio/
 |   |   +-- Music/
-|   |   |   +-- Interstellar (Complete)/   <- 33 pistas MP3
+|   |   |   +-- InterstellarComplete/   <- 26 pistas MP3
 |   |   +-- SFX/
 |   |       +-- UI/
 |   |       +-- Interaction/               <- break.wav, hit*.wav, pickup*.wav
 |   +-- Materials/
-|   |   +-- Unity-URP-GlassShader-master/  <- suelo cristal portal room
-|   +-- Models/
+|   |   +-- UnityURPGlassShader/  <- suelo cristal portal room
 |   +-- Prefabs/
-|   |   +-- XR/
 |   |   +-- Locomotion/
 |   |   +-- Interaction/
 |   |   +-- UI/
@@ -289,11 +285,11 @@ Jugador agarra asteroide y lo lanza contra un planeta
 | ScriptableObjects planetas | `_Project/Assets/ScriptableObjects/PlanetConfig_*.asset` | ✅ 11 assets creados |
 | Modelos planetas 3D | `Assets/Planets of the Solar System 3D/` | ✅ Importado |
 | Asteroides 3D | `Assets/Asteroids/` | ✅ Importado |
-| Musica (Interstellar) | `_Project/Audio/Music/Interstellar (Complete)/` | ✅ 33 pistas MP3 |
+| Musica (Interstellar) | `_Project/Audio/Music/InterstellarComplete/` | ✅ 26 pistas MP3 |
 | SFX interaccion | `_Project/Audio/SFX/Interaction/` | ✅ break.wav, hit*.wav, pickup*.wav |
-| Shader cristal | `_Project/Materials/Unity-URP-GlassShader-master/` | ✅ Importado |
+| Shader cristal | `_Project/Materials/UnityURPGlassShader/` | ✅ Importado |
 | UI Kit espacio | `Assets/Space_Exploration_GUI_Kit/` | ✅ Importado |
-| Prefabs XR | `_Project/Prefabs/XR/` | ✅ XR Origin (Astrak00) |
+| Prefabs del proyecto | `_Project/Prefabs/` | ✅ Interaction, Locomotion, Planets, UI, VFX |
 
 ---
 

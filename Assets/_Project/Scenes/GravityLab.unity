@@ -240,7 +240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7799e94760d4b41d0a967d9286ee0997, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: Jupiter
+  _sceneName: Jupiter
 --- !u!1 &700207980 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2506571893801445724, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
@@ -258,7 +258,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7799e94760d4b41d0a967d9286ee0997, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: Tierra
+  _sceneName: Tierra
 --- !u!114 &756956274
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -459,6 +459,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _dataCard: {fileID: 0}
   _rayDistance: 100
+  _rayRadius: 0.08
   _layerMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -547,7 +548,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7799e94760d4b41d0a967d9286ee0997, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: Marte
+  _sceneName: Marte
 --- !u!4 &1661740676 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8366379412631108205, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
@@ -917,8 +918,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _wristMenuController: {fileID: 1707798601}
   _orbitalPauseController: {fileID: 1829900471}
-  _mainMenuSceneName: GravityLab
   _orbitVisibilityController: {fileID: 1829900472}
+  _mainMenuSceneName: GravityLab
 --- !u!4 &1829900470
 Transform:
   m_ObjectHideFlags: 0
@@ -975,7 +976,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7799e94760d4b41d0a967d9286ee0997, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: Venus
+  _sceneName: Venus
 --- !u!1 &1962012650
 GameObject:
   m_ObjectHideFlags: 0
@@ -1080,7 +1081,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7799e94760d4b41d0a967d9286ee0997, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: Mercurio
+  _sceneName: Mercurio
 --- !u!114 &1995645549 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4369859984187300521, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
@@ -1401,7 +1402,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7799e94760d4b41d0a967d9286ee0997, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: Neptuno
+  _sceneName: Neptuno
 --- !u!1 &1846828126038186939 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3195126178060164582, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
@@ -1419,7 +1420,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7799e94760d4b41d0a967d9286ee0997, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: Urano
+  _sceneName: Urano
 --- !u!1 &1846828126038186941 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3230936353802216003, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
@@ -1437,7 +1438,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7799e94760d4b41d0a967d9286ee0997, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: Saturno
+  _sceneName: Saturno
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
