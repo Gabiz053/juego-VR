@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1270152314839518760}
-  - component: {fileID: 809283525782477282}
   - component: {fileID: 2775147149617696855}
   m_Layer: 5
   m_Name: UI_AtmPill
@@ -37,14 +36,6 @@ RectTransform:
   m_AnchoredPosition: {x: -99724.5, y: -145540.5}
   m_SizeDelta: {x: 400, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &809283525782477282
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7866881826121585901}
-  m_CullTransparentMesh: 1
 --- !u!114 &2775147149617696855
 MonoBehaviour:
   m_ObjectHideFlags: 0
