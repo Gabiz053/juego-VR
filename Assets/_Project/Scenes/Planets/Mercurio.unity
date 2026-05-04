@@ -775,6 +775,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _dataCard: {fileID: 1762838371}
   _rayDistance: 100
+  _rayRadius: 0.08
   _layerMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -801,7 +802,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -1547,8 +1548,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _wristMenuController: {fileID: 2015226800}
   _orbitalPauseController: {fileID: 2010880149}
-  _mainMenuSceneName: GravityLab
   _orbitVisibilityController: {fileID: 2010880148}
+  _mainMenuSceneName: GravityLab
 --- !u!4 &2010880151
 Transform:
   m_ObjectHideFlags: 0
@@ -1580,7 +1581,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 2001}
-  - {fileID: 1569539260}
   - {fileID: 1520654273}
+  - {fileID: 1569539260}
   - {fileID: 1872643451}
   - {fileID: 2010880151}

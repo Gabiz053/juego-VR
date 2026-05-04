@@ -805,8 +805,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _wristMenuController: {fileID: 1475521905}
   _orbitalPauseController: {fileID: 1943984416}
-  _mainMenuSceneName: GravityLab
   _orbitVisibilityController: {fileID: 1943984415}
+  _mainMenuSceneName: GravityLab
 --- !u!4 &1943984418
 Transform:
   m_ObjectHideFlags: 0
@@ -816,7 +816,7 @@ Transform:
   m_GameObject: {fileID: 1943984414}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.7435894, y: -1.9857208, z: 0.79730797}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

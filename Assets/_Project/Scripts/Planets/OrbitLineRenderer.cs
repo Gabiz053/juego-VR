@@ -34,6 +34,9 @@ namespace _Project.Scripts.Planets
         [Tooltip("Width of the orbit line in world units.")]
         [SerializeField, Range(0.001f, 1f)] private float lineWidth = 0.05f;
 
+        [Tooltip("If true, draws the orbit in local space so it follows the parent transform.")]
+        [SerializeField] private bool _useLocalSpace = false;
+
         #endregion
 
         #region Events
@@ -77,6 +80,14 @@ namespace _Project.Scripts.Planets
             ValidateReferences();
         }
 
+        private void LateUpdate()
+        {
+            if (!_useLocalSpace)
+                return;
+
+            DrawOrbit();
+        }
+
         #endregion
 
         #region Internals
@@ -108,7 +119,7 @@ namespace _Project.Scripts.Planets
             int pointCount = Mathf.Max(resolution, MIN_RESOLUTION);
 
             _lr.loop          = true;
-            _lr.useWorldSpace = true;
+            _lr.useWorldSpace = !_useLocalSpace;
             _lr.positionCount = pointCount;
             _lr.startWidth    = lineWidth;
             _lr.endWidth      = lineWidth;
@@ -116,8 +127,16 @@ namespace _Project.Scripts.Planets
             for (int i = 0; i < pointCount; i++)
             {
                 float t = (float)i / pointCount;
-                splineContainer.Evaluate(t, out var pos, out _, out _);
-                _lr.SetPosition(i, new Vector3(pos.x, pos.y, pos.z));
+                if (_useLocalSpace)
+                {
+                    SplineUtility.Evaluate(splineContainer.Spline, t, out var pos, out _, out _);
+                    _lr.SetPosition(i, new Vector3(pos.x, pos.y, pos.z));
+                }
+                else
+                {
+                    splineContainer.Evaluate(t, out var pos, out _, out _);
+                    _lr.SetPosition(i, new Vector3(pos.x, pos.y, pos.z));
+                }
             }
         }
 

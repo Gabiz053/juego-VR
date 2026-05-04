@@ -496,9 +496,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   semiMajorAxis: 2.5
   eccentricity: 0.2
+  _inclination: 5.1
   resolution: 64
   generateOnStart: 1
-  sun: {fileID: 0}
+  _enableSplineAnimateOnGenerate: 0
+  sun: {fileID: 6716991259885266055}
 --- !u!120 &1566913750358238255
 LineRenderer:
   serializedVersion: 2
@@ -523,7 +525,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c76804fd63242327eb724b6e7cbb0d90, type: 2}
+  - {fileID: 2100000, guid: e625373434bab8d9881d794a223abeca, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -615,11 +617,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1791535025709320231}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b7cf1a7a229cf702bfdbd324b4cb02b, type: 3}
+  m_Script: {fileID: 11500000, guid: 1831cd3c6f005eaadb42601e51787fc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   splineContainer: {fileID: 6624626758363571076}
-  segments: 64
+  resolution: 128
+  lineWidth: 0.05
+  _useLocalSpace: 1
 --- !u!1 &1977343864060271823
 GameObject:
   m_ObjectHideFlags: 0

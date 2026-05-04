@@ -32,6 +32,10 @@ namespace _Project.Scripts.Planets
         [Tooltip("Orbital eccentricity (0 = circle, approaching 1 = very elongated).")]
         [SerializeField, Range(0f, 0.99f)] private float eccentricity = 0.2f;
 
+        [Tooltip("Orbital inclination in degrees relative to the ecliptic (XZ) plane. " +
+                 "Real values: Mercury 7°, Venus 3.4°, Mars 1.85°, Jupiter 1.3°, Saturn 2.49°, Moon 5.1°.")]
+        [SerializeField, Range(0f, 90f)] private float _inclination = 0f;
+
         [Tooltip("Number of knots that define the orbit spline. Higher = smoother ellipse.")]
         [SerializeField] private int resolution = 64;
 
@@ -39,8 +43,11 @@ namespace _Project.Scripts.Planets
                  "Set false for KeplerLab where the orbit is generated on planet release.")]
         [SerializeField] private bool generateOnStart = true;
 
+        [Tooltip("If true, re-enables the child SplineAnimate after generating the orbit.")]
+        [SerializeField] private bool _enableSplineAnimateOnGenerate = true;
+
         [Header("References")]
-        [Tooltip("Transform of the Sun. Its world position is used as the orbit focus.")]
+        [Tooltip("Transform of the orbit focus. Use the Sun for planets and Earth for the Moon.")]
         [SerializeField] private Transform sun;
 
         #endregion
@@ -93,6 +100,26 @@ namespace _Project.Scripts.Planets
                 _splineAnimate.enabled = false;
         }
 
+        private void OnEnable()
+        {
+            if (Application.isPlaying)
+                return;
+
+            if (_splineContainer == null)
+                _splineContainer = GetComponent<SplineContainer>();
+
+            TryResolveSunReference();
+            CacheSunRenderer();
+
+            if (_splineAnimate == null)
+                _splineAnimate = GetComponentInChildren<SplineAnimate>();
+
+            GenerateOrbit();
+
+            if (_splineAnimate != null)
+                _splineAnimate.enabled = false;
+        }
+
         private void Start()
         {
             ValidateReferences();
@@ -109,7 +136,7 @@ namespace _Project.Scripts.Planets
             yield return _waitForEndOfFrame;
             GenerateOrbit();
 
-            if (_splineAnimate != null)
+            if (_enableSplineAnimateOnGenerate && _splineAnimate != null)
                 _splineAnimate.enabled = true;
         }
 
@@ -127,17 +154,33 @@ namespace _Project.Scripts.Planets
             float b = a * Mathf.Sqrt(1f - e * e);
             float c = a * e;
 
-            Vector3 sunPos = GetSunFocusPosition();
+            // Convert focus (Sun/Earth) to LOCAL space of this SplineContainer.
+            // For planets: SplineContainer is at origin → focusLocal ≈ (0,0,0), no change.
+            // For Moon: SplineContainer is child of Earth at local (0,0,0) → focusLocal = (0,0,0),
+            // so the orbit is generated centred at Earth and moves with it as Earth orbits the Sun.
+            Vector3 focusLocal = sun != null
+                ? transform.InverseTransformPoint(GetSunFocusPosition())
+                : Vector3.zero;
+
+            float incRad = _inclination * Mathf.Deg2Rad;
+            float sinInc = Mathf.Sin(incRad);
+            float cosInc = Mathf.Cos(incRad);
 
             var spline = _splineContainer.Spline;
             spline.Clear();
 
             for (int i = 0; i < knotCount; i++)
             {
-                float angle    = (float)i / knotCount * 2f * Mathf.PI;
-                float x        = Mathf.Cos(angle) * a - c;
-                float z        = Mathf.Sin(angle) * b;
-                var   position = new float3(sunPos.x + x, sunPos.y, sunPos.z + z);
+                float angle = (float)i / knotCount * 2f * Mathf.PI;
+                float x     = Mathf.Cos(angle) * a - c;
+                float zFlat = Mathf.Sin(angle) * b;
+
+                // Rotate orbit plane around the periapsis axis (X) by the inclination angle.
+                var position = new float3(
+                    focusLocal.x + x,
+                    focusLocal.y + zFlat * sinInc,
+                    focusLocal.z + zFlat * cosInc);
+
                 spline.Add(new BezierKnot(position), TangentMode.AutoSmooth);
             }
 

@@ -804,7 +804,7 @@ MonoBehaviour:
   _spawnRadius: 18
   _minRadius: 2
   _pixelSize: 0.06
-  _brightness: 1
+  _brightness: 4
   _speedMax: 0.09
   _lifetimeMin: 6
   _lifetimeMax: 20
@@ -1702,7 +1702,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
