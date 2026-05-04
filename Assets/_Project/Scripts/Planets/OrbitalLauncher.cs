@@ -44,19 +44,21 @@ namespace _Project.Scripts.Planets
 
         #endregion
 
-        #region Events
-        #endregion
-
         #region Cached Components
 
         private OrbitalMover       _orbitalMover;
         private XRGrabInteractable _grabInteractable;
         private Rigidbody          _rigidbody;
-        private Renderer _sunRenderer;
+        private Renderer           _sunRenderer;
 
         #endregion
 
-        #region Public API
+        #region State
+
+        private bool    _isGrabbed;
+        private Vector3 _previousPosition;
+        private Vector3 _releaseVelocity;
+
         #endregion
 
         #region Unity Lifecycle
@@ -73,11 +75,20 @@ namespace _Project.Scripts.Planets
             TryResolveSunReference();
             CacheSunRenderer();
             ValidateReferences();
-            if (_grabInteractable == null)
-                return;
 
+            _previousPosition      = transform.position;
+
+            if (_grabInteractable == null) return;
             _grabInteractable.selectEntered.AddListener(OnGrabbed);
             _grabInteractable.selectExited.AddListener(OnReleased);
+        }
+
+        private void Update()
+        {
+            if (_isGrabbed)
+                _releaseVelocity = (transform.position - _previousPosition) / Time.deltaTime;
+
+            _previousPosition = transform.position;
         }
 
         private void OnDestroy()
@@ -93,30 +104,18 @@ namespace _Project.Scripts.Planets
 
         private void OnGrabbed(SelectEnterEventArgs args)
         {
+            _isGrabbed    = true;
+            _releaseVelocity = Vector3.zero;
+
             if (_orbitalMover != null)
                 _orbitalMover.StopOrbit();
 
-            if (_rigidbody == null)
-            {
-                Debug.LogWarning($"{LOG_TAG} _rigidbody is not assigned.", this);
-                return;
-            }
-
-            _rigidbody.isKinematic = false;
             Debug.Log($"{LOG_TAG} Planet grabbed -- orbit stopped.");
         }
 
         private void OnReleased(SelectExitEventArgs args)
         {
-            if (_rigidbody == null)
-            {
-                Debug.LogWarning($"{LOG_TAG} _rigidbody is not assigned.", this);
-                return;
-            }
-
-            Vector3 releasePosition = transform.position;
-            Vector3 releaseVelocity = _rigidbody.linearVelocity;
-            _rigidbody.isKinematic  = true;
+            _isGrabbed = false;
 
             if (_sunTransform == null || _orbitalMover == null)
             {
@@ -124,7 +123,7 @@ namespace _Project.Scripts.Planets
                 return;
             }
 
-            ComputeAndBeginOrbit(releasePosition, releaseVelocity);
+            ComputeAndBeginOrbit(transform.position, _releaseVelocity);
         }
 
         private void ComputeAndBeginOrbit(Vector3 worldPosition, Vector3 worldVelocity)
@@ -226,8 +225,7 @@ namespace _Project.Scripts.Planets
 
         private void TryResolveSunReference()
         {
-            if (_sunTransform != null)
-                return;
+            if (_sunTransform != null) return;
 
             Transform[] sceneTransforms = FindObjectsByType<Transform>(FindObjectsSortMode.None);
             Transform fallback = null;
@@ -242,8 +240,7 @@ namespace _Project.Scripts.Planets
                     candidateName.Contains("sun") ||
                     candidateName.Contains("sol");
 
-                if (!isLikelySun)
-                    continue;
+                if (!isLikelySun) continue;
 
                 if (candidate.GetComponentInChildren<Renderer>() != null)
                 {
@@ -270,12 +267,8 @@ namespace _Project.Scripts.Planets
 
         private Vector3 GetSunFocusPosition()
         {
-            if (_sunTransform == null)
-                return Vector3.zero;
-
-            if (_sunRenderer == null)
-                CacheSunRenderer();
-
+            if (_sunTransform == null) return Vector3.zero;
+            if (_sunRenderer == null) CacheSunRenderer();
             return _sunRenderer != null ? _sunRenderer.bounds.center : _sunTransform.position;
         }
 
