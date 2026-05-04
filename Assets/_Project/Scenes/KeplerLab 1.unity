@@ -691,11 +691,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f776740c447e45afb25edbca842de92, type: 3}
---- !u!4 &694181434 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1229251971759408710, guid: 5f776740c447e45afb25edbca842de92, type: 3}
-  m_PrefabInstance: {fileID: 694181433}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &818956277
 GameObject:
   m_ObjectHideFlags: 0
@@ -1663,6 +1658,7 @@ MonoBehaviour:
   _orbitalPauseController: {fileID: 1829900471}
   _orbitVisibilityController: {fileID: 1829900472}
   _mainMenuSceneName: Main_VR
+  _currentSceneIndex: 0
   _planetPrefab: {fileID: 8492967959566658416, guid: c0b975ee0db2e3d33958febbe16241d9, type: 3}
   _cameraTransform: {fileID: 47491072}
   _spawnDistance: 1.5
@@ -1825,75 +1821,6 @@ CanvasGroup:
   m_CorrespondingSourceObject: {fileID: 3285216353359987453, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
   m_PrefabInstance: {fileID: 115084322}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &9184581814530764889
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 652930402624152031, guid: c0b975ee0db2e3d33958febbe16241d9, type: 3}
-      propertyPath: _sunTransform
-      value: 
-      objectReference: {fileID: 694181434}
-    - target: {fileID: 2908997878007547105, guid: c0b975ee0db2e3d33958febbe16241d9, type: 3}
-      propertyPath: sun
-      value: 
-      objectReference: {fileID: 694181434}
-    - target: {fileID: 4649270693706017761, guid: c0b975ee0db2e3d33958febbe16241d9, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4649270693706017761, guid: c0b975ee0db2e3d33958febbe16241d9, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4649270693706017761, guid: c0b975ee0db2e3d33958febbe16241d9, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4649270693706017761, guid: c0b975ee0db2e3d33958febbe16241d9, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4649270693706017761, guid: c0b975ee0db2e3d33958febbe16241d9, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4649270693706017761, guid: c0b975ee0db2e3d33958febbe16241d9, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4649270693706017761, guid: c0b975ee0db2e3d33958febbe16241d9, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4649270693706017761, guid: c0b975ee0db2e3d33958febbe16241d9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4649270693706017761, guid: c0b975ee0db2e3d33958febbe16241d9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4649270693706017761, guid: c0b975ee0db2e3d33958febbe16241d9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4930438501419504217, guid: c0b975ee0db2e3d33958febbe16241d9, type: 3}
-      propertyPath: _sunTransform
-      value: 
-      objectReference: {fileID: 694181434}
-    - target: {fileID: 8492967959566658416, guid: c0b975ee0db2e3d33958febbe16241d9, type: 3}
-      propertyPath: m_Name
-      value: MarsOrbit
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: c0b975ee0db2e3d33958febbe16241d9, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1906,4 +1833,3 @@ SceneRoots:
   - {fileID: 1829900470}
   - {fileID: 2003792060}
   - {fileID: 694181433}
-  - {fileID: 9184581814530764889}

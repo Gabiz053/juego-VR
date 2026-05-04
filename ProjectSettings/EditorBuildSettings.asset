@@ -15,8 +15,14 @@ EditorBuildSettings:
     path: Assets/_Project/Scenes/GravityLab.unity
     guid: 4a1045f2337130e429a4a39c31aca885
   - enabled: 1
-    path: Assets/_Project/Scenes/KeplerLab.unity
+    path: Assets/_Project/Scenes/KeplerLab 1.unity
     guid: 930815b1e7d2ab841a013e99bd0619fc
+  - enabled: 1
+    path: Assets/_Project/Scenes/KeplerLab 2.unity
+    guid: efb0e577eb19d4ed0b0dcbcdd167fd65
+  - enabled: 1
+    path: Assets/_Project/Scenes/KeplerLab 3.unity
+    guid: d12af1577b566f60ea5ac83338b7efed
   - enabled: 1
     path: Assets/_Project/Scenes/Sandbox.unity
     guid: ed89ac3640757074ea0f1e0973b0159f

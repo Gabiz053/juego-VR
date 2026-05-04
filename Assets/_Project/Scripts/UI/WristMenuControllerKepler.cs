@@ -140,6 +140,19 @@ namespace _Project.Scripts.UI
             _orbitButtonIcon.sprite = isVisible ? _iconOrbitVisible : _iconOrbitHidden;
         }
 
+        /// <summary>
+        /// Activa o desactiva el boton Spawn Planet visualmente.
+        /// Llamar desde KeplerSceneConnector al iniciar la escena.
+        /// </summary>
+        public void SetSpawnButtonInteractable(bool interactable)
+        {
+            if (_btnSpawnPlanet == null)
+                return;
+
+            _btnSpawnPlanet.interactable = interactable;
+            Debug.Log($"{LOG_TAG} Spawn button interactable: {interactable}.");
+        }
+
         #endregion
 
         #region Unity Lifecycle

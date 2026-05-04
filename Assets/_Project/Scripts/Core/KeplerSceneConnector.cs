@@ -35,6 +35,9 @@ namespace _Project.Scripts.Core
         [Tooltip("Exact name of the main menu scene (must be in Build Settings).")]
         [SerializeField] private string _mainMenuSceneName = "Main_VR";
 
+        [Tooltip("Index of this scene within the Kepler sequence (0 = KeplerLab1, 1 = KeplerLab2, 2 = KeplerLab3).")]
+        [SerializeField] private int _currentSceneIndex = 0;
+
         [Header("Spawn Settings")]
         [Tooltip("Prefab del planeta a instanciar (MarsOrbit).")]
         [SerializeField] private GameObject _planetPrefab;
@@ -44,6 +47,17 @@ namespace _Project.Scripts.Core
 
         [Tooltip("Distancia frente al jugador donde aparece el planeta.")]
         [SerializeField] private float _spawnDistance = 1.5f;
+
+        #endregion
+
+        #region Constants — Kepler Scenes
+
+        private static readonly string[] KEPLER_SCENES =
+        {
+            "KeplerLab 1",
+            "KeplerLab 2",
+            "KeplerLab 3"
+        };
 
         #endregion
 
@@ -66,7 +80,12 @@ namespace _Project.Scripts.Core
             _spawnDistance = Mathf.Max(MIN_SPAWN_DISTANCE, _spawnDistance);
             ValidateReferences();
             SubscribeEvents();
-            Debug.Log($"{LOG_TAG} Initialized -- events subscribed.");
+
+            // Desactivar boton spawn si no estamos en KeplerLab 1
+            if (_wristMenuController != null)
+                _wristMenuController.SetSpawnButtonInteractable(_currentSceneIndex == 0);
+
+            Debug.Log($"{LOG_TAG} Initialized -- scene index: {_currentSceneIndex}, events subscribed.");
         }
 
         private void OnDestroy()
@@ -140,6 +159,12 @@ namespace _Project.Scripts.Core
 
         private void HandleSpawnPlanetPressed()
         {
+            if (_currentSceneIndex != 0)
+            {
+                Debug.Log($"{LOG_TAG} Spawn blocked -- only allowed in KeplerLab 1.");
+                return;
+            }
+
             if (_planetPrefab == null)
             {
                 Debug.LogWarning($"{LOG_TAG} _planetPrefab is not assigned.", this);
@@ -162,8 +187,24 @@ namespace _Project.Scripts.Core
 
         private void HandleNextLawPressed()
         {
-            // TODO: implementar logica de siguiente ley de Kepler
-            Debug.Log($"{LOG_TAG} Next law pressed -- pending implementation.");
+            if (SceneController.Instance == null)
+            {
+                Debug.LogWarning($"{LOG_TAG} SceneController.Instance is null.", this);
+                return;
+            }
+
+            int nextIndex = _currentSceneIndex + 1;
+
+            if (nextIndex >= KEPLER_SCENES.Length)
+            {
+                Debug.Log($"{LOG_TAG} Next law pressed -- already on last Kepler scene, returning to main menu.");
+                SceneController.Instance.LoadScene(_mainMenuSceneName, GameState.MainMenu);
+                return;
+            }
+
+            string nextScene = KEPLER_SCENES[nextIndex];
+            Debug.Log($"{LOG_TAG} Next law pressed -- loading {nextScene} (index {nextIndex}).");
+            SceneController.Instance.LoadScene(nextScene, GameState.KeplerLab);
         }
 
         #endregion
@@ -184,6 +225,8 @@ namespace _Project.Scripts.Core
                 Debug.LogWarning($"{LOG_TAG} _planetPrefab is not assigned.", this);
             if (_cameraTransform == null)
                 Debug.LogWarning($"{LOG_TAG} _cameraTransform is not assigned.", this);
+            if (_currentSceneIndex < 0 || _currentSceneIndex >= KEPLER_SCENES.Length)
+                Debug.LogWarning($"{LOG_TAG} _currentSceneIndex {_currentSceneIndex} is out of range.", this);
         }
 
         #endregion
