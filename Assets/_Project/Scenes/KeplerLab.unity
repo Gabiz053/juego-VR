@@ -444,11 +444,19 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4264298935910122637, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 115084331}
   m_SourcePrefab: {fileID: 100100000, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
 --- !u!224 &115084323 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1782322548416687588, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
+  m_PrefabInstance: {fileID: 115084322}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &115084324 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4264298935910122637, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
   m_PrefabInstance: {fileID: 115084322}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &115084325 stripped
@@ -511,6 +519,35 @@ Canvas:
   m_CorrespondingSourceObject: {fileID: 8131727972920384187, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
   m_PrefabInstance: {fileID: 115084322}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &115084331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 115084324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7dfc9dc743b9663b837b6ae0e5b1c3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cameraTransform: {fileID: 0}
+  _palmTransform: {fileID: 0}
+  _wristCanvas: {fileID: 0}
+  _canvasGroup: {fileID: 0}
+  _dotThreshold: 0.7
+  _maxDistance: 0.5
+  _btnBack: {fileID: 0}
+  _btnPause: {fileID: 0}
+  _btnToggleOrbits: {fileID: 0}
+  _btnSpawnPlanet: {fileID: 0}
+  _btnNextLaw: {fileID: 0}
+  _iconPause: {fileID: 0}
+  _iconPlay: {fileID: 0}
+  _pauseButtonIcon: {fileID: 0}
+  _iconOrbitVisible: {fileID: 0}
+  _iconOrbitHidden: {fileID: 0}
+  _orbitButtonIcon: {fileID: 0}
 --- !u!4 &612012728 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 202364688, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
@@ -869,6 +906,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _dataCard: {fileID: 1169391614}
   _rayDistance: 100
+  _rayRadius: 0.08
   _layerMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -1609,12 +1647,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdcd2541944986ab28849004a73fef27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _wristMenuController: {fileID: 0}
+  _wristMenuController: {fileID: 115084331}
   _orbitalPauseController: {fileID: 1829900471}
   _orbitVisibilityController: {fileID: 1829900472}
   _mainMenuSceneName: Main_VR
-  _planetPrefab: {fileID: 0}
-  _cameraTransform: {fileID: 0}
+  _planetPrefab: {fileID: 8492967959566658416, guid: c0b975ee0db2e3d33958febbe16241d9, type: 3}
+  _cameraTransform: {fileID: 47491072}
   _spawnDistance: 1.5
 --- !u!1 &1962012650
 GameObject:
