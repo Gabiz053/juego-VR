@@ -648,7 +648,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1229251971759408710, guid: 5f776740c447e45afb25edbca842de92, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 0.43
       objectReference: {fileID: 0}
     - target: {fileID: 1229251971759408710, guid: 5f776740c447e45afb25edbca842de92, type: 3}
       propertyPath: m_LocalPosition.z
@@ -696,6 +696,578 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1229251971759408710, guid: 5f776740c447e45afb25edbca842de92, type: 3}
   m_PrefabInstance: {fileID: 694181433}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &700000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 700000002}
+  - component: {fileID: 700000004}
+  m_Layer: 0
+  m_Name: Svc_KeplerLab2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &700000002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 700000001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &700000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 700000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a923c78427984256ad31c85e51b54e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _planets:
+  - _orbiter: {fileID: 710000003}
+    _visualizer: {fileID: 710000004}
+    _label: Inner_A
+    _orbitGroup: Inner
+    _sweepColor: {r: 1, g: 0.7, b: 0.2, a: 0.55}
+  - _orbiter: {fileID: 711000003}
+    _visualizer: {fileID: 711000004}
+    _label: Inner_B
+    _orbitGroup: Inner
+    _sweepColor: {r: 1, g: 0.55, b: 0.2, a: 0.55}
+  - _orbiter: {fileID: 712000003}
+    _visualizer: {fileID: 712000004}
+    _label: Inner_C
+    _orbitGroup: Inner
+    _sweepColor: {r: 1, g: 0.4, b: 0.25, a: 0.55}
+  - _orbiter: {fileID: 720000003}
+    _visualizer: {fileID: 720000004}
+    _label: Outer_A
+    _orbitGroup: Outer
+    _sweepColor: {r: 0.5, g: 0.85, b: 1, a: 0.55}
+  - _orbiter: {fileID: 721000003}
+    _visualizer: {fileID: 721000004}
+    _label: Outer_B
+    _orbitGroup: Outer
+    _sweepColor: {r: 0.45, g: 0.65, b: 1, a: 0.55}
+  - _orbiter: {fileID: 722000003}
+    _visualizer: {fileID: 722000004}
+    _label: Outer_C
+    _orbitGroup: Outer
+    _sweepColor: {r: 0.7, g: 0.55, b: 1, a: 0.55}
+  _toggleKey: 1
+  _pauseOnCaptureStop: 1
+  _faceSunOnStart: 1
+  _sunTransform: {fileID: 0}
+  _showMessagePanel: 1
+  _messageDistance: 4
+  _messageHeightOffset: 0.3
+  _messagePanelSize: {x: 3, y: 1.6}
+  _messageFontSize: 0.16
+  _messageFont: {fileID: 0}
+  _msgIdle: 'Press SPACE to start capturing equal-area sweeps.
+
+    (All planets
+    will sweep simultaneously.)'
+  _msgCapturing: 'Capturing...
+
+    Press SPACE again to stop and freeze the simulation.'
+--- !u!1 &710000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 710000002}
+  - component: {fileID: 710000003}
+  - component: {fileID: 710000004}
+  m_Layer: 0
+  m_Name: Planet_Inner_A
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &710000002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 710000001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3, y: 2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &710000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 710000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5840adffb862431f9a49f16ecaee488a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sunTransform: {fileID: 694181434}
+  _semiMajorAxis: 4.5
+  _eccentricity: 0.6
+  _orbitalPeriod: 14
+  _initialPhase01: 0
+  _orbitNormal: {x: 0, y: 1, z: 0}
+  _periapsisDirection: {x: 1, y: 0, z: 0}
+  _autoCreatePlanetMesh: 1
+  _planetDiameter: 0.6
+  _planetColor: {r: 0.95, g: 0.6, b: 0.3, a: 1}
+  _drawOrbitLine: 1
+  _orbitLineSegments: 96
+  _orbitLineWidth: 0.03
+  _orbitLineColor: {r: 0.95, g: 0.6, b: 0.3, a: 0.7}
+--- !u!114 &710000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 710000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f186e2621f6348d9841e944351dc1f0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sunTransform: {fileID: 694181434}
+  _planetTransform: {fileID: 710000002}
+  _sweepDuration: 2
+  _groupSweepsUnderSingleRoot: 1
+  _drawDoubleSided: 1
+  _arcSegments: 24
+  _sampleSpacing: 0.05
+  _maxArcSamples: 4096
+  _defaultSweepColor: {r: 1, g: 0.7, b: 0.2, a: 0.55}
+--- !u!1 &711000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 711000002}
+  - component: {fileID: 711000003}
+  - component: {fileID: 711000004}
+  m_Layer: 0
+  m_Name: Planet_Inner_B
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &711000002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 711000001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &711000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 711000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5840adffb862431f9a49f16ecaee488a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sunTransform: {fileID: 694181434}
+  _semiMajorAxis: 4.5
+  _eccentricity: 0.6
+  _orbitalPeriod: 14
+  _initialPhase01: 0.3333
+  _orbitNormal: {x: 0, y: 1, z: 0}
+  _periapsisDirection: {x: 1, y: 0, z: 0}
+  _autoCreatePlanetMesh: 1
+  _planetDiameter: 0.6
+  _planetColor: {r: 0.95, g: 0.6, b: 0.3, a: 1}
+  _drawOrbitLine: 1
+  _orbitLineSegments: 96
+  _orbitLineWidth: 0.03
+  _orbitLineColor: {r: 0.95, g: 0.6, b: 0.3, a: 0.7}
+--- !u!114 &711000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 711000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f186e2621f6348d9841e944351dc1f0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sunTransform: {fileID: 694181434}
+  _planetTransform: {fileID: 711000002}
+  _sweepDuration: 2
+  _groupSweepsUnderSingleRoot: 1
+  _drawDoubleSided: 1
+  _arcSegments: 24
+  _sampleSpacing: 0.05
+  _maxArcSamples: 4096
+  _defaultSweepColor: {r: 1, g: 0.7, b: 0.2, a: 0.55}
+--- !u!1 &712000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 712000002}
+  - component: {fileID: 712000003}
+  - component: {fileID: 712000004}
+  m_Layer: 0
+  m_Name: Planet_Inner_C
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &712000002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 712000001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &712000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 712000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5840adffb862431f9a49f16ecaee488a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sunTransform: {fileID: 694181434}
+  _semiMajorAxis: 4.5
+  _eccentricity: 0.6
+  _orbitalPeriod: 14
+  _initialPhase01: 0.6667
+  _orbitNormal: {x: 0, y: 1, z: 0}
+  _periapsisDirection: {x: 1, y: 0, z: 0}
+  _autoCreatePlanetMesh: 1
+  _planetDiameter: 0.6
+  _planetColor: {r: 0.95, g: 0.6, b: 0.3, a: 1}
+  _drawOrbitLine: 1
+  _orbitLineSegments: 96
+  _orbitLineWidth: 0.03
+  _orbitLineColor: {r: 0.95, g: 0.6, b: 0.3, a: 0.7}
+--- !u!114 &712000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 712000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f186e2621f6348d9841e944351dc1f0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sunTransform: {fileID: 694181434}
+  _planetTransform: {fileID: 712000002}
+  _sweepDuration: 2
+  _groupSweepsUnderSingleRoot: 1
+  _drawDoubleSided: 1
+  _arcSegments: 24
+  _sampleSpacing: 0.05
+  _maxArcSamples: 4096
+  _defaultSweepColor: {r: 1, g: 0.7, b: 0.2, a: 0.55}
+--- !u!1 &720000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 720000002}
+  - component: {fileID: 720000003}
+  - component: {fileID: 720000004}
+  m_Layer: 0
+  m_Name: Planet_Outer_A
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &720000002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 720000001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2, z: 7}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &720000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 720000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5840adffb862431f9a49f16ecaee488a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sunTransform: {fileID: 694181434}
+  _semiMajorAxis: 7.5
+  _eccentricity: 0.45
+  _orbitalPeriod: 24
+  _initialPhase01: 0
+  _orbitNormal: {x: 0, y: 1, z: 0}
+  _periapsisDirection: {x: 0, y: 0, z: 1}
+  _autoCreatePlanetMesh: 1
+  _planetDiameter: 0.6
+  _planetColor: {r: 0.4, g: 0.7, b: 1, a: 1}
+  _drawOrbitLine: 1
+  _orbitLineSegments: 96
+  _orbitLineWidth: 0.03
+  _orbitLineColor: {r: 0.4, g: 0.7, b: 1, a: 0.7}
+--- !u!114 &720000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 720000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f186e2621f6348d9841e944351dc1f0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sunTransform: {fileID: 694181434}
+  _planetTransform: {fileID: 720000002}
+  _sweepDuration: 2
+  _groupSweepsUnderSingleRoot: 1
+  _drawDoubleSided: 1
+  _arcSegments: 24
+  _sampleSpacing: 0.05
+  _maxArcSamples: 4096
+  _defaultSweepColor: {r: 0.5, g: 0.85, b: 1, a: 0.55}
+--- !u!1 &721000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 721000002}
+  - component: {fileID: 721000003}
+  - component: {fileID: 721000004}
+  m_Layer: 0
+  m_Name: Planet_Outer_B
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &721000002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 721000001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &721000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 721000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5840adffb862431f9a49f16ecaee488a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sunTransform: {fileID: 694181434}
+  _semiMajorAxis: 7.5
+  _eccentricity: 0.45
+  _orbitalPeriod: 24
+  _initialPhase01: 0.3333
+  _orbitNormal: {x: 0, y: 1, z: 0}
+  _periapsisDirection: {x: 0, y: 0, z: 1}
+  _autoCreatePlanetMesh: 1
+  _planetDiameter: 0.6
+  _planetColor: {r: 0.4, g: 0.7, b: 1, a: 1}
+  _drawOrbitLine: 1
+  _orbitLineSegments: 96
+  _orbitLineWidth: 0.03
+  _orbitLineColor: {r: 0.4, g: 0.7, b: 1, a: 0.7}
+--- !u!114 &721000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 721000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f186e2621f6348d9841e944351dc1f0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sunTransform: {fileID: 694181434}
+  _planetTransform: {fileID: 721000002}
+  _sweepDuration: 2
+  _groupSweepsUnderSingleRoot: 1
+  _drawDoubleSided: 1
+  _arcSegments: 24
+  _sampleSpacing: 0.05
+  _maxArcSamples: 4096
+  _defaultSweepColor: {r: 0.5, g: 0.85, b: 1, a: 0.55}
+--- !u!1 &722000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 722000002}
+  - component: {fileID: 722000003}
+  - component: {fileID: 722000004}
+  m_Layer: 0
+  m_Name: Planet_Outer_C
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &722000002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 722000001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &722000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 722000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5840adffb862431f9a49f16ecaee488a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sunTransform: {fileID: 694181434}
+  _semiMajorAxis: 7.5
+  _eccentricity: 0.45
+  _orbitalPeriod: 24
+  _initialPhase01: 0.6667
+  _orbitNormal: {x: 0, y: 1, z: 0}
+  _periapsisDirection: {x: 0, y: 0, z: 1}
+  _autoCreatePlanetMesh: 1
+  _planetDiameter: 0.6
+  _planetColor: {r: 0.4, g: 0.7, b: 1, a: 1}
+  _drawOrbitLine: 1
+  _orbitLineSegments: 96
+  _orbitLineWidth: 0.03
+  _orbitLineColor: {r: 0.4, g: 0.7, b: 1, a: 0.7}
+--- !u!114 &722000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 722000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f186e2621f6348d9841e944351dc1f0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sunTransform: {fileID: 694181434}
+  _planetTransform: {fileID: 722000002}
+  _sweepDuration: 2
+  _groupSweepsUnderSingleRoot: 1
+  _drawDoubleSided: 1
+  _arcSegments: 24
+  _sampleSpacing: 0.05
+  _maxArcSamples: 4096
+  _defaultSweepColor: {r: 0.5, g: 0.85, b: 1, a: 0.55}
 --- !u!1 &818956277
 GameObject:
   m_ObjectHideFlags: 0
@@ -1663,6 +2235,7 @@ MonoBehaviour:
   _orbitalPauseController: {fileID: 1829900471}
   _orbitVisibilityController: {fileID: 1829900472}
   _mainMenuSceneName: Main_VR
+  _currentSceneIndex: 0
   _planetPrefab: {fileID: 8492967959566658416, guid: c0b975ee0db2e3d33958febbe16241d9, type: 3}
   _cameraTransform: {fileID: 47491072}
   _spawnDistance: 1.5
@@ -1825,554 +2398,6 @@ CanvasGroup:
   m_CorrespondingSourceObject: {fileID: 3285216353359987453, guid: 976acc7e8c08a7a059b1e860929339fd, type: 3}
   m_PrefabInstance: {fileID: 115084322}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &700000001
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 700000002}
-  - component: {fileID: 700000004}
-  m_Layer: 0
-  m_Name: Svc_KeplerLab2
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &700000002
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 700000001}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &700000004
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 700000001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a923c78427984256ad31c85e51b54e26, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _planets:
-  - _orbiter: {fileID: 710000003}
-    _visualizer: {fileID: 710000004}
-    _label: Inner_A
-    _orbitGroup: Inner
-    _sweepColor: {r: 1.0, g: 0.7, b: 0.2, a: 0.55}
-  - _orbiter: {fileID: 711000003}
-    _visualizer: {fileID: 711000004}
-    _label: Inner_B
-    _orbitGroup: Inner
-    _sweepColor: {r: 1.0, g: 0.55, b: 0.2, a: 0.55}
-  - _orbiter: {fileID: 712000003}
-    _visualizer: {fileID: 712000004}
-    _label: Inner_C
-    _orbitGroup: Inner
-    _sweepColor: {r: 1.0, g: 0.4, b: 0.25, a: 0.55}
-  - _orbiter: {fileID: 720000003}
-    _visualizer: {fileID: 720000004}
-    _label: Outer_A
-    _orbitGroup: Outer
-    _sweepColor: {r: 0.5, g: 0.85, b: 1.0, a: 0.55}
-  - _orbiter: {fileID: 721000003}
-    _visualizer: {fileID: 721000004}
-    _label: Outer_B
-    _orbitGroup: Outer
-    _sweepColor: {r: 0.45, g: 0.65, b: 1.0, a: 0.55}
-  - _orbiter: {fileID: 722000003}
-    _visualizer: {fileID: 722000004}
-    _label: Outer_C
-    _orbitGroup: Outer
-    _sweepColor: {r: 0.7, g: 0.55, b: 1.0, a: 0.55}
-  _pauseOnCaptureStop: 1
-  _faceSunOnStart: 1
-  _showMessagePanel: 1
-  _messageDistance: 4
-  _messageHeightOffset: 0.3
-  _messagePanelSize: {x: 3, y: 1.6}
-  _messageFontSize: 0.16
---- !u!1 &710000001
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 710000002}
-  - component: {fileID: 710000003}
-  - component: {fileID: 710000004}
-  m_Layer: 0
-  m_Name: Planet_Inner_A
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &710000002
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 710000001}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.0, y: 2.0, z: 0.0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &710000003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 710000001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5840adffb862431f9a49f16ecaee488a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _sunTransform: {fileID: 694181434}
-  _semiMajorAxis: 4.5
-  _eccentricity: 0.6
-  _orbitalPeriod: 14.0
-  _initialPhase01: 0.0
-  _orbitNormal: {x: 0, y: 1, z: 0}
-  _periapsisDirection: {x: 1, y: 0, z: 0}
-  _autoCreatePlanetMesh: 1
-  _planetDiameter: 0.6
-  _planetColor: {r: 0.95, g: 0.6, b: 0.3, a: 1}
-  _drawOrbitLine: 1
-  _orbitLineSegments: 96
-  _orbitLineWidth: 0.03
-  _orbitLineColor: {r: 0.95, g: 0.6, b: 0.3, a: 0.7}
---- !u!114 &710000004
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 710000001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f186e2621f6348d9841e944351dc1f0b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _sunTransform: {fileID: 694181434}
-  _planetTransform: {fileID: 710000002}
-  _sweepDuration: 2
-  _groupSweepsUnderSingleRoot: 1
-  _drawDoubleSided: 1
-  _defaultSweepColor: {r: 1.0, g: 0.7, b: 0.2, a: 0.55}
---- !u!1 &720000001
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 720000002}
-  - component: {fileID: 720000003}
-  - component: {fileID: 720000004}
-  m_Layer: 0
-  m_Name: Planet_Outer_A
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &720000002
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 720000001}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0, y: 2.0, z: 7.0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &720000003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 720000001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5840adffb862431f9a49f16ecaee488a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _sunTransform: {fileID: 694181434}
-  _semiMajorAxis: 7.5
-  _eccentricity: 0.45
-  _orbitalPeriod: 24.0
-  _initialPhase01: 0
-  _orbitNormal: {x: 0, y: 1, z: 0}
-  _periapsisDirection: {x: 0, y: 0, z: 1}
-  _autoCreatePlanetMesh: 1
-  _planetDiameter: 0.6
-  _planetColor: {r: 0.4, g: 0.7, b: 1.0, a: 1}
-  _drawOrbitLine: 1
-  _orbitLineSegments: 96
-  _orbitLineWidth: 0.03
-  _orbitLineColor: {r: 0.4, g: 0.7, b: 1.0, a: 0.7}
---- !u!114 &720000004
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 720000001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f186e2621f6348d9841e944351dc1f0b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _sunTransform: {fileID: 694181434}
-  _planetTransform: {fileID: 720000002}
-  _sweepDuration: 2
-  _groupSweepsUnderSingleRoot: 1
-  _drawDoubleSided: 1
-  _defaultSweepColor: {r: 0.5, g: 0.85, b: 1.0, a: 0.55}
---- !u!1 &711000001
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 711000002}
-  - component: {fileID: 711000003}
-  - component: {fileID: 711000004}
-  m_Layer: 0
-  m_Name: Planet_Inner_B
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &711000002
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 711000001}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &711000003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 711000001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5840adffb862431f9a49f16ecaee488a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _sunTransform: {fileID: 694181434}
-  _semiMajorAxis: 4.5
-  _eccentricity: 0.6
-  _orbitalPeriod: 14.0
-  _initialPhase01: 0.3333
-  _orbitNormal: {x: 0, y: 1, z: 0}
-  _periapsisDirection: {x: 1, y: 0, z: 0}
-  _autoCreatePlanetMesh: 1
-  _planetDiameter: 0.6
-  _planetColor: {r: 0.95, g: 0.6, b: 0.3, a: 1}
-  _drawOrbitLine: 1
-  _orbitLineSegments: 96
-  _orbitLineWidth: 0.03
-  _orbitLineColor: {r: 0.95, g: 0.6, b: 0.3, a: 0.7}
---- !u!114 &711000004
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 711000001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f186e2621f6348d9841e944351dc1f0b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _sunTransform: {fileID: 694181434}
-  _planetTransform: {fileID: 711000002}
-  _sweepDuration: 2
-  _groupSweepsUnderSingleRoot: 1
-  _drawDoubleSided: 1
-  _arcSegments: 24
-  _defaultSweepColor: {r: 1.0, g: 0.7, b: 0.2, a: 0.55}
---- !u!1 &712000001
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 712000002}
-  - component: {fileID: 712000003}
-  - component: {fileID: 712000004}
-  m_Layer: 0
-  m_Name: Planet_Inner_C
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &712000002
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 712000001}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &712000003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 712000001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5840adffb862431f9a49f16ecaee488a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _sunTransform: {fileID: 694181434}
-  _semiMajorAxis: 4.5
-  _eccentricity: 0.6
-  _orbitalPeriod: 14.0
-  _initialPhase01: 0.6667
-  _orbitNormal: {x: 0, y: 1, z: 0}
-  _periapsisDirection: {x: 1, y: 0, z: 0}
-  _autoCreatePlanetMesh: 1
-  _planetDiameter: 0.6
-  _planetColor: {r: 0.95, g: 0.6, b: 0.3, a: 1}
-  _drawOrbitLine: 1
-  _orbitLineSegments: 96
-  _orbitLineWidth: 0.03
-  _orbitLineColor: {r: 0.95, g: 0.6, b: 0.3, a: 0.7}
---- !u!114 &712000004
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 712000001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f186e2621f6348d9841e944351dc1f0b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _sunTransform: {fileID: 694181434}
-  _planetTransform: {fileID: 712000002}
-  _sweepDuration: 2
-  _groupSweepsUnderSingleRoot: 1
-  _drawDoubleSided: 1
-  _arcSegments: 24
-  _defaultSweepColor: {r: 1.0, g: 0.7, b: 0.2, a: 0.55}
---- !u!1 &721000001
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 721000002}
-  - component: {fileID: 721000003}
-  - component: {fileID: 721000004}
-  m_Layer: 0
-  m_Name: Planet_Outer_B
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &721000002
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 721000001}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &721000003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 721000001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5840adffb862431f9a49f16ecaee488a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _sunTransform: {fileID: 694181434}
-  _semiMajorAxis: 7.5
-  _eccentricity: 0.45
-  _orbitalPeriod: 24.0
-  _initialPhase01: 0.3333
-  _orbitNormal: {x: 0, y: 1, z: 0}
-  _periapsisDirection: {x: 0, y: 0, z: 1}
-  _autoCreatePlanetMesh: 1
-  _planetDiameter: 0.6
-  _planetColor: {r: 0.4, g: 0.7, b: 1.0, a: 1}
-  _drawOrbitLine: 1
-  _orbitLineSegments: 96
-  _orbitLineWidth: 0.03
-  _orbitLineColor: {r: 0.4, g: 0.7, b: 1.0, a: 0.7}
---- !u!114 &721000004
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 721000001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f186e2621f6348d9841e944351dc1f0b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _sunTransform: {fileID: 694181434}
-  _planetTransform: {fileID: 721000002}
-  _sweepDuration: 2
-  _groupSweepsUnderSingleRoot: 1
-  _drawDoubleSided: 1
-  _arcSegments: 24
-  _defaultSweepColor: {r: 0.5, g: 0.85, b: 1.0, a: 0.55}
---- !u!1 &722000001
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 722000002}
-  - component: {fileID: 722000003}
-  - component: {fileID: 722000004}
-  m_Layer: 0
-  m_Name: Planet_Outer_C
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &722000002
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 722000001}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &722000003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 722000001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5840adffb862431f9a49f16ecaee488a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _sunTransform: {fileID: 694181434}
-  _semiMajorAxis: 7.5
-  _eccentricity: 0.45
-  _orbitalPeriod: 24.0
-  _initialPhase01: 0.6667
-  _orbitNormal: {x: 0, y: 1, z: 0}
-  _periapsisDirection: {x: 0, y: 0, z: 1}
-  _autoCreatePlanetMesh: 1
-  _planetDiameter: 0.6
-  _planetColor: {r: 0.4, g: 0.7, b: 1.0, a: 1}
-  _drawOrbitLine: 1
-  _orbitLineSegments: 96
-  _orbitLineWidth: 0.03
-  _orbitLineColor: {r: 0.4, g: 0.7, b: 1.0, a: 0.7}
---- !u!114 &722000004
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 722000001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f186e2621f6348d9841e944351dc1f0b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _sunTransform: {fileID: 694181434}
-  _planetTransform: {fileID: 722000002}
-  _sweepDuration: 2
-  _groupSweepsUnderSingleRoot: 1
-  _drawDoubleSided: 1
-  _arcSegments: 24
-  _defaultSweepColor: {r: 0.5, g: 0.85, b: 1.0, a: 0.55}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
