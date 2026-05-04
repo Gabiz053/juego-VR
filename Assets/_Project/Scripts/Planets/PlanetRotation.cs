@@ -27,9 +27,6 @@ namespace _Project.Scripts.Planets
 
         #endregion
 
-        #region Events
-        #endregion
-
         #region Cached Components
 
         private bool _hasValidAxis;
@@ -37,7 +34,20 @@ namespace _Project.Scripts.Planets
 
         #endregion
 
+        #region State
+
+        private bool _isPaused;
+
+        #endregion
+
         #region Public API
+
+        /// <summary>Pauses or resumes the self-rotation of this planet.</summary>
+        public void SetPaused(bool paused)
+        {
+            _isPaused = paused;
+        }
+
         #endregion
 
         #region Unity Lifecycle
@@ -52,15 +62,12 @@ namespace _Project.Scripts.Planets
 
         private void Update()
         {
-            if (!_hasValidAxis || Mathf.Approximately(rotationSpeed, 0f))
+            if (_isPaused || !_hasValidAxis || Mathf.Approximately(rotationSpeed, 0f))
                 return;
 
             transform.Rotate(_normalizedAxis, rotationSpeed * Time.deltaTime, Space.Self);
         }
 
-        #endregion
-
-        #region Internals
         #endregion
 
         #region Validation

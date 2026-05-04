@@ -677,8 +677,9 @@ GameObject:
   - component: {fileID: 893291169465361264}
   - component: {fileID: 5296518850321369948}
   - component: {fileID: 3137109570721207530}
+  - component: {fileID: 7431832797338046406}
   m_Layer: 5
-  m_Name: UI_HUD_WristMenu_Kepler
+  m_Name: HUD_WristMenu_Kepler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -775,6 +776,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4264298935910122637}
   m_CullTransparentMesh: 1
+--- !u!114 &7431832797338046406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4264298935910122637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cdb74fcdd11cb147bd24210e0399815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cameraTransform: {fileID: 0}
+  _palmTransform: {fileID: 0}
+  _wristCanvas: {fileID: 0}
+  _canvasGroup: {fileID: 0}
+  _dotThreshold: 0.85
+  _maxDistance: 0.35
+  _btnBack: {fileID: 0}
+  _btnPause: {fileID: 0}
+  _btnToggleOrbits: {fileID: 0}
+  _iconPause: {fileID: 0}
+  _iconPlay: {fileID: 0}
+  _pauseButtonIcon: {fileID: 0}
+  _iconOrbitVisible: {fileID: 0}
+  _iconOrbitHidden: {fileID: 0}
+  _orbitButtonIcon: {fileID: 0}
 --- !u!1 &5383434442820298881
 GameObject:
   m_ObjectHideFlags: 0
@@ -937,7 +965,6 @@ GameObject:
   - component: {fileID: 970638864595794393}
   - component: {fileID: 585809876122458142}
   - component: {fileID: 7251751370981023707}
-  - component: {fileID: 3285216353359987453}
   m_Layer: 5
   m_Name: Pnl_WristBackground
   m_TagString: Untagged
@@ -1030,18 +1057,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!225 &3285216353359987453
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5840872530860644808}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!1 &5900809847856576239
 GameObject:
   m_ObjectHideFlags: 0
