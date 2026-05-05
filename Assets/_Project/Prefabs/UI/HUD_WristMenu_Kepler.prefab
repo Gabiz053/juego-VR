@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8334858653711504750}
   - component: {fileID: 1314390875622565835}
   - component: {fileID: 4364873938794708129}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Btn_Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 2884996186881440991}
   - component: {fileID: 4578370676938125397}
   - component: {fileID: 8979834180796941972}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Btn_Next
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -253,7 +253,7 @@ GameObject:
   - component: {fileID: 7989158246202177553}
   - component: {fileID: 7181196266789882068}
   - component: {fileID: 1666312305986543412}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Icon_Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -329,7 +329,7 @@ GameObject:
   - component: {fileID: 3722769699203599813}
   - component: {fileID: 8608340977442394026}
   - component: {fileID: 7911462940311859641}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Btn_Pause
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -450,7 +450,7 @@ GameObject:
   - component: {fileID: 5509918539337922840}
   - component: {fileID: 5837827123402116906}
   - component: {fileID: 6614013089425082372}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Btn_ToggleOrbits
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -572,10 +572,10 @@ GameObject:
   - component: {fileID: 893291169465361264}
   - component: {fileID: 5296518850321369948}
   - component: {fileID: 3137109570721207530}
-  - component: {fileID: 7431832797338046406}
   - component: {fileID: 5311008030036221837}
   - component: {fileID: 6852903069986102760}
-  m_Layer: 5
+  - component: {fileID: 5027304443940058665}
+  m_Layer: 0
   m_Name: HUD_WristMenu_Kepler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -677,33 +677,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4264298935910122637}
   m_CullTransparentMesh: 1
---- !u!114 &7431832797338046406
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4264298935910122637}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cdb74fcdd11cb147bd24210e0399815, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _cameraTransform: {fileID: 0}
-  _palmTransform: {fileID: 0}
-  _wristCanvas: {fileID: 8131727972920384187}
-  _canvasGroup: {fileID: 5311008030036221837}
-  _dotThreshold: 0.85
-  _maxDistance: 0.35
-  _btnBack: {fileID: 4364873938794708129}
-  _btnPause: {fileID: 7911462940311859641}
-  _btnToggleOrbits: {fileID: 6614013089425082372}
-  _iconPause: {fileID: 21300000, guid: 4ea8ba5807fecd54b8602eb8aa3bf33d, type: 3}
-  _iconPlay: {fileID: 21300000, guid: abc9a7b606890a24ab93af27d4886321, type: 3}
-  _pauseButtonIcon: {fileID: 1220952243686117973}
-  _iconOrbitVisible: {fileID: 21300000, guid: a853574891f9dcd41bfc2772adb51cd7, type: 3}
-  _iconOrbitHidden: {fileID: 21300000, guid: 6d418b7c87330234bb6f0395faf3bb75, type: 3}
-  _orbitButtonIcon: {fileID: 4369859984187300521}
 --- !u!225 &5311008030036221837
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -711,7 +684,7 @@ CanvasGroup:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4264298935910122637}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
@@ -735,6 +708,35 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RaycastTriggerInteraction: 1
+--- !u!114 &5027304443940058665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4264298935910122637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7dfc9dc743b9663b837b6ae0e5b1c3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cameraTransform: {fileID: 0}
+  _palmTransform: {fileID: 0}
+  _wristCanvas: {fileID: 8131727972920384187}
+  _canvasGroup: {fileID: 5311008030036221837}
+  _dotThreshold: 0.7
+  _maxDistance: 0.5
+  _btnBack: {fileID: 4364873938794708129}
+  _btnPause: {fileID: 7911462940311859641}
+  _btnToggleOrbits: {fileID: 6614013089425082372}
+  _btnSpawnPlanet: {fileID: 7031245356949014851}
+  _btnNextLaw: {fileID: 8979834180796941972}
+  _iconPause: {fileID: 21300000, guid: 4ea8ba5807fecd54b8602eb8aa3bf33d, type: 3}
+  _iconPlay: {fileID: 21300000, guid: abc9a7b606890a24ab93af27d4886321, type: 3}
+  _pauseButtonIcon: {fileID: 1220952243686117973}
+  _iconOrbitVisible: {fileID: 21300000, guid: a853574891f9dcd41bfc2772adb51cd7, type: 3}
+  _iconOrbitHidden: {fileID: 21300000, guid: 6d418b7c87330234bb6f0395faf3bb75, type: 3}
+  _orbitButtonIcon: {fileID: 4369859984187300521}
 --- !u!1 &5383434442820298881
 GameObject:
   m_ObjectHideFlags: 0
@@ -746,7 +748,7 @@ GameObject:
   - component: {fileID: 7620267897186451021}
   - component: {fileID: 3829665423757618796}
   - component: {fileID: 8902894392500656237}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Icon_Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -821,7 +823,7 @@ GameObject:
   - component: {fileID: 5059064830448021250}
   - component: {fileID: 2490336539125059127}
   - component: {fileID: 4369859984187300521}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Icon_ToggleOrbits
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -896,7 +898,7 @@ GameObject:
   - component: {fileID: 1692560493160630903}
   - component: {fileID: 2259533426801676570}
   - component: {fileID: 6942262839992422794}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Icon_Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -971,7 +973,7 @@ GameObject:
   - component: {fileID: 7140458123560885367}
   - component: {fileID: 3551631332650781077}
   - component: {fileID: 1220952243686117973}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Icon_Pause
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1047,7 +1049,7 @@ GameObject:
   - component: {fileID: 9062830736319291997}
   - component: {fileID: 9083126801968208679}
   - component: {fileID: 7031245356949014851}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Btn_Planet
   m_TagString: Untagged
   m_Icon: {fileID: 0}

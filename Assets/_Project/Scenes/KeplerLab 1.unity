@@ -1580,6 +1580,14 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5027304443940058665, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
+      propertyPath: _palmTransform
+      value: 
+      objectReference: {fileID: 826587939}
+    - target: {fileID: 5027304443940058665, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
+      propertyPath: _cameraTransform
+      value: 
+      objectReference: {fileID: 47491072}
     - target: {fileID: 7431832797338046406, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
       propertyPath: _palmTransform
       value: 
@@ -1600,6 +1608,17 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2006318079}
   m_SourcePrefab: {fileID: 100100000, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
+--- !u!114 &1645577886 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5027304443940058665, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
+  m_PrefabInstance: {fileID: 1645577885}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2006318071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7dfc9dc743b9663b837b6ae0e5b1c3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1655139345
 GameObject:
   m_ObjectHideFlags: 0
@@ -1873,7 +1892,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdcd2541944986ab28849004a73fef27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _wristMenuController: {fileID: 0}
+  _wristMenuController: {fileID: 1645577886}
   _orbitalPauseController: {fileID: 1829900471}
   _orbitVisibilityController: {fileID: 1829900472}
   _mainMenuSceneName: Main_VR
