@@ -738,7 +738,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1782322548416687588, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.05
       objectReference: {fileID: 0}
     - target: {fileID: 1782322548416687588, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
       propertyPath: m_LocalRotation.w
@@ -784,9 +784,17 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4264298935910122637, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7431832797338046406, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
       propertyPath: _maxDistance
-      value: 0.35
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7431832797338046406, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
+      propertyPath: _dotThreshold
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 7431832797338046406, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
       propertyPath: _palmTransform
@@ -801,8 +809,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2137273654}
     - target: {fileID: 8898143826368202762, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
+      propertyPath: m_Alpha
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8898143826368202762, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8898143826368202762, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
+      propertyPath: m_BlocksRaycasts
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
