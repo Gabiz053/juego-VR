@@ -2815,6 +2815,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4265582109632222214, guid: c9b6bf1ee574fc3448600cc9ab8a2778, type: 3}
+      propertyPath: _targetSceneName
+      value: KeplerLab 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4265582109632222214, guid: c9b6bf1ee574fc3448600cc9ab8a2778, type: 3}
       propertyPath: _returnSpawnPoint
       value: 
       objectReference: {fileID: 211625414}
