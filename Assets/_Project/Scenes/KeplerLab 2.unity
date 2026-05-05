@@ -1082,17 +1082,17 @@ MonoBehaviour:
   _sunTransform: {fileID: 0}
   _showMessagePanel: 1
   _leftControllerAnchor: {fileID: 0}
-  _panelLocalOffset: {x: 0, y: 0.05, z: 0.05}
+  _panelLocalOffset: {x: 0, y: 0.2, z: 0.05}
   _panelLocalEuler: {x: 45, y: 0, z: 0}
   _panelControllerScale: 0.25
   _messageDistance: 4
-  _messageHeightOffset: 0.3
-  _messagePanelSize: {x: 1.4, y: 0.75}
-  _messageFontSize: 0.05
+  _messageHeightOffset: 0.8
+  _messagePanelSize: {x: 2, y: 1.6}
+  _messageFontSize: 0.13
   _messageFont: {fileID: 0}
   _msgIdle: "Haz click en el grip para empezar \na capturar y vuelve a pulsar para
     soltar."
-  _msgCapturing: "Capturando...\nVuelve a hacer click en el mismo bot\xF3n para \npausar
+  _msgCapturing: "Capturando...\nVuelve a hacer click en el mismo bot\xF3n para pausar
     la simulaci\xF3n y ver los resultados"
 --- !u!1 &710000001
 GameObject:
@@ -2938,7 +2938,7 @@ MonoBehaviour:
   _planetPrefab: {fileID: 8492967959566658416, guid: c0b975ee0db2e3d33958febbe16241d9, type: 3}
   _cameraTransform: {fileID: 47491072}
   _spawnDistance: 1.5
-  _showIntroPanel: 1
+  _showIntroPanel: 0
   _introText: '<size=120%><b>KeplerLab 1</b></size>
 
     <size=80%>(Primera Ley de
