@@ -972,18 +972,18 @@ MonoBehaviour:
   _planets:
   - _orbiter: {fileID: 710000003}
     _visualizer: {fileID: 710000004}
-    _label: Inner_A
-    _orbitGroup: Inner
+    _label: Planeta 1
+    _orbitGroup: naranja
     _sweepColor: {r: 1, g: 0.7, b: 0.2, a: 0.55}
   - _orbiter: {fileID: 711000003}
     _visualizer: {fileID: 711000004}
-    _label: Inner_B
-    _orbitGroup: Inner
+    _label: Planeta 2
+    _orbitGroup: naranja
     _sweepColor: {r: 1, g: 0.55, b: 0.2, a: 0.55}
   - _orbiter: {fileID: 712000003}
     _visualizer: {fileID: 712000004}
-    _label: Inner_C
-    _orbitGroup: Inner
+    _label: Planeta 3
+    _orbitGroup: naranja
     _sweepColor: {r: 1, g: 0.4, b: 0.25, a: 0.55}
   - _orbiter: {fileID: 720000003}
     _visualizer: {fileID: 720000004}
@@ -1000,23 +1000,51 @@ MonoBehaviour:
     _label: Outer_C
     _orbitGroup: Outer
     _sweepColor: {r: 0.7, g: 0.55, b: 1, a: 0.55}
-  _toggleKey: 1
+  _toggleAction:
+    m_UseReference: 0
+    m_Action:
+      m_Name: ToggleCapture
+      m_Type: 1
+      m_ExpectedControlType: 
+      m_Id: 32b576c7-84af-4b4b-b13a-1906d5c92fef
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: e973955d-866f-40c7-aa92-78d8df108153
+        m_Path: <XRController>{RightHand}/primaryButton
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: ToggleCapture
+        m_Flags: 0
+      - m_Name: 
+        m_Id: 7bf031be-5aa6-46f8-9f5b-9b446848db37
+        m_Path: <XRSimulatedController>/gripButton
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: ToggleCapture
+        m_Flags: 0
+      m_Flags: 0
+    m_Reference: {fileID: 0}
   _pauseOnCaptureStop: 1
   _faceSunOnStart: 1
   _sunTransform: {fileID: 0}
   _showMessagePanel: 1
+  _leftControllerAnchor: {fileID: 0}
+  _panelLocalOffset: {x: 0, y: 0.05, z: 0.05}
+  _panelLocalEuler: {x: 45, y: 0, z: 0}
+  _panelControllerScale: 0.25
   _messageDistance: 4
   _messageHeightOffset: 0.3
-  _messagePanelSize: {x: 3, y: 1.6}
-  _messageFontSize: 0.16
+  _messagePanelSize: {x: 1.4, y: 0.75}
+  _messageFontSize: 0.05
   _messageFont: {fileID: 0}
-  _msgIdle: 'Press SPACE to start capturing equal-area sweeps.
-
-    (All planets
-    will sweep simultaneously.)'
-  _msgCapturing: 'Capturing...
-
-    Press SPACE again to stop and freeze the simulation.'
+  _msgIdle: "Haz click en el grip para empezar \na capturar y vuelve a pulsar para
+    soltar."
+  _msgCapturing: "Capturando...\nVuelve a hacer click en el mismo bot\xF3n para \npausar
+    la simulaci\xF3n y ver los resultados"
 --- !u!1 &710000001
 GameObject:
   m_ObjectHideFlags: 0
