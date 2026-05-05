@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Splines;
@@ -46,6 +48,9 @@ namespace _Project.Scripts.Planets
         [Tooltip("If true, re-enables the child SplineAnimate after generating the orbit.")]
         [SerializeField] private bool _enableSplineAnimateOnGenerate = true;
 
+        [Tooltip("If true, keeps the orbit centered at local origin when the focus is this object's ancestor (e.g., Moon around Earth).")]
+        [SerializeField] private bool _centerOnLocalOriginWhenFocusIsAncestor = true;
+
         [Header("References")]
         [Tooltip("Transform of the orbit focus. Use the Sun for planets and Earth for the Moon.")]
         [SerializeField] private Transform sun;
@@ -58,7 +63,7 @@ namespace _Project.Scripts.Planets
         #region Cached Components
 
         private SplineContainer  _splineContainer;
-        private SplineAnimate    _splineAnimate;
+        private SplineAnimate[]  _splineAnimates = Array.Empty<SplineAnimate>();
         private OrbitLineRenderer _orbitLineRenderer;
         private readonly WaitForEndOfFrame _waitForEndOfFrame = new WaitForEndOfFrame();
 
@@ -116,9 +121,8 @@ namespace _Project.Scripts.Planets
             _orbitLineRenderer = GetComponent<OrbitLineRenderer>();
             TryResolveSunReference();
 
-            _splineAnimate = GetComponentInChildren<SplineAnimate>();
-            if (_splineAnimate != null)
-                _splineAnimate.enabled = false;
+            CacheSplineAnimates();
+            SetSplineAnimatesEnabled(false);
         }
 
         private void OnEnable()
@@ -134,13 +138,11 @@ namespace _Project.Scripts.Planets
 
             TryResolveSunReference();
 
-            if (_splineAnimate == null)
-                _splineAnimate = GetComponentInChildren<SplineAnimate>();
+            CacheSplineAnimates();
 
             GenerateOrbit();
 
-            if (_splineAnimate != null)
-                _splineAnimate.enabled = false;
+            SetSplineAnimatesEnabled(false);
         }
 
         private void Start()
@@ -165,11 +167,7 @@ namespace _Project.Scripts.Planets
             if (_orbitLineRenderer != null)
                 _orbitLineRenderer.Redraw();
 
-            if (_enableSplineAnimateOnGenerate && _splineAnimate != null && knotCount >= MIN_RESOLUTION)
-            {
-                _splineAnimate.enabled = true;
-                Debug.Log($"{LOG_TAG} SplineAnimate enabled -- knots validated.");
-            }
+            EnableSplineAnimatesIfReady(knotCount);
         }
 
         private void GenerateOrbit()
@@ -190,9 +188,7 @@ namespace _Project.Scripts.Planets
             // For planets: SplineContainer is at origin → focusLocal ≈ (0,0,0), no change.
             // For Moon: SplineContainer is child of Earth at local (0,0,0) → focusLocal = (0,0,0),
             // so the orbit is generated centred at Earth and moves with it as Earth orbits the Sun.
-            Vector3 focusLocal = sun != null
-                ? transform.InverseTransformPoint(GetSunFocusPosition())
-                : Vector3.zero;
+            Vector3 focusLocal = ResolveFocusLocalPosition();
 
             // Base ortonormal en el plano XZ local: periDir es la direccion del
             // periapsis, perpDir es 90deg CCW dentro del plano. La elipse se
@@ -272,6 +268,83 @@ namespace _Project.Scripts.Planets
         }
 
         private Vector3 GetSunFocusPosition() => sun != null ? sun.position : Vector3.zero;
+
+        private Vector3 ResolveFocusLocalPosition()
+        {
+            if (sun == null)
+                return Vector3.zero;
+
+            if (_centerOnLocalOriginWhenFocusIsAncestor && (sun == transform || transform.IsChildOf(sun)))
+                return Vector3.zero;
+
+            return transform.InverseTransformPoint(GetSunFocusPosition());
+        }
+
+        private void CacheSplineAnimates()
+        {
+            SplineAnimate[] candidates = GetComponentsInChildren<SplineAnimate>(true);
+            if (candidates == null || candidates.Length == 0)
+            {
+                _splineAnimates = Array.Empty<SplineAnimate>();
+                return;
+            }
+
+            var ownedAnimators = new List<SplineAnimate>(candidates.Length);
+            for (int i = 0; i < candidates.Length; i++)
+            {
+                SplineAnimate candidate = candidates[i];
+                if (candidate == null)
+                    continue;
+
+                OrbitalSplineGenerator owner = candidate.GetComponentInParent<OrbitalSplineGenerator>();
+                if (owner == this)
+                    ownedAnimators.Add(candidate);
+            }
+
+            _splineAnimates = ownedAnimators.Count > 0
+                ? ownedAnimators.ToArray()
+                : Array.Empty<SplineAnimate>();
+        }
+
+        private void SetSplineAnimatesEnabled(bool isEnabled)
+        {
+            if (_splineAnimates == null || _splineAnimates.Length == 0)
+                return;
+
+            for (int i = 0; i < _splineAnimates.Length; i++)
+            {
+                SplineAnimate animator = _splineAnimates[i];
+                if (animator == null)
+                    continue;
+
+                animator.enabled = isEnabled;
+            }
+        }
+
+        private void EnableSplineAnimatesIfReady(int knotCount)
+        {
+            if (!_enableSplineAnimateOnGenerate)
+                return;
+
+            if (knotCount < MIN_RESOLUTION)
+                return;
+
+            if (_splineAnimates == null || _splineAnimates.Length == 0)
+                return;
+
+            for (int i = 0; i < _splineAnimates.Length; i++)
+            {
+                SplineAnimate animator = _splineAnimates[i];
+                if (animator == null)
+                    continue;
+
+                animator.Container = _splineContainer;
+                animator.enabled   = true;
+                animator.Play();
+            }
+
+            Debug.Log($"{LOG_TAG} SplineAnimate enabled -- knots validated.");
+        }
 
         #endregion
 

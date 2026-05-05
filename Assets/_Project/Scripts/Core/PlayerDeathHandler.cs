@@ -1,11 +1,13 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace _Project.Scripts.Core
 {
     /// <summary>
-    /// Detects two death conditions and respawns the player on the XR Origin:
-    ///   1. Head drops below _fallThreshold (Y-axis fall out of scene).
-    ///   2. Head enters any spherical death zone (e.g. the asteroid belt ring).
+    /// Detects two death conditions and reloads the current scene via SceneController,
+    /// which fades to black and respawns the player at the scene's default spawn point.
+    ///   1. Head drops below _fallThreshold (Y-axis fall).
+    ///   2. Head enters any spherical death zone (e.g. asteroid belt).
     /// Attach to the XR Origin root GameObject.
     /// </summary>
     [DisallowMultipleComponent]
@@ -21,7 +23,7 @@ namespace _Project.Scripts.Core
         #region Inspector -------------------------------------------------------
 
         [Header("Camera")]
-        [Tooltip("Head-tracking camera used for position checks. Leave empty to use Camera.main.")]
+        [Tooltip("Head-tracking camera. Leave empty to use Camera.main.")]
         [SerializeField] private Camera _cameraOverride;
 
         [Header("Fall Detection")]
@@ -35,11 +37,8 @@ namespace _Project.Scripts.Core
         [Tooltip("Uniform radius (metres) of each death zone sphere.")]
         [SerializeField, Min(0f)] private float _deathZoneRadius = 5f;
 
-        [Header("Respawn")]
-        [Tooltip("XR Origin is teleported to this position on death. Assign the scene spawn point.")]
-        [SerializeField] private Transform _respawnPoint;
-
-        [Tooltip("Seconds that must pass before death can trigger again. Prevents rapid re-death.")]
+        [Header("Cooldown")]
+        [Tooltip("Seconds before death can trigger again (prevents double-trigger during reload fade).")]
         [SerializeField, Min(0f)] private float _deathCooldown = 3f;
 
         #endregion
@@ -47,9 +46,8 @@ namespace _Project.Scripts.Core
         #region Cached Components -----------------------------------------------
 
         private Camera _camera;
-        private CharacterController _characterController;
-        private float _lastDeathTime = -999f;
-        private float _deathZoneRadiusSqr;
+        private float  _lastDeathTime = -999f;
+        private float  _deathZoneRadiusSqr;
 
         #endregion
 
@@ -57,9 +55,8 @@ namespace _Project.Scripts.Core
 
         private void Start()
         {
-            _camera              = _cameraOverride != null ? _cameraOverride : Camera.main;
-            _characterController = GetComponent<CharacterController>();
-            _deathZoneRadiusSqr  = _deathZoneRadius * _deathZoneRadius;
+            _camera             = _cameraOverride != null ? _cameraOverride : Camera.main;
+            _deathZoneRadiusSqr = _deathZoneRadius * _deathZoneRadius;
             ValidateReferences();
             Debug.Log($"{LOG_TAG} Initialized -- fallY={_fallThreshold:F1}, zones={(_deathZoneCenters?.Length ?? 0)}.");
         }
@@ -73,8 +70,6 @@ namespace _Project.Scripts.Core
             }
 
             if (Time.time - _lastDeathTime < _deathCooldown) return;
-
-            // Skip if a scene transition is already in progress.
             if (SceneController.Instance != null && SceneController.Instance.IsTransitioning) return;
 
             Vector3 headPos = _camera.transform.position;
@@ -104,31 +99,16 @@ namespace _Project.Scripts.Core
         private void TriggerDeath(string reason)
         {
             _lastDeathTime = Time.time;
-            Debug.Log($"{LOG_TAG} Player died -- {reason}.");
+            Debug.Log($"{LOG_TAG} Player died -- {reason}. Reloading scene.");
+
             AudioManager.Instance?.PlayPlayerDeathSound();
-            Respawn();
-        }
 
-        private void Respawn()
-        {
-            if (_respawnPoint == null)
-            {
-                Debug.LogWarning($"{LOG_TAG} _respawnPoint not assigned -- cannot teleport.", this);
-                return;
-            }
+            var sceneName  = SceneManager.GetActiveScene().name;
+            var gameState  = GameManager.Instance != null
+                ? GameManager.Instance.CurrentState
+                : GameState.MainMenu;
 
-            // CharacterController must be disabled before moving transform directly,
-            // otherwise Unity ignores the position change.
-            if (_characterController != null)
-                _characterController.enabled = false;
-
-            transform.position = _respawnPoint.position;
-            transform.rotation = _respawnPoint.rotation;
-
-            if (_characterController != null)
-                _characterController.enabled = true;
-
-            Debug.Log($"{LOG_TAG} Respawned to {_respawnPoint.position}.");
+            SceneController.Instance.LoadScene(sceneName, gameState);
         }
 
         #endregion
@@ -138,9 +118,9 @@ namespace _Project.Scripts.Core
         private void ValidateReferences()
         {
             if (_camera == null)
-                Debug.LogWarning($"{LOG_TAG} No camera found -- death detection disabled until Camera.main is available.", this);
-            if (_respawnPoint == null)
-                Debug.LogWarning($"{LOG_TAG} _respawnPoint is not assigned -- player will not teleport on death.", this);
+                Debug.LogWarning($"{LOG_TAG} No camera found -- detection disabled until Camera.main available.", this);
+            if (SceneController.Instance == null)
+                Debug.LogWarning($"{LOG_TAG} SceneController not found -- death will not reload scene.", this);
         }
 
         #endregion

@@ -21,6 +21,9 @@ EditorBuildSettings:
     path: Assets/_Project/Scenes/KeplerLab 2.unity
     guid: 36d871a15a694bbcb6c27416c6b08805
   - enabled: 1
+    path: Assets/_Project/Scenes/KeplerLab 3.unity
+    guid: b5e9785f36eeaec4891279cd1814edd5
+  - enabled: 1
     path: Assets/_Project/Scenes/Sandbox.unity
     guid: ed89ac3640757074ea0f1e0973b0159f
   - enabled: 1

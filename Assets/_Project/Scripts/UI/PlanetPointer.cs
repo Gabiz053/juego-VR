@@ -36,6 +36,9 @@ namespace _Project.Scripts.UI
         [Tooltip("Layer mask the ray tests against. Leave Everything if no specific layer is set.")]
         [SerializeField] private LayerMask _layerMask = ~0;
 
+        [Tooltip("Extra distance penalty applied to satellites when selecting a target. Helps prioritize parent planets (e.g., Earth over Moon).")]
+        [SerializeField, Min(0f)] private float _satelliteSelectionPenalty = 3f;
+
         #endregion
 
         #region Events
@@ -93,7 +96,7 @@ namespace _Project.Scripts.UI
 
             PlanetProxy nearestProxy = null;
             GameObject nearestPlanetObject = null;
-            float nearestDistance = float.MaxValue;
+            float bestScore = float.MaxValue;
 
             for (int i = 0; i < hitCount; i++)
             {
@@ -103,10 +106,14 @@ namespace _Project.Scripts.UI
                 if (!TryGetPlanetProxy(hitObject, out PlanetProxy proxy))
                     continue;
 
-                if (hit.distance >= nearestDistance)
+                float score = hit.distance;
+                if (HasParentPlanetProxy(proxy))
+                    score += _satelliteSelectionPenalty;
+
+                if (score >= bestScore)
                     continue;
 
-                nearestDistance = hit.distance;
+                bestScore = score;
                 nearestProxy = proxy;
                 nearestPlanetObject = proxy.gameObject;
             }
@@ -119,7 +126,7 @@ namespace _Project.Scripts.UI
                 HideCurrentLabel();
                 _currentTarget = nearestPlanetObject;
 
-                Canvas canvas = _currentTarget.GetComponentInChildren<Canvas>(true);
+                Canvas canvas = GetLabelCanvasForProxy(nearestProxy);
                 if (canvas != null)
                 {
                     _currentPlanetLabel = canvas.gameObject;
@@ -172,6 +179,35 @@ namespace _Project.Scripts.UI
             return proxy != null;
         }
 
+        private static bool HasParentPlanetProxy(PlanetProxy proxy)
+        {
+            if (proxy == null || proxy.transform.parent == null)
+                return false;
+
+            PlanetProxy parentProxy = proxy.transform.parent.GetComponentInParent<PlanetProxy>();
+            return parentProxy != null;
+        }
+
+        private static Canvas GetLabelCanvasForProxy(PlanetProxy proxy)
+        {
+            if (proxy == null)
+                return null;
+
+            Canvas[] canvases = proxy.GetComponentsInChildren<Canvas>(true);
+            for (int i = 0; i < canvases.Length; i++)
+            {
+                Canvas canvas = canvases[i];
+                if (canvas == null)
+                    continue;
+
+                PlanetProxy ownerProxy = canvas.GetComponentInParent<PlanetProxy>();
+                if (ownerProxy == proxy)
+                    return canvas;
+            }
+
+            return null;
+        }
+
         #endregion
 
         #region Validation
@@ -184,6 +220,8 @@ namespace _Project.Scripts.UI
                 Debug.LogWarning($"{LOG_TAG} _rayDistance should be greater than zero.", this);
             if (_rayRadius < 0f)
                 Debug.LogWarning($"{LOG_TAG} _rayRadius should not be negative.", this);
+            if (_satelliteSelectionPenalty < 0f)
+                Debug.LogWarning($"{LOG_TAG} _satelliteSelectionPenalty should not be negative.", this);
         }
 
         #endregion
