@@ -2934,7 +2934,7 @@ MonoBehaviour:
   _orbitalPauseController: {fileID: 1829900471}
   _orbitVisibilityController: {fileID: 1829900472}
   _mainMenuSceneName: Main_VR
-  _currentSceneIndex: 0
+  _currentSceneIndex: 1
   _planetPrefab: {fileID: 8492967959566658416, guid: c0b975ee0db2e3d33958febbe16241d9, type: 3}
   _cameraTransform: {fileID: 47491072}
   _spawnDistance: 1.5
