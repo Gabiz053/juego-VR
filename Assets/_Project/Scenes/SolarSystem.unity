@@ -836,6 +836,17 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RaycastTriggerInteraction: 1
+--- !u!114 &902085809 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7431832797338046406, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
+  m_PrefabInstance: {fileID: 902085799}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 499654208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cdb74fcdd11cb147bd24210e0399815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &916436889
 GameObject:
   m_ObjectHideFlags: 0
@@ -1840,10 +1851,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 479779c07fe546845997e56d3cc90b09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _wristMenuController: {fileID: 0}
+  _wristMenuController: {fileID: 902085809}
   _orbitalPauseController: {fileID: 1829900473}
   _orbitVisibilityController: {fileID: 1829900472}
   _mainMenuSceneName: Main_VR
+  _returnPosition: {x: 0, y: 0, z: -2}
+  _returnEulerAngles: {x: 0, y: 0, z: 0}
 --- !u!4 &1829900470
 Transform:
   m_ObjectHideFlags: 0

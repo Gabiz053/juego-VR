@@ -1,3 +1,4 @@
+using Unity.XR.CoreUtils;
 using UnityEngine;
 using _Project.Scripts.UI;
 
@@ -34,6 +35,12 @@ namespace _Project.Scripts.Core
         [Tooltip("Exact name of the main menu scene (must be in Build Settings).")]
         [SerializeField] private string _mainMenuSceneName = "Main_VR";
 
+        [Tooltip("World position in Main_VR where the player will be placed on return.")]
+        [SerializeField] private Vector3 _returnPosition = Vector3.zero;
+
+        [Tooltip("Rotation in Main_VR where the player will be placed on return.")]
+        [SerializeField] private Vector3 _returnEulerAngles = Vector3.zero;
+
         #endregion
 
         #region Events
@@ -67,18 +74,18 @@ namespace _Project.Scripts.Core
         {
             if (_wristMenuController == null) return;
 
-            _wristMenuController.OnBackPressed          += HandleBackPressed;
-            _wristMenuController.OnPausePressed         += HandlePausePressed;
-            _wristMenuController.OnToggleOrbitsPressed  += HandleToggleOrbitsPressed;
+            _wristMenuController.OnBackPressed += HandleBackPressed;
+            _wristMenuController.OnPausePressed += HandlePausePressed;
+            _wristMenuController.OnToggleOrbitsPressed += HandleToggleOrbitsPressed;
         }
 
         private void UnsubscribeEvents()
         {
             if (_wristMenuController == null) return;
 
-            _wristMenuController.OnBackPressed          -= HandleBackPressed;
-            _wristMenuController.OnPausePressed         -= HandlePausePressed;
-            _wristMenuController.OnToggleOrbitsPressed  -= HandleToggleOrbitsPressed;
+            _wristMenuController.OnBackPressed -= HandleBackPressed;
+            _wristMenuController.OnPausePressed -= HandlePausePressed;
+            _wristMenuController.OnToggleOrbitsPressed -= HandleToggleOrbitsPressed;
         }
 
         private void HandleBackPressed()
@@ -88,6 +95,9 @@ namespace _Project.Scripts.Core
                 Debug.LogWarning($"{LOG_TAG} SceneController.Instance is null.", this);
                 return;
             }
+
+            SessionContext.SetMainMenuSpawn(_returnPosition, Quaternion.Euler(_returnEulerAngles));
+            Debug.Log($"{LOG_TAG} Return spawn set -- {_returnPosition}.");
 
             Debug.Log($"{LOG_TAG} Back pressed -- returning to main menu.");
             SceneController.Instance.LoadScene(_mainMenuSceneName, GameState.MainMenu);

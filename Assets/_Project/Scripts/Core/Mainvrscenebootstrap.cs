@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 
 namespace _Project.Scripts.Core
 {
@@ -41,7 +42,7 @@ namespace _Project.Scripts.Core
 
         private void Awake()
         {
-            SubscribeToSceneController();
+            /// SubscribeToSceneController();
         }
 
         private void OnDisable()
@@ -49,16 +50,23 @@ namespace _Project.Scripts.Core
             UnsubscribeFromSceneController();
         }
 
-        private void Start()
+        /* private void Start()
         {
             ValidateReferences();
 
-            if (!_isSubscribed)
-                SubscribeToSceneController();
+            ///if (!_isSubscribed)                SubscribeToSceneController();
 
             if (!SessionContext.HasMainMenuSpawnOverride && _spawnPoint != null)
                 SessionContext.SetMainMenuSpawn(_spawnPoint.position, _spawnPoint.rotation);
 
+            RepositionPlayer();
+        }*/
+        private void Start()
+        {
+            ValidateReferences();
+            // sin suscripción al evento — Start() es suficiente y llega en el momento correcto
+            if (!SessionContext.HasMainMenuSpawnOverride && _spawnPoint != null)
+                SessionContext.SetMainMenuSpawn(_spawnPoint.position, _spawnPoint.rotation);
             RepositionPlayer();
         }
 
@@ -83,12 +91,16 @@ namespace _Project.Scripts.Core
                 targetRotation = _spawnPoint.rotation;
             }
 
+            var teleportProvider = xrOrigin.GetComponentInChildren<TeleportationProvider>();
+            if (teleportProvider != null) teleportProvider.enabled = false;
+
             var cc = xrOrigin.GetComponent<CharacterController>();
             if (cc != null) cc.enabled = false;
 
             xrOrigin.transform.SetPositionAndRotation(targetPosition, targetRotation);
 
             if (cc != null) cc.enabled = true;
+            if (teleportProvider != null) teleportProvider.enabled = true;
 
             Debug.Log($"{LOG_TAG} Player repositioned -- {targetPosition}.");
         }
@@ -135,3 +147,4 @@ namespace _Project.Scripts.Core
         #endregion
     }
 }
+
