@@ -2249,6 +2249,44 @@ MonoBehaviour:
   _planetPrefab: {fileID: 6392694476324826247, guid: fbe2f758224df5f45b6433e200824604, type: 3}
   _cameraTransform: {fileID: 47491072}
   _spawnDistance: 3
+  _showIntroPanel: 1
+  _introText: '<size=120%><b>KeplerLab 1</b></size>
+
+    <size=80%>(Primera Ley de
+    Kepler)</size>
+
+
+    1. Pulsa <b>Spawn Planet</b> para crear un planeta.
+
+    2.
+    <b>Agarralo</b> y colocalo en cualquier punto del espacio.
+
+    3. Al soltarlo,
+    el sistema genera una <b>orbita eliptica 3D</b> con el <b>Sol en uno de los focos</b>.
+
+    4.
+    Puedes pausar la simulacion para ver la explicacion de la ley.
+
+
+    <size=80%>Observa
+    como cambia la forma de la orbita segun la posicion y el lanzamiento.</size>'
+  _showExplanationOnPause: 1
+  _leftControllerAnchor: {fileID: 0}
+  _panelLocalOffset: {x: 0, y: 0.08, z: 0.05}
+  _panelLocalEuler: {x: 45, y: 0, z: 0}
+  _panelControllerScale: 0.08
+  _messageDistance: 2
+  _messageHeightOffset: 0.05
+  _messagePanelSize: {x: 3, y: 2}
+  _messageFontSize: 0.12
+  _messageFont: {fileID: 0}
+  _explanationText: "<size=120%><b>Primera Ley de Kepler</b></size>\n<size=80%>(Ley
+    de las orbitas)</size>\n\nTodos los planetas describen <b>orbitas elipticas</b>,
+    con el <b>Sol</b> situado en uno de los <b>focos</b> de la elipse.\n\n\u25CF
+    <b>Perihelio</b>: punto mas cercano al Sol.\n\u25CF <b>Afelio</b>: punto mas
+    lejano al Sol.\n\u25CF La <b>excentricidad</b> (e) define la forma:\n    e =
+    0  -> circulo\n    0 < e < 1 -> elipse\n\n<size=80%>Pulsa pausa de nuevo para
+    reanudar.</size>"
 --- !u!1 &1834068109
 GameObject:
   m_ObjectHideFlags: 0

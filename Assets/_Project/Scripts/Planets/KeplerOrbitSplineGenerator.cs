@@ -69,8 +69,12 @@ namespace _Project.Scripts.Planets
             // Eje perpendicular en el plano orbital
             Vector3 semiLatDir = Vector3.Cross(normal, periDir).normalized;
 
-            // Centro de la elipse = foco + c * direccion_periapsis
-            Vector3 ellipseCenter = sunPos + periDir * c;
+            // Con un foco en el Sol, el centro de la elipse debe quedar a -c en
+            // la direccion del periapsis. Asi, cuando angle = 0:
+            //   worldPos = center + a * periDir = sun + (a - c) * periDir
+            // que es exactamente el periapsis (y el punto de soltado cuando
+            // OrbitalLauncher fuerza una orbita circular o arranca en periapsis).
+            Vector3 ellipseCenter = sunPos - periDir * c;
 
             var spline = _splineContainer.Spline;
             spline.Clear();
