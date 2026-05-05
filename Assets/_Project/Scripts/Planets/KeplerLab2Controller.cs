@@ -398,7 +398,7 @@ namespace _Project.Scripts.Planets
             _messageText.fontSize = _messageFontSize * 100f;
             _messageText.alignment = TextAlignmentOptions.Center;
             _messageText.color = Color.white;
-            _messageText.enableWordWrapping = true;
+            _messageText.textWrappingMode = TextWrappingModes.Normal;
             _messageText.text = string.Empty;
 
             var textRect = textGo.GetComponent<RectTransform>();

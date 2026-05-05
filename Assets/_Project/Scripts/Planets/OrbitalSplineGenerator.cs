@@ -57,9 +57,9 @@ namespace _Project.Scripts.Planets
 
         #region Cached Components
 
-        private SplineContainer _splineContainer;
-        private SplineAnimate   _splineAnimate;
-        private Renderer _sunRenderer;
+        private SplineContainer  _splineContainer;
+        private SplineAnimate    _splineAnimate;
+        private OrbitLineRenderer _orbitLineRenderer;
         private readonly WaitForEndOfFrame _waitForEndOfFrame = new WaitForEndOfFrame();
 
         #endregion
@@ -77,6 +77,7 @@ namespace _Project.Scripts.Planets
             if (_splineContainer == null)
                 _splineContainer = GetComponent<SplineContainer>();
             GenerateOrbit();
+            _orbitLineRenderer?.Redraw();
         }
 
         /// <summary>Overload that accepts a periapsis direction (currently unused by this generator).</summary>
@@ -91,9 +92,9 @@ namespace _Project.Scripts.Planets
 
         private void Awake()
         {
-            _splineContainer = GetComponent<SplineContainer>();
+            _splineContainer   = GetComponent<SplineContainer>();
+            _orbitLineRenderer = GetComponent<OrbitLineRenderer>();
             TryResolveSunReference();
-            CacheSunRenderer();
 
             _splineAnimate = GetComponentInChildren<SplineAnimate>();
             if (_splineAnimate != null)
@@ -108,8 +109,10 @@ namespace _Project.Scripts.Planets
             if (_splineContainer == null)
                 _splineContainer = GetComponent<SplineContainer>();
 
+            if (_orbitLineRenderer == null)
+                _orbitLineRenderer = GetComponent<OrbitLineRenderer>();
+
             TryResolveSunReference();
-            CacheSunRenderer();
 
             if (_splineAnimate == null)
                 _splineAnimate = GetComponentInChildren<SplineAnimate>();
@@ -136,8 +139,17 @@ namespace _Project.Scripts.Planets
             yield return _waitForEndOfFrame;
             GenerateOrbit();
 
-            if (_enableSplineAnimateOnGenerate && _splineAnimate != null)
+            int knotCount = _splineContainer != null ? _splineContainer.Spline.Count : 0;
+            Debug.Log($"{LOG_TAG} Generated orbit -- knots: {knotCount}, GO: {gameObject.name}.");
+
+            if (_orbitLineRenderer != null)
+                _orbitLineRenderer.Redraw();
+
+            if (_enableSplineAnimateOnGenerate && _splineAnimate != null && knotCount >= MIN_RESOLUTION)
+            {
                 _splineAnimate.enabled = true;
+                Debug.Log($"{LOG_TAG} SplineAnimate enabled -- knots validated.");
+            }
         }
 
         private void GenerateOrbit()
@@ -226,21 +238,7 @@ namespace _Project.Scripts.Planets
             }
         }
 
-        private void CacheSunRenderer()
-        {
-            _sunRenderer = sun != null ? sun.GetComponentInChildren<Renderer>() : null;
-        }
-
-        private Vector3 GetSunFocusPosition()
-        {
-            if (sun == null)
-                return Vector3.zero;
-
-            if (_sunRenderer == null)
-                CacheSunRenderer();
-
-            return _sunRenderer != null ? _sunRenderer.bounds.center : sun.position;
-        }
+        private Vector3 GetSunFocusPosition() => sun != null ? sun.position : Vector3.zero;
 
         #endregion
 

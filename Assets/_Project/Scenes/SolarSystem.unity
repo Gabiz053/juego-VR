@@ -322,7 +322,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29a074d529cf945029ef7cf40540c9df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Target: {fileID: 0}
+  m_Target: {fileID: 411326287}
   m_PlayOnAwake: 1
   m_LoopMode: 1
   m_Method: 0
@@ -348,7 +348,7 @@ MonoBehaviour:
   splineContainer: {fileID: 411326287}
   resolution: 128
   lineWidth: 0.05
-  _useLocalSpace: 0
+  _useLocalSpace: 1
 --- !u!1001 &465954478
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -580,7 +580,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1717954561962503726, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1717954561962503726, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2286,6 +2286,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1255778252}
     m_Modifications:
+    - target: {fileID: 859698306002138939, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 859698306002138939, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 859698306002138939, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1627832538112665193, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
       propertyPath: _maxRadius
       value: 6.6
@@ -2306,6 +2318,14 @@ PrefabInstance:
       propertyPath: _heightOffset
       value: -10
       objectReference: {fileID: 0}
+    - target: {fileID: 2914792853639924371, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3158784513175863657, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3720669398680436365, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
       propertyPath: _inclination
       value: 7
@@ -2322,6 +2342,10 @@ PrefabInstance:
       propertyPath: sun
       value: 
       objectReference: {fileID: 8628101737500424567}
+    - target: {fileID: 4816619519007871021, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+      propertyPath: _enableSplineAnimateOnGenerate
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5266315445586285240, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2394,8 +2418,7 @@ PrefabInstance:
       propertyPath: _inclination
       value: 1.85
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 4132962493444466755, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 1980068226664984493, guid: 51fdd0d9b78a47848b74e36e0005d0a0, type: 3}
     m_AddedGameObjects:

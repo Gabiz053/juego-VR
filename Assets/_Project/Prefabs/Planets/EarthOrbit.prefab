@@ -499,7 +499,7 @@ MonoBehaviour:
   _inclination: 5.1
   resolution: 64
   generateOnStart: 1
-  _enableSplineAnimateOnGenerate: 0
+  _enableSplineAnimateOnGenerate: 1
   sun: {fileID: 6716991259885266055}
 --- !u!120 &1566913750358238255
 LineRenderer:
