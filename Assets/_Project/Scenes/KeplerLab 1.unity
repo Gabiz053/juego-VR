@@ -1576,6 +1576,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HUD_WristMenu_Kepler
       objectReference: {fileID: 0}
+    - target: {fileID: 4264298935910122637, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7431832797338046406, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
       propertyPath: _palmTransform
       value: 
