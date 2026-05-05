@@ -75,10 +75,10 @@ namespace _Project.Scripts.Core
 
         private void EnsureLineRenderersCache()
         {
-            _lineRenderers.RemoveAll(lr => lr == null);
-
-            if (_lineRenderers.Count == 0)
-                CacheLineRenderers();
+            // Always refresh: newly spawned planets add LineRenderers after Start,
+            // so a stale cache would miss them and the toggle would only affect
+            // the orbits that existed at scene load.
+            CacheLineRenderers();
         }
 
         private void HideOrbits()
