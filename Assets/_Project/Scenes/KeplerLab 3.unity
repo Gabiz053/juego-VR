@@ -707,6 +707,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 612012728}
     m_Modifications:
+    - target: {fileID: 893291169465361264, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1782322548416687588, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -749,7 +753,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1782322548416687588, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2
+      value: -0.01
       objectReference: {fileID: 0}
     - target: {fileID: 1782322548416687588, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
       propertyPath: m_LocalRotation.w
@@ -773,7 +777,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1782322548416687588, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1
+      value: 0.07
       objectReference: {fileID: 0}
     - target: {fileID: 1782322548416687588, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -791,6 +795,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: HUD_WristMenu_Kepler
       objectReference: {fileID: 0}
+    - target: {fileID: 5027304443940058665, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
+      propertyPath: _palmTransform
+      value: 
+      objectReference: {fileID: 826587939}
+    - target: {fileID: 5027304443940058665, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
+      propertyPath: _cameraTransform
+      value: 
+      objectReference: {fileID: 47491072}
     - target: {fileID: 7431832797338046406, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
       propertyPath: _palmTransform
       value: 
@@ -813,6 +825,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1782322548416687588, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
   m_PrefabInstance: {fileID: 1093763925}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1093763927 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5027304443940058665, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
+  m_PrefabInstance: {fileID: 1093763925}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7dfc9dc743b9663b837b6ae0e5b1c3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1133604584
 GameObject:
   m_ObjectHideFlags: 0
@@ -1822,7 +1845,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abb613a00b06d134fb1277d6889ab856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _wristMenuController: {fileID: 0}
+  _wristMenuController: {fileID: 1093763927}
   _orbitalPauseController: {fileID: 1829900471}
   _orbitVisibilityController: {fileID: 1829900472}
   _mainMenuSceneName: Main_VR
