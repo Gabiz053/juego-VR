@@ -186,15 +186,22 @@ namespace _Project.Scripts.Planets
             Vector3 eVec          = (1f / gm) * ((vMag * vMag - gm / rMag) * r - rdotv * v);
             float   eccentricity  = Mathf.Clamp(eVec.magnitude, 0f, 0.99f);
 
+            // Para orbitas casi circulares (el caso "el jugador suelta el planeta
+            // sin lanzarlo") el vector excentricidad es ~0 y su direccion es
+            // numericamente inestable. Usamos la direccion radial del punto de
+            // soltado como direccion de "periapsis" -- de esta forma el planeta
+            // empieza la orbita exactamente en el punto donde se solto (nu0 = 0).
             Vector3 periapsisDirection = eccentricity > 0.001f
                 ? eVec.normalized
-                : GetArbitraryPerpendicular(orbitNormal);
+                : r.normalized;
 
             float orbitalPeriod = TWO_PI * Mathf.Sqrt(semiMajorAxis * semiMajorAxis * semiMajorAxis / gm);
 
+            // Para circular: nu0 = 0 (planeta en periapsis = punto de soltado).
+            // Para elipses: angulo entre la direccion al planeta y la direccion al periapsis.
             float cosNu0 = eccentricity > 0.001f
                 ? Mathf.Clamp(Vector3.Dot(eVec.normalized, r.normalized), -1f, 1f)
-                : 0f;
+                : 1f;
             float nu0 = Mathf.Acos(cosNu0);
             if (rdotv < 0f) nu0 = TWO_PI - nu0;
 

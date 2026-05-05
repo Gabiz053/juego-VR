@@ -62,6 +62,13 @@ namespace _Project.Scripts.Planets
         private OrbitLineRenderer _orbitLineRenderer;
         private readonly WaitForEndOfFrame _waitForEndOfFrame = new WaitForEndOfFrame();
 
+        // Direccion del periapsis en LOCAL space del SplineContainer.
+        // Por defecto +X para preservar el comportamiento del SolarSystem original
+        // (donde el periapsis siempre apuntaba a +X). Cuando el OrbitalLauncher
+        // suelta un planeta llama al overload UpdateOrbit(a, e, dir) y este vector
+        // se reorienta para que la elipse pase por el punto de soltado.
+        private Vector3 _periapsisDirLocal = Vector3.right;
+
         #endregion
 
         #region Public API
@@ -80,9 +87,22 @@ namespace _Project.Scripts.Planets
             _orbitLineRenderer?.Redraw();
         }
 
-        /// <summary>Overload that accepts a periapsis direction (currently unused by this generator).</summary>
+        /// <summary>
+        /// Overload que ademas orienta la elipse para que su periapsis quede en la
+        /// direccion indicada (en world space). Esto hace que el planeta arranque
+        /// la orbita exactamente desde donde el jugador la solto.
+        /// </summary>
         public void UpdateOrbit(float newA, float newE, Vector3 periapsisDir)
         {
+            // Convertimos la direccion world->local del SplineContainer y la
+            // proyectamos al plano horizontal (la elipse se traza en XZ y luego
+            // se inclina segun _inclination).
+            Vector3 dirLocal = transform.InverseTransformDirection(periapsisDir);
+            dirLocal.y = 0f;
+            if (dirLocal.sqrMagnitude < 1e-6f)
+                dirLocal = Vector3.right;
+            _periapsisDirLocal = dirLocal.normalized;
+
             UpdateOrbit(newA, newE);
         }
 
@@ -174,26 +194,39 @@ namespace _Project.Scripts.Planets
                 ? transform.InverseTransformPoint(GetSunFocusPosition())
                 : Vector3.zero;
 
+            // Base ortonormal en el plano XZ local: periDir es la direccion del
+            // periapsis, perpDir es 90deg CCW dentro del plano. La elipse se
+            // genera con la formula parametrica clasica:
+            //   p(E) = focus + (a*cos(E) - c) * periDir + b*sin(E) * perpDir
+            Vector3 periDir = _periapsisDirLocal.sqrMagnitude > 1e-6f
+                            ? new Vector3(_periapsisDirLocal.x, 0f, _periapsisDirLocal.z).normalized
+                            : Vector3.right;
+            // perpDir = up x periDir → rota periDir 90 grados CCW en el plano XZ.
+            Vector3 perpDir = new Vector3(-periDir.z, 0f, periDir.x);
+
             float incRad = _inclination * Mathf.Deg2Rad;
             float sinInc = Mathf.Sin(incRad);
             float cosInc = Mathf.Cos(incRad);
+
+            // Inclinacion: pivotamos el eje "perpendicular al periapsis" hacia
+            // arriba. Para inclinacion = 0, perpDirInclined == perpDir (orbita en
+            // el plano horizontal). Para inclinacion > 0, la orbita se inclina
+            // alrededor del eje del periapsis (que es como rotaba el codigo
+            // original, pero ahora generalizado a cualquier direccion de periapsis).
+            Vector3 perpDirInclined = perpDir * cosInc + Vector3.up * sinInc;
 
             var spline = _splineContainer.Spline;
             spline.Clear();
 
             for (int i = 0; i < knotCount; i++)
             {
-                float angle = (float)i / knotCount * 2f * Mathf.PI;
-                float x     = Mathf.Cos(angle) * a - c;
-                float zFlat = Mathf.Sin(angle) * b;
+                float angle  = (float)i / knotCount * 2f * Mathf.PI;
+                float along  = Mathf.Cos(angle) * a - c;
+                float across = Mathf.Sin(angle) * b;
 
-                // Rotate orbit plane around the periapsis axis (X) by the inclination angle.
-                var position = new float3(
-                    focusLocal.x + x,
-                    focusLocal.y + zFlat * sinInc,
-                    focusLocal.z + zFlat * cosInc);
-
-                spline.Add(new BezierKnot(position), TangentMode.AutoSmooth);
+                Vector3 posLocal = focusLocal + periDir * along + perpDirInclined * across;
+                spline.Add(new BezierKnot(new float3(posLocal.x, posLocal.y, posLocal.z)),
+                           TangentMode.AutoSmooth);
             }
 
             spline.Closed = true;
