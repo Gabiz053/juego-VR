@@ -1559,7 +1559,7 @@ GameObject:
   - component: {fileID: 1514360685}
   - component: {fileID: 1514360686}
   m_Layer: 0
-  m_Name: '[MainVRSceneBootstrap]'
+  m_Name: '[LessonSceneBootstrap]'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1589,7 +1589,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1514360684}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5faf4179cc2e0e1418c8bdae6f0d5c3c, type: 3}
+  m_Script: {fileID: 11500000, guid: 768a5ca4309e2354a9d3d41fa35404b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _spawnPoint: {fileID: 1294974381}
