@@ -51,6 +51,22 @@ namespace _Project.Scripts.Core
         [SerializeField] private float _spawnDistance = 1.5f;
 
         [Header("Explanation Panel (Pause)")]
+        [Tooltip("Si esta activado, al entrar en la escena aparece un panel con instrucciones " +
+                 "de uso, igual que en KeplerLab 2.")]
+        [SerializeField] private bool _showIntroPanel = true;
+
+        [TextArea(4, 12)]
+        [Tooltip("Texto inicial que explica como funciona la escena.")]
+        [SerializeField] private string _introText =
+            "<size=120%><b>KeplerLab 1</b></size>\n" +
+            "<size=80%>(Primera Ley de Kepler)</size>\n\n" +
+            "1. Pulsa <b>Spawn Planet</b> para crear un planeta.\n" +
+            "2. <b>Agarralo</b> y colocalo en cualquier punto del espacio.\n" +
+            "3. Al soltarlo, el sistema genera una <b>orbita eliptica 3D</b> " +
+            "con el <b>Sol en uno de los focos</b>.\n" +
+            "4. Puedes pausar la simulacion para ver la explicacion de la ley.\n\n" +
+            "<size=80%>Observa como cambia la forma de la orbita segun la posicion y el lanzamiento.</size>";
+
         [Tooltip("Si esta activado, al pulsar pausa aparece un panel TMP en la muneca " +
                  "izquierda con una explicacion de la 1ra Ley de Kepler. " +
                  "Replicamos el patron del HUD de KeplerLab2Controller.")]
@@ -121,6 +137,8 @@ namespace _Project.Scripts.Core
 
         // Runtime objects para el panel de explicacion que aparece al pausar.
         private const string TMP_FONT_RESOURCE_PATH = "Fonts & Materials/LiberationSans SDF";
+        private GameObject _introPanelGo;
+        private TextMeshProUGUI _introLabel;
         private GameObject _explanationPanelGo;
         private TextMeshProUGUI _explanationLabel;
 
@@ -145,12 +163,17 @@ namespace _Project.Scripts.Core
             if (_wristMenuController != null)
                 _wristMenuController.SetSpawnButtonInteractable(_currentSceneIndex == 0);
 
+            if (_showIntroPanel)
+                ShowIntroPanel();
+
             Debug.Log($"{LOG_TAG} Initialized -- scene index: {_currentSceneIndex}, events subscribed.");
         }
 
         private void OnDestroy()
         {
             UnsubscribeEvents();
+            if (_introPanelGo != null)
+                Destroy(_introPanelGo);
             if (_explanationPanelGo != null)
                 Destroy(_explanationPanelGo);
         }
@@ -283,6 +306,43 @@ namespace _Project.Scripts.Core
 
         #endregion
 
+        #region Internals -- Intro Panel ----------------------------------------
+
+        private void ShowIntroPanel()
+        {
+            if (_introPanelGo == null)
+                CreateIntroPanel();
+            if (_introPanelGo == null) return;
+
+            _introPanelGo.SetActive(true);
+            if (_introLabel != null)
+                _introLabel.text = _introText;
+        }
+
+        private void CreateIntroPanel()
+        {
+            TMP_FontAsset font = ResolvePanelFont();
+            if (font == null)
+            {
+                Debug.LogWarning($"{LOG_TAG} No TMP font available -- intro panel skipped.", this);
+                return;
+            }
+
+            _introPanelGo = new GameObject("HUD_KeplerLab1_Intro");
+            if (!TryPlacePanel(_introPanelGo))
+            {
+                Destroy(_introPanelGo);
+                _introPanelGo = null;
+                return;
+            }
+
+            _introLabel = BuildPanelVisuals(_introPanelGo, font, "Txt_Intro");
+            if (_introLabel != null)
+                _introLabel.text = _introText;
+        }
+
+        #endregion
+
         #region Internals -- Explanation Panel ----------------------------------
 
         private void TryResolveLeftControllerAnchor()
@@ -335,15 +395,7 @@ namespace _Project.Scripts.Core
 
         private void CreateExplanationPanel()
         {
-            // Misma estrategia que KeplerLab2Controller.CreateMessagePanel: si
-            // tenemos referencia al mando izquierdo lo anclamos ahi (HUD de
-            // muneca); si no, fallback delante de la camara.
-            TMP_FontAsset font = _messageFont;
-            if (font == null)
-                font = Resources.Load<TMP_FontAsset>(TMP_FONT_RESOURCE_PATH);
-            if (font == null && TMP_Settings.instance != null)
-                font = TMP_Settings.defaultFontAsset;
-
+            TMP_FontAsset font = ResolvePanelFont();
             if (font == null)
             {
                 Debug.LogWarning($"{LOG_TAG} No TMP font available -- explanation panel skipped.", this);
@@ -351,44 +403,67 @@ namespace _Project.Scripts.Core
             }
 
             _explanationPanelGo = new GameObject("HUD_KeplerLab1_Explanation");
+            if (!TryPlacePanel(_explanationPanelGo))
+            {
+                Destroy(_explanationPanelGo);
+                _explanationPanelGo = null;
+                return;
+            }
 
+            _explanationLabel = BuildPanelVisuals(_explanationPanelGo, font, "Txt_Explanation");
+            if (_explanationLabel != null)
+                _explanationLabel.text = _explanationText;
+        }
+
+        private TMP_FontAsset ResolvePanelFont()
+        {
+            TMP_FontAsset font = _messageFont;
+            if (font == null)
+                font = Resources.Load<TMP_FontAsset>(TMP_FONT_RESOURCE_PATH);
+            if (font == null && TMP_Settings.instance != null)
+                font = TMP_Settings.defaultFontAsset;
+            return font;
+        }
+
+        private bool TryPlacePanel(GameObject panelGo)
+        {
             if (_leftControllerAnchor != null)
             {
-                _explanationPanelGo.transform.SetParent(_leftControllerAnchor, worldPositionStays: false);
-                _explanationPanelGo.transform.localPosition = _panelLocalOffset;
-                _explanationPanelGo.transform.localRotation = Quaternion.Euler(_panelLocalEuler);
+                panelGo.transform.SetParent(_leftControllerAnchor, worldPositionStays: false);
+                panelGo.transform.localPosition = _panelLocalOffset;
+                panelGo.transform.localRotation = Quaternion.Euler(_panelLocalEuler);
+                return true;
             }
-            else
+
+            if (Camera.main == null)
             {
-                if (Camera.main == null)
-                {
-                    Debug.LogWarning($"{LOG_TAG} No main camera and no left controller -- cannot place explanation panel.", this);
-                    Destroy(_explanationPanelGo);
-                    _explanationPanelGo = null;
-                    return;
-                }
-
-                Camera cam = Camera.main;
-                Vector3 panelPos = cam.transform.position
-                                 + cam.transform.forward * _messageDistance
-                                 + Vector3.up * _messageHeightOffset;
-                _explanationPanelGo.transform.position = panelPos;
-                _explanationPanelGo.transform.rotation =
-                    Quaternion.LookRotation(panelPos - cam.transform.position, Vector3.up);
+                Debug.LogWarning($"{LOG_TAG} No main camera and no left controller -- cannot place panel.", this);
+                return false;
             }
 
-            var canvas = _explanationPanelGo.AddComponent<Canvas>();
+            Camera cam = Camera.main;
+            Vector3 panelPos = cam.transform.position
+                             + cam.transform.forward * _messageDistance
+                             + Vector3.up * _messageHeightOffset;
+            panelGo.transform.position = panelPos;
+            panelGo.transform.rotation =
+                Quaternion.LookRotation(panelPos - cam.transform.position, Vector3.up);
+            return true;
+        }
+
+        private TextMeshProUGUI BuildPanelVisuals(GameObject panelGo, TMP_FontAsset font, string textObjectName)
+        {
+            var canvas = panelGo.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.WorldSpace;
             canvas.sortingOrder = 100;
 
-            var canvasRect = _explanationPanelGo.GetComponent<RectTransform>();
+            var canvasRect = panelGo.GetComponent<RectTransform>();
             canvasRect.sizeDelta = new Vector2(_messagePanelSize.x * 100f, _messagePanelSize.y * 100f);
             float baseScale = _leftControllerAnchor != null ? _panelControllerScale * 0.01f : 0.01f;
             canvasRect.localScale = Vector3.one * baseScale;
 
-            // Fondo translucido.
             var bgGo = new GameObject("Img_PanelBackground");
-            bgGo.transform.SetParent(_explanationPanelGo.transform, worldPositionStays: false);
+            bgGo.transform.SetParent(panelGo.transform, worldPositionStays: false);
             var bgImage = bgGo.AddComponent<UnityEngine.UI.Image>();
             bgImage.color = new Color(0f, 0f, 0f, 0.55f);
             var bgRect = bgGo.GetComponent<RectTransform>();
@@ -397,22 +472,22 @@ namespace _Project.Scripts.Core
             bgRect.offsetMin = Vector2.zero;
             bgRect.offsetMax = Vector2.zero;
 
-            // Texto.
-            var textGo = new GameObject("Txt_Explanation");
-            textGo.transform.SetParent(_explanationPanelGo.transform, worldPositionStays: false);
-            _explanationLabel = textGo.AddComponent<TextMeshProUGUI>();
-            _explanationLabel.font = font;
-            _explanationLabel.fontSize = _messageFontSize * 100f;
-            _explanationLabel.alignment = TextAlignmentOptions.Center;
-            _explanationLabel.color = Color.white;
-            _explanationLabel.textWrappingMode = TextWrappingModes.Normal;
-            _explanationLabel.text = _explanationText;
+            var textGo = new GameObject(textObjectName);
+            textGo.transform.SetParent(panelGo.transform, worldPositionStays: false);
+            var label = textGo.AddComponent<TextMeshProUGUI>();
+            label.font = font;
+            label.fontSize = _messageFontSize * 100f;
+            label.alignment = TextAlignmentOptions.Center;
+            label.color = Color.white;
+            label.textWrappingMode = TextWrappingModes.Normal;
 
             var textRect = textGo.GetComponent<RectTransform>();
             textRect.anchorMin = Vector2.zero;
             textRect.anchorMax = Vector2.one;
             textRect.offsetMin = new Vector2(20, 20);
             textRect.offsetMax = new Vector2(-20, -20);
+
+            return label;
         }
 
         #endregion
