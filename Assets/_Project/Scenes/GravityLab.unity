@@ -224,7 +224,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -5202165748392950219, guid: e66f57fccae66c94eadae332385c13e9, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -5202165748392950219, guid: e66f57fccae66c94eadae332385c13e9, type: 3}
       propertyPath: _rightHand
@@ -815,17 +815,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e66f57fccae66c94eadae332385c13e9, type: 3}
---- !u!114 &64241146 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: -5202165748392950219, guid: e66f57fccae66c94eadae332385c13e9, type: 3}
-  m_PrefabInstance: {fileID: 64241145}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe4736f2020b6a7408b670c26dc8f9f7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &64241147 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5075688403106313804, guid: e66f57fccae66c94eadae332385c13e9, type: 3}
@@ -2559,7 +2548,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8eb0a4b479caca442a0826f229fc5b64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dataCard: {fileID: 64241146}
+  _dataCard: {fileID: 0}
   _rayDistance: 100
   _rayRadius: 0.08
   _layerMask:
