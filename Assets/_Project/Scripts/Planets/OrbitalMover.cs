@@ -32,6 +32,9 @@ namespace _Project.Scripts.Planets
         [Tooltip("SplineContainer en MarsOrbit que define la orbita.")]
         [SerializeField] private SplineContainer _splineContainer;
 
+        [Tooltip("Generador de orbita en world space para planetas spawneados en KeplerLab.")]
+        [SerializeField] private KeplerOrbitSplineGenerator _keplerSplineGenerator;
+
         #endregion
 
         #region Events
@@ -54,7 +57,14 @@ namespace _Project.Scripts.Planets
             Vector3 orbitNormal,
             Vector3 periapsisDirection)
         {
-            if (_splineGenerator != null)
+            // Generador nuevo (world space) tiene prioridad
+            if (_keplerSplineGenerator != null)
+                _keplerSplineGenerator.GenerateOrbit(
+                    semiMajorAxis,
+                    eccentricity,
+                    periapsisDirection,
+                    orbitNormal);
+            else if (_splineGenerator != null)
                 _splineGenerator.UpdateOrbit(semiMajorAxis, eccentricity, periapsisDirection);
 
             if (_orbitLineRenderer != null)
@@ -67,9 +77,10 @@ namespace _Project.Scripts.Planets
             }
 
             _splineAnimate.Container = _splineContainer;
-            _splineAnimate.Duration  = orbitalPeriod;
-            _splineAnimate.Loop      = SplineAnimate.LoopMode.Loop;
-            _splineAnimate.enabled   = true;
+            _splineAnimate.Duration = orbitalPeriod;
+            _splineAnimate.Loop = SplineAnimate.LoopMode.Loop;
+            _splineAnimate.enabled = true;
+            _splineAnimate.NormalizedTime = trueAnomalyAtLaunch / (2f * Mathf.PI);
             _splineAnimate.Play();
 
             Debug.Log($"{LOG_TAG} Orbit set -- following spline, T={orbitalPeriod:F1}s.");

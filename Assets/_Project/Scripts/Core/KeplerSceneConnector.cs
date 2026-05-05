@@ -181,7 +181,7 @@ namespace _Project.Scripts.Core
             }
 
             Vector3 spawnPos = _cameraTransform.position + _cameraTransform.forward * _spawnDistance;
-            Instantiate(_planetPrefab, Vector3.zero, Quaternion.identity);
+            Instantiate(_planetPrefab, spawnPos, Quaternion.identity);
             Debug.Log($"{LOG_TAG} Planet spawned at {spawnPos}.");
         }
 
