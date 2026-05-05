@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using _Project.Scripts.UI;
 
 namespace _Project.Scripts.Core
@@ -55,6 +57,16 @@ namespace _Project.Scripts.Core
                  "de uso, igual que en KeplerLab 2.")]
         [SerializeField] private bool _showIntroPanel = true;
 
+        [Header("Intro Panel — Timing")]
+        [Tooltip("Seconds the intro panel takes to fade in.")]
+        [SerializeField] private float _introFadeInDuration = 1.0f;
+
+        [Tooltip("Seconds the intro panel stays fully visible before fading out.")]
+        [SerializeField] private float _introHoldDuration = 4.0f;
+
+        [Tooltip("Seconds the intro panel takes to fade out.")]
+        [SerializeField] private float _introFadeOutDuration = 1.5f;
+
         [TextArea(4, 12)]
         [Tooltip("Texto inicial que explica como funciona la escena.")]
         [SerializeField] private string _introText =
@@ -72,9 +84,9 @@ namespace _Project.Scripts.Core
                  "Replicamos el patron del HUD de KeplerLab2Controller.")]
         [SerializeField] private bool _showExplanationOnPause = true;
 
-        [Tooltip("Transform de la muneca / mando izquierdo. Si esta vacio, se autoresuelve " +
-                 "buscando un transform llamado 'Left Controller' / 'LeftHand' en escena.")]
-        [SerializeField] private Transform _leftControllerAnchor;
+        [Tooltip("Transform de la muneca / mando derecho. Si esta vacio, se autoresuelve " +
+                 "buscando un transform llamado 'Right Controller' / 'RightHand' en escena.")]
+        [SerializeField] private Transform _rightControllerAnchor;
 
         [Tooltip("Offset local (m) respecto al mando izquierdo donde se ancla el panel " +
                  "(por defecto ~18 cm por encima de la muneca).")]
@@ -139,6 +151,8 @@ namespace _Project.Scripts.Core
         private const string TMP_FONT_RESOURCE_PATH = "Fonts & Materials/LiberationSans SDF";
         private GameObject _introPanelGo;
         private TextMeshProUGUI _introLabel;
+        private CanvasGroup _introCanvasGroup;
+        private Coroutine _introFadeCoroutine;
         private GameObject _explanationPanelGo;
         private TextMeshProUGUI _explanationLabel;
 
@@ -155,7 +169,7 @@ namespace _Project.Scripts.Core
                 _cameraTransform = Camera.main.transform;
 
             _spawnDistance = Mathf.Max(MIN_SPAWN_DISTANCE, _spawnDistance);
-            TryResolveLeftControllerAnchor();
+            TryResolveRightControllerAnchor();
             ValidateReferences();
             SubscribeEvents();
 
@@ -314,9 +328,15 @@ namespace _Project.Scripts.Core
                 CreateIntroPanel();
             if (_introPanelGo == null) return;
 
-            _introPanelGo.SetActive(true);
             if (_introLabel != null)
                 _introLabel.text = _introText;
+
+            // Stop any running fade before starting fresh
+            if (_introFadeCoroutine != null)
+                StopCoroutine(_introFadeCoroutine);
+
+            _introPanelGo.SetActive(true);
+            _introFadeCoroutine = StartCoroutine(IntroPanelFadeSequence());
         }
 
         private void CreateIntroPanel()
@@ -329,6 +349,11 @@ namespace _Project.Scripts.Core
             }
 
             _introPanelGo = new GameObject("HUD_KeplerLab1_Intro");
+
+            // CanvasGroup lets us tween the whole panel's alpha in one place
+            _introCanvasGroup = _introPanelGo.AddComponent<CanvasGroup>();
+            _introCanvasGroup.alpha = 0f;
+
             if (!TryPlacePanel(_introPanelGo))
             {
                 Destroy(_introPanelGo);
@@ -341,13 +366,55 @@ namespace _Project.Scripts.Core
                 _introLabel.text = _introText;
         }
 
+        /// <summary>
+        /// Fades the intro panel in, holds it, then fades it out and deactivates it.
+        /// Timing controlled by _introFadeInDuration, _introHoldDuration, _introFadeOutDuration.
+        /// </summary>
+        private IEnumerator IntroPanelFadeSequence()
+        {
+            float fadeIn   = Mathf.Max(0f, _introFadeInDuration);
+            float hold     = Mathf.Max(0f, _introHoldDuration);
+            float fadeOut  = Mathf.Max(0f, _introFadeOutDuration);
+
+            // --- Fade In ---
+            float elapsed = 0f;
+            while (elapsed < fadeIn)
+            {
+                elapsed += Time.deltaTime;
+                if (_introCanvasGroup != null)
+                    _introCanvasGroup.alpha = Mathf.Clamp01(elapsed / Mathf.Max(fadeIn, 0.001f));
+                yield return null;
+            }
+            if (_introCanvasGroup != null) _introCanvasGroup.alpha = 1f;
+
+            // --- Hold ---
+            yield return new WaitForSeconds(hold);
+
+            // --- Fade Out ---
+            elapsed = 0f;
+            while (elapsed < fadeOut)
+            {
+                elapsed += Time.deltaTime;
+                if (_introCanvasGroup != null)
+                    _introCanvasGroup.alpha = Mathf.Clamp01(1f - elapsed / Mathf.Max(fadeOut, 0.001f));
+                yield return null;
+            }
+            if (_introCanvasGroup != null) _introCanvasGroup.alpha = 0f;
+
+            if (_introPanelGo != null)
+                _introPanelGo.SetActive(false);
+
+            _introFadeCoroutine = null;
+            Debug.Log($"{LOG_TAG} Intro panel fade sequence complete.");
+        }
+
         #endregion
 
         #region Internals -- Explanation Panel ----------------------------------
 
-        private void TryResolveLeftControllerAnchor()
+        private void TryResolveRightControllerAnchor()
         {
-            if (_leftControllerAnchor != null) return;
+            if (_rightControllerAnchor != null) return;
 
             Transform[] all = FindObjectsByType<Transform>(FindObjectsSortMode.None);
             Transform exact = null;
@@ -356,24 +423,24 @@ namespace _Project.Scripts.Core
             {
                 string n     = all[i].name;
                 string lower = n.ToLowerInvariant();
-                if (string.Equals(n, "Left Controller", StringComparison.Ordinal))
+                if (string.Equals(n, "Right Controller", StringComparison.Ordinal))
                 {
                     exact = all[i];
                     break;
                 }
                 if (fuzzy == null
-                    && (lower.Contains("leftcontroller")
-                        || lower.Contains("left controller")
-                        || lower.Contains("lefthand")
-                        || lower.Contains("left hand")))
+                    && (lower.Contains("rightcontroller")
+                        || lower.Contains("right controller")
+                        || lower.Contains("righthand")
+                        || lower.Contains("right hand")))
                 {
                     fuzzy = all[i];
                 }
             }
 
-            _leftControllerAnchor = exact != null ? exact : fuzzy;
-            if (_leftControllerAnchor != null)
-                Debug.Log($"{LOG_TAG} Auto-assigned _leftControllerAnchor: {_leftControllerAnchor.name}.");
+            _rightControllerAnchor = exact != null ? exact : fuzzy;
+            if (_rightControllerAnchor != null)
+                Debug.Log($"{LOG_TAG} Auto-assigned _rightControllerAnchor: {_rightControllerAnchor.name}.");
         }
 
         private void ShowExplanationPanel()
@@ -427,9 +494,9 @@ namespace _Project.Scripts.Core
 
         private bool TryPlacePanel(GameObject panelGo)
         {
-            if (_leftControllerAnchor != null)
+            if (_rightControllerAnchor != null)
             {
-                panelGo.transform.SetParent(_leftControllerAnchor, worldPositionStays: false);
+                panelGo.transform.SetParent(_rightControllerAnchor, worldPositionStays: false);
                 panelGo.transform.localPosition = _panelLocalOffset;
                 panelGo.transform.localRotation = Quaternion.Euler(_panelLocalEuler);
                 return true;
@@ -437,7 +504,7 @@ namespace _Project.Scripts.Core
 
             if (Camera.main == null)
             {
-                Debug.LogWarning($"{LOG_TAG} No main camera and no left controller -- cannot place panel.", this);
+                Debug.LogWarning($"{LOG_TAG} No main camera and no right controller -- cannot place panel.", this);
                 return false;
             }
 
@@ -459,7 +526,7 @@ namespace _Project.Scripts.Core
 
             var canvasRect = panelGo.GetComponent<RectTransform>();
             canvasRect.sizeDelta = new Vector2(_messagePanelSize.x * 100f, _messagePanelSize.y * 100f);
-            float baseScale = _leftControllerAnchor != null ? _panelControllerScale * 0.01f : 0.01f;
+            float baseScale = _rightControllerAnchor != null ? _panelControllerScale * 0.01f : 0.01f;
             canvasRect.localScale = Vector3.one * baseScale;
 
             var bgGo = new GameObject("Img_PanelBackground");

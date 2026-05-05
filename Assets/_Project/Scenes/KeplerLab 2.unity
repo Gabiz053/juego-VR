@@ -633,7 +633,7 @@ MonoBehaviour:
   _faceSunOnStart: 1
   _sunTransform: {fileID: 0}
   _showMessagePanel: 1
-  _leftControllerAnchor: {fileID: 0}
+  _leftControllerAnchor: {fileID: 889939286}
   _panelLocalOffset: {x: 0, y: 0.2, z: 0.05}
   _panelLocalEuler: {x: 45, y: 0, z: 0}
   _panelControllerScale: 0.25
@@ -2633,6 +2633,9 @@ MonoBehaviour:
   _cameraTransform: {fileID: 47491072}
   _spawnDistance: 1.5
   _showIntroPanel: 0
+  _introFadeInDuration: 1
+  _introHoldDuration: 4
+  _introFadeOutDuration: 1.5
   _introText: '<size=120%><b>KeplerLab 1</b></size>
 
     <size=80%>(Primera Ley de
