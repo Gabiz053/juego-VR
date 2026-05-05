@@ -46,8 +46,9 @@ namespace _Project.Scripts.Planets
         [Tooltip("Manual GM value. Only used when Auto Compute GM is disabled.")]
         [SerializeField] private float _sunGM = 100f;
 
-        [Tooltip("If true, constrains the orbit to the XZ plane (ignores vertical velocity).")]
-        [SerializeField] private bool _forceXZPlane = true;
+        [Tooltip("If true, constrains the orbit to the XZ plane (ignores height and vertical velocity). " +
+                 "Disable this to preserve the real 3D release position and allow orbits above/below the floor.")]
+        [SerializeField] private bool _forceXZPlane = false;
 
         #endregion
 
@@ -186,15 +187,22 @@ namespace _Project.Scripts.Planets
             Vector3 eVec          = (1f / gm) * ((vMag * vMag - gm / rMag) * r - rdotv * v);
             float   eccentricity  = Mathf.Clamp(eVec.magnitude, 0f, 0.99f);
 
+            // Para orbitas casi circulares (el caso "el jugador suelta el planeta
+            // sin lanzarlo") el vector excentricidad es ~0 y su direccion es
+            // numericamente inestable. Usamos la direccion radial del punto de
+            // soltado como direccion de "periapsis" -- de esta forma el planeta
+            // empieza la orbita exactamente en el punto donde se solto (nu0 = 0).
             Vector3 periapsisDirection = eccentricity > 0.001f
                 ? eVec.normalized
-                : GetArbitraryPerpendicular(orbitNormal);
+                : r.normalized;
 
             float orbitalPeriod = TWO_PI * Mathf.Sqrt(semiMajorAxis * semiMajorAxis * semiMajorAxis / gm);
 
+            // Para circular: nu0 = 0 (planeta en periapsis = punto de soltado).
+            // Para elipses: angulo entre la direccion al planeta y la direccion al periapsis.
             float cosNu0 = eccentricity > 0.001f
                 ? Mathf.Clamp(Vector3.Dot(eVec.normalized, r.normalized), -1f, 1f)
-                : 0f;
+                : 1f;
             float nu0 = Mathf.Acos(cosNu0);
             if (rdotv < 0f) nu0 = TWO_PI - nu0;
 
@@ -227,12 +235,6 @@ namespace _Project.Scripts.Planets
                 tangent = Vector3.forward;
 
             return tangent * speed;
-        }
-
-        private static Vector3 GetArbitraryPerpendicular(Vector3 v)
-        {
-            Vector3 candidate = Mathf.Abs(v.x) < 0.9f ? Vector3.right : Vector3.up;
-            return Vector3.Cross(v, candidate).normalized;
         }
 
         private void TryResolveSunReference()

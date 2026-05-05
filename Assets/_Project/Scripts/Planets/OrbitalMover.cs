@@ -80,7 +80,16 @@ namespace _Project.Scripts.Planets
             _splineAnimate.Duration = orbitalPeriod;
             _splineAnimate.Loop = SplineAnimate.LoopMode.Loop;
             _splineAnimate.enabled = true;
-            _splineAnimate.NormalizedTime = trueAnomalyAtLaunch / (2f * Mathf.PI);
+
+            // Los knots del spline estan distribuidos uniformemente en *eccentric*
+            // anomaly E (ver OrbitalSplineGenerator/KeplerOrbitSplineGenerator),
+            // mientras que el OrbitalLauncher nos pasa la *true* anomaly nu.
+            // Convertimos nu -> E para que NormalizedTime caiga exactamente en el
+            // punto del spline que corresponde a la posicion donde el jugador
+            // solto el planeta. Para circular (e=0) E == nu, asi que esto se
+            // reduce a la formula vieja sin sorpresas.
+            float E = TrueToEccentricAnomaly(trueAnomalyAtLaunch, eccentricity);
+            _splineAnimate.NormalizedTime = E / (2f * Mathf.PI);
             _splineAnimate.Play();
 
             Debug.Log($"{LOG_TAG} Orbit set -- following spline, T={orbitalPeriod:F1}s.");
@@ -113,6 +122,25 @@ namespace _Project.Scripts.Planets
         #endregion
 
         #region Internals
+
+        /// <summary>
+        /// Convierte true anomaly (nu) a eccentric anomaly (E) usando la formula
+        /// estandar tan(E/2) = sqrt((1-e)/(1+e)) * tan(nu/2). Devuelve un valor
+        /// en [0, 2pi) para que se pueda dividir directamente entre 2pi y usar
+        /// como NormalizedTime en SplineAnimate.
+        /// </summary>
+        private static float TrueToEccentricAnomaly(float nu, float e)
+        {
+            float twoPi = 2f * Mathf.PI;
+            // Atan2 devuelve un angulo en [-pi, pi]; lo desplazamos a [0, 2pi).
+            float E = 2f * Mathf.Atan2(
+                Mathf.Sqrt(1f - e) * Mathf.Sin(nu * 0.5f),
+                Mathf.Sqrt(1f + e) * Mathf.Cos(nu * 0.5f));
+            if (E < 0f) E += twoPi;
+            // nu puede venir > 2pi (caso rdotv < 0 en OrbitalLauncher); normaliza.
+            return E % twoPi;
+        }
+
         #endregion
 
         #region Validation
