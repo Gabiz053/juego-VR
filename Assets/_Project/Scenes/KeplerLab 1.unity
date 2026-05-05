@@ -2203,8 +2203,8 @@ MonoBehaviour:
   _panelControllerScale: 0.08
   _messageDistance: 2
   _messageHeightOffset: 0.05
-  _messagePanelSize: {x: 3, y: 2}
-  _messageFontSize: 0.12
+  _messagePanelSize: {x: 4, y: 2.5}
+  _messageFontSize: 0.13
   _messageFont: {fileID: 0}
   _explanationText: "<size=120%><b>Primera Ley de Kepler</b></size>\n<size=80%>(Ley
     de las orbitas)</size>\n\nTodos los planetas describen <b>orbitas elipticas</b>,

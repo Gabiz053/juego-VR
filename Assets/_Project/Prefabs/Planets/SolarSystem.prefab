@@ -10941,8 +10941,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   semiMajorAxis: 72
   eccentricity: 0.2
+  _inclination: 0
   resolution: 64
   generateOnStart: 1
+  _enableSplineAnimateOnGenerate: 1
+  _centerOnLocalOriginWhenFocusIsAncestor: 1
   sun: {fileID: 8006612035139020910}
 --- !u!120 &987104616734857960
 LineRenderer:
@@ -11066,6 +11069,7 @@ MonoBehaviour:
   splineContainer: {fileID: 5961524091887695762}
   resolution: 128
   lineWidth: 0.05
+  _useLocalSpace: 0
 --- !u!1 &1980068226664984493
 GameObject:
   m_ObjectHideFlags: 0
@@ -11214,8 +11218,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   semiMajorAxis: 23
   eccentricity: 0.2
+  _inclination: 0
   resolution: 64
   generateOnStart: 1
+  _enableSplineAnimateOnGenerate: 1
+  _centerOnLocalOriginWhenFocusIsAncestor: 1
   sun: {fileID: 8006612035139020910}
 --- !u!120 &515008095410146281
 LineRenderer:
@@ -11339,6 +11346,7 @@ MonoBehaviour:
   splineContainer: {fileID: 6688857217435555043}
   resolution: 128
   lineWidth: 0.05
+  _useLocalSpace: 0
 --- !u!1 &2410715256863490775
 GameObject:
   m_ObjectHideFlags: 0
@@ -13065,7 +13073,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1790002961197535272}
-  - {fileID: 4430626641101719887}
   m_Father: {fileID: 5266315445586285240}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4394376736011336871
@@ -13122,8 +13129,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   semiMajorAxis: 8
   eccentricity: 0.2
+  _inclination: 0
   resolution: 64
   generateOnStart: 1
+  _enableSplineAnimateOnGenerate: 1
+  _centerOnLocalOriginWhenFocusIsAncestor: 1
   sun: {fileID: 8006612035139020910}
 --- !u!120 &588006281500476990
 LineRenderer:
@@ -13247,6 +13257,7 @@ MonoBehaviour:
   splineContainer: {fileID: 4394376736011336871}
   resolution: 128
   lineWidth: 0.05
+  _useLocalSpace: 0
 --- !u!1 &4836220190727316405
 GameObject:
   m_ObjectHideFlags: 0
@@ -18183,8 +18194,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   semiMajorAxis: 12
   eccentricity: 0.2
+  _inclination: 0
   resolution: 64
   generateOnStart: 1
+  _enableSplineAnimateOnGenerate: 1
+  _centerOnLocalOriginWhenFocusIsAncestor: 1
   sun: {fileID: 8006612035139020910}
 --- !u!120 &8291417607192602074
 LineRenderer:
@@ -18308,6 +18322,7 @@ MonoBehaviour:
   splineContainer: {fileID: 8426612952229542432}
   resolution: 128
   lineWidth: 0.05
+  _useLocalSpace: 0
 --- !u!1 &5158393658525025736
 GameObject:
   m_ObjectHideFlags: 0
@@ -18398,8 +18413,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   semiMajorAxis: 60
   eccentricity: 0.2
+  _inclination: 0
   resolution: 64
   generateOnStart: 1
+  _enableSplineAnimateOnGenerate: 1
+  _centerOnLocalOriginWhenFocusIsAncestor: 1
   sun: {fileID: 8006612035139020910}
 --- !u!120 &7718137060161724689
 LineRenderer:
@@ -18523,6 +18541,7 @@ MonoBehaviour:
   splineContainer: {fileID: 6916321686488012447}
   resolution: 128
   lineWidth: 0.05
+  _useLocalSpace: 0
 --- !u!1 &5246436651205505264
 GameObject:
   m_ObjectHideFlags: 0
@@ -24032,8 +24051,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   semiMajorAxis: 48
   eccentricity: 0.2
+  _inclination: 0
   resolution: 64
   generateOnStart: 1
+  _enableSplineAnimateOnGenerate: 1
+  _centerOnLocalOriginWhenFocusIsAncestor: 1
   sun: {fileID: 8006612035139020910}
 --- !u!120 &4886830049550248119
 LineRenderer:
@@ -24157,6 +24179,7 @@ MonoBehaviour:
   splineContainer: {fileID: 5212741202199853084}
   resolution: 128
   lineWidth: 0.05
+  _useLocalSpace: 0
 --- !u!1 &7342617412828838454
 GameObject:
   m_ObjectHideFlags: 0
@@ -29350,7 +29373,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8978173963830791800}
-  m_Father: {fileID: 2679128607900410011}
+  m_Father: {fileID: 1790002961197535272}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3408099210362102487
 MonoBehaviour:
@@ -29401,6 +29424,7 @@ Transform:
   - {fileID: 6056690197600558783}
   - {fileID: 4174276434254936151}
   - {fileID: 1099781699272360336}
+  - {fileID: 4430626641101719887}
   m_Father: {fileID: 2679128607900410011}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!205 &3949686994567743683
