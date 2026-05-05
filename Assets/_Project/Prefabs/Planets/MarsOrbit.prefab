@@ -353,7 +353,7 @@ MonoBehaviour:
   _sunTransform: {fileID: 0}
   _autoComputeGM: 1
   _sunGM: 100
-  _forceXZPlane: 1
+  _forceXZPlane: 0
 --- !u!114 &30094511812420665
 MonoBehaviour:
   m_ObjectHideFlags: 0

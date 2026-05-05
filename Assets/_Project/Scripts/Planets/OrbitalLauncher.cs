@@ -46,8 +46,9 @@ namespace _Project.Scripts.Planets
         [Tooltip("Manual GM value. Only used when Auto Compute GM is disabled.")]
         [SerializeField] private float _sunGM = 100f;
 
-        [Tooltip("If true, constrains the orbit to the XZ plane (ignores vertical velocity).")]
-        [SerializeField] private bool _forceXZPlane = true;
+        [Tooltip("If true, constrains the orbit to the XZ plane (ignores height and vertical velocity). " +
+                 "Disable this to preserve the real 3D release position and allow orbits above/below the floor.")]
+        [SerializeField] private bool _forceXZPlane = false;
 
         #endregion
 
@@ -234,12 +235,6 @@ namespace _Project.Scripts.Planets
                 tangent = Vector3.forward;
 
             return tangent * speed;
-        }
-
-        private static Vector3 GetArbitraryPerpendicular(Vector3 v)
-        {
-            Vector3 candidate = Mathf.Abs(v.x) < 0.9f ? Vector3.right : Vector3.up;
-            return Vector3.Cross(v, candidate).normalized;
         }
 
         private void TryResolveSunReference()
