@@ -160,6 +160,7 @@ namespace _Project.Scripts.Interaction
 
             if (SceneController.Instance.IsTransitioning) return;
 
+            AudioManager.Instance?.PlayUIClick();
             Debug.Log($"{LOG_TAG} Teleporting to '{scene}'.");
             SceneController.Instance.LoadScene(scene, GameState.PlanetSurface);
         }

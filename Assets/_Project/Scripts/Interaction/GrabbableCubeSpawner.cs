@@ -125,6 +125,9 @@ namespace _Project.Scripts.Interaction
                 grab.throwOnDetach      = _throwOnRelease;
                 grab.useDynamicAttach   = true;
 
+                if (_spawnedCube.GetComponent<PhysicsImpactSoundEmitter>() == null)
+                    _spawnedCube.AddComponent<PhysicsImpactSoundEmitter>();
+
                 Debug.Log($"{LOG_TAG} Prefab '{_cubePrefab.name}' spawned at y={spawnY:F2}, gravity={Physics.gravity.y:F2} m/s².");
             }
             else
@@ -158,6 +161,7 @@ namespace _Project.Scripts.Interaction
                 XRGrabInteractable grab = _spawnedCube.AddComponent<XRGrabInteractable>();
                 grab.throwOnDetach      = _throwOnRelease;
                 grab.useDynamicAttach   = true;
+                _spawnedCube.AddComponent<PhysicsImpactSoundEmitter>();
 
                 Debug.Log($"{LOG_TAG} Primitive cube spawned at y={spawnY:F2}, gravity={Physics.gravity.y:F2} m/s².");
             }

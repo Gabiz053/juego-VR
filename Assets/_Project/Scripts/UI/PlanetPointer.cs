@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using _Project.Scripts.Core;
 using _Project.Scripts.Interaction;
 
 namespace _Project.Scripts.UI
@@ -131,6 +132,8 @@ namespace _Project.Scripts.UI
                         _currentLabel = label;
                     }
                 }
+
+                AudioManager.Instance?.PlayUIHover();
 
                 if (_dataCard != null)
                     _dataCard.UpdateData(nearestProxy);

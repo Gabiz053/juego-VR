@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using _Project.Scripts.Core;
 
 namespace _Project.Scripts.UI
 {
@@ -188,6 +190,9 @@ namespace _Project.Scripts.UI
                     _canvasGroup.blocksRaycasts = _isVisible;
                 }
 
+                if (_isVisible)
+                    AudioManager.Instance?.PlayUIMenuOpen();
+
                 Debug.Log($"{LOG_TAG} Menu {(_isVisible ? "ON" : "OFF")} -- dot: {dot:F2}, distSqr: {distanceSqr:F3}.");
             }
         }
@@ -214,6 +219,10 @@ namespace _Project.Scripts.UI
 
             if (_btnToggleOrbits != null)
                 _btnToggleOrbits.onClick.AddListener(HandleToggleOrbitsPressed);
+
+            AddButtonHoverSound(_btnBack);
+            AddButtonHoverSound(_btnPause);
+            AddButtonHoverSound(_btnToggleOrbits);
         }
 
         private void UnregisterButtonListeners()
@@ -230,20 +239,33 @@ namespace _Project.Scripts.UI
 
         private void HandleBackPressed()
         {
+            AudioManager.Instance?.PlayUIClick();
             Debug.Log($"{LOG_TAG} Back button pressed.");
             OnBackPressed?.Invoke();
         }
 
         private void HandlePausePressed()
         {
+            AudioManager.Instance?.PlayUIClick();
             Debug.Log($"{LOG_TAG} Pause button pressed.");
             OnPausePressed?.Invoke();
         }
 
         private void HandleToggleOrbitsPressed()
         {
+            AudioManager.Instance?.PlayUIClick();
             Debug.Log($"{LOG_TAG} Toggle orbits button pressed.");
             OnToggleOrbitsPressed?.Invoke();
+        }
+
+        private static void AddButtonHoverSound(Button button)
+        {
+            if (button == null) return;
+            var trigger = button.gameObject.GetComponent<EventTrigger>()
+                       ?? button.gameObject.AddComponent<EventTrigger>();
+            var entry = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+            entry.callback.AddListener(_ => AudioManager.Instance?.PlayUIHover());
+            trigger.triggers.Add(entry);
         }
 
         #endregion

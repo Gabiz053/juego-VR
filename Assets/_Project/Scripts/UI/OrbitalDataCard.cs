@@ -1,5 +1,6 @@
 ﻿using TMPro;
 using UnityEngine;
+using _Project.Scripts.Core;
 
 namespace _Project.Scripts.UI
 {
@@ -81,6 +82,7 @@ namespace _Project.Scripts.UI
 
             _canvas.gameObject.SetActive(true);
             _isActive = true;
+            AudioManager.Instance?.PlayUIMenuOpen();
 
             Debug.Log($"{LOG_TAG} DataCard shown -- T={periodInDays:F0}d a={distanceInKm:N0}km ({distanceInUA:F2}UA).");
         }
