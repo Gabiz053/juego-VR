@@ -15,6 +15,13 @@ namespace _Project.Scripts.Planets
     [RequireComponent(typeof(Rigidbody))]
     public sealed class OrbitalLauncher : MonoBehaviour
     {
+
+        #region Events
+
+        /// <summary>Se dispara cuando el planeta entra en orbita. Pasa semiMajorAxis y orbitalPeriod.</summary>
+        public event System.Action<float, float> OnOrbitLaunched;
+
+        #endregion
         #region Constants
 
         private const string LOG_TAG = "[OrbitalLauncher]";
@@ -60,6 +67,7 @@ namespace _Project.Scripts.Planets
         private Vector3 _releaseVelocity;
 
         #endregion
+
 
         #region Unity Lifecycle
 
@@ -198,7 +206,11 @@ namespace _Project.Scripts.Planets
                 orbitNormal,
                 periapsisDirection);
 
+            OnOrbitLaunched?.Invoke(semiMajorAxis, orbitalPeriod);
+
             Debug.Log($"{LOG_TAG} Released -- r={rMag:F2} v={vMag:F2} GM={gm:F2} a={semiMajorAxis:F2} e={eccentricity:F3} T={orbitalPeriod:F1}s.");
+
+
         }
 
         private Vector3 CircularVelocity(Vector3 relativePosition, float radius, float gm)
