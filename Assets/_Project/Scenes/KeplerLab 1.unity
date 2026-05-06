@@ -1917,7 +1917,7 @@ MonoBehaviour:
   _showIntroPanel: 1
   _useUnifiedPanelStyle: 1
   _introFadeInDuration: 1
-  _introHoldDuration: 4
+  _introHoldDuration: 8
   _introFadeOutDuration: 1.5
   _introText: '<size=140%><b>KeplerLab 1</b></size>
 

@@ -86,10 +86,10 @@ namespace _Project.Scripts.Planets
 
             Vector3 center = sun != null ? sun.position : transform.position;
 
-            SetupPlanet(mercury, 0.55f, 6f,  center);
-            SetupPlanet(venus,   0.85f, 9f,  center);
-            SetupPlanet(earth,   0.9f,  13f, center);
-            SetupPlanet(mars,    0.65f, 17f, center);
+            SetupPlanet(mercury, 0.8f, 6f,  center);
+            SetupPlanet(venus,   1.1f, 9f,  center);
+            SetupPlanet(earth,   1.2f,  13f, center);
+            SetupPlanet(mars,    0.9f, 17f, center);
             SetupPlanet(jupiter, 3.2f,  26f, center);
             SetupPlanet(saturn,  2.7f,  36f, center);
             SetupPlanet(uranus,  1.8f,  45f, center);
