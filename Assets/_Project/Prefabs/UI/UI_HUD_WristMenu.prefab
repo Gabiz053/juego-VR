@@ -494,8 +494,10 @@ MonoBehaviour:
   _palmTransform: {fileID: 0}
   _wristCanvas: {fileID: 8131727972920384187}
   _canvasGroup: {fileID: 8898143826368202762}
-  _dotThreshold: 0.85
+  _showThreshold: 0.6
+  _hideThreshold: 0.25
   _maxDistance: 0.35
+  _palmNormalAxis: 2
   _btnBack: {fileID: 4364873938794708129}
   _btnPause: {fileID: 7911462940311859641}
   _btnToggleOrbits: {fileID: 6614013089425082372}

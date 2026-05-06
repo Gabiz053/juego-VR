@@ -1,4 +1,3 @@
-using Unity.XR.CoreUtils;
 using UnityEngine;
 using _Project.Scripts.UI;
 
@@ -34,12 +33,6 @@ namespace _Project.Scripts.Core
         [Header("Scene Settings")]
         [Tooltip("Exact name of the main menu scene (must be in Build Settings).")]
         [SerializeField] private string _mainMenuSceneName = "Main_VR";
-
-        [Tooltip("World position in Main_VR where the player will be placed on return.")]
-        [SerializeField] private Vector3 _returnPosition = Vector3.zero;
-
-        [Tooltip("Rotation in Main_VR where the player will be placed on return.")]
-        [SerializeField] private Vector3 _returnEulerAngles = Vector3.zero;
 
         #endregion
 
@@ -96,8 +89,9 @@ namespace _Project.Scripts.Core
                 return;
             }
 
-            SessionContext.SetMainMenuSpawn(_returnPosition, Quaternion.Euler(_returnEulerAngles));
-            Debug.Log($"{LOG_TAG} Return spawn set -- {_returnPosition}.");
+            // Match the other lesson connectors: return through Main_VR default spawn flow.
+            SessionContext.ClearMainMenuSpawnOverride();
+            Debug.Log($"{LOG_TAG} Main menu spawn override cleared -- using Main_VR spawn point.");
 
             Debug.Log($"{LOG_TAG} Back pressed -- returning to main menu.");
             SceneController.Instance.LoadScene(_mainMenuSceneName, GameState.MainMenu);

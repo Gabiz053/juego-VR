@@ -321,6 +321,7 @@ Jugador agarra asteroide y lo lanza contra un planeta
 | Script | Responsabilidad |
 |--------|-----------------|
 | `WristMenuController.cs` | Menu de muneca XR. Pause, spawner planetas, ajuste masas. *(susanasrez)* |
+| `UIButtonAutoFeedback.cs` | Aplica hover visual (glow) y sonido hover automaticamente a todos los botones hijos de un Canvas/root UI. |
 | `PlanetDataCard.cs` | Tarjeta flotante con datos del planeta al acercarse. *(susanasrez)* |
 | `PlanetSpawnerUI.cs` | Botones para crear planetas en Sandbox. *(susanasrez)* |
 

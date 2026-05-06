@@ -142,7 +142,7 @@ Material:
     - _Noise1_RND_1_5_3_1: 1.5
     - _Noise1_size: 0.1
     - _Noise1_size_RND_0_1_1_5: 0.1
-    - _Noise2_Brightness: 8.64
+    - _Noise2_Brightness: 3.0
     - _Noise2_Lacunarity: 1.94
     - _Noise2_RND_0_8_3_5: 2.2
     - _Noise2_RND_2_1_3_5: 1.95
@@ -157,7 +157,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Smoothness: 0.5
+    - _Smoothness: 0.15
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -171,10 +171,10 @@ Material:
     - _Color: {r: 0.23270428, g: 0.038784023, b: 0.038784023, a: 1}
     - _Color2: {r: 0.54088044, g: 0.056129042, b: 0.07059079, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Noise1_Color1: {r: 0.32704395, g: 0.30576617, b: 0, a: 0}
+    - _Noise1_Color1: {r: 0.22, g: 0.20, b: 0.14, a: 0}
     - _Noise1_Color2: {r: 0.2264151, g: 0.029191868, b: 0.032322384, a: 0}
-    - _Noise2_Color1: {r: 0.8238993, g: 0.24624659, b: 0.012954309, a: 0}
-    - _Noise2_Color2: {r: 0.6037736, g: 0.066453, b: 0.11340993, a: 0}
+    - _Noise2_Color1: {r: 0.32, g: 0.18, b: 0.10, a: 0}
+    - _Noise2_Color2: {r: 0.25, g: 0.10, b: 0.10, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -68,12 +68,12 @@ Material:
     - _Crater_angle_RND_5_10: 9.95
     - _FilanBtightness: 0.018
     - _LongNoise_RND: 0.07
-    - _Metallic: 0.733
+    - _Metallic: 0.0
     - _ObjScaleY_RND_1_3: 1
     - _ObjScaleY_RND_1_5: 1
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Smooth: 0.176
+    - _Smooth: 0.15
     - _SubGeom_RND: 34.1
     - _SubtractCratersFromVertex: 0.0109
     - _VoronNoiseGeom_RND_0_2: 1.73
@@ -84,10 +84,10 @@ Material:
     - _Wave_Noise_Geom_RND_2_30: 2
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Color2_TXT_3: {r: 0.81761, g: 0.4827627, b: 0, a: 0}
-    - _Color2_TXT_4: {r: 0, g: 0.00934577, b: 1, a: 0}
+    - _Color2_TXT_3: {r: 0.35, g: 0.24, b: 0.14, a: 0}
+    - _Color2_TXT_4: {r: 0.15, g: 0.18, b: 0.30, a: 0}
     - _Color_Crater_1: {r: 0.1509434, g: 0.05602023, b: 0, a: 0}
-    - _Color_Crater_2: {r: 0.70440245, g: 0.39450848, b: 0.17056279, a: 0}
+    - _Color_Crater_2: {r: 0.28, g: 0.18, b: 0.12, a: 0}
     - _Color_TXT_1: {r: 0, g: 0, b: 0, a: 0}
     - _Color_TXT_2: {r: 0.5471698, g: 0.5471698, b: 0.5471698, a: 0}
   m_BuildTextureStacks: []

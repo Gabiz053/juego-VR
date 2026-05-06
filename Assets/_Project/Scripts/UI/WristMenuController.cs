@@ -1,6 +1,6 @@
 using System;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using _Project.Scripts.Core;
 
@@ -10,18 +10,33 @@ namespace _Project.Scripts.UI
     [AddComponentMenu("ProyectoVR/UI/Wrist Menu Controller")]
     public class WristMenuController : MonoBehaviour
     {
+        #region Constants
         private const string LOG_TAG = "[WristMenuController]";
-        private const float FADE_SPEED = 8f;
+        private const float SHOW_DURATION = 0.28f;
+        private const float HIDE_DURATION = 0.18f;
+        private const float DEBOUNCE_TIME = 0.35f;
+        #endregion
 
+        #region Inspector
         [Header("References")]
+        [Tooltip("Main camera / XR Head transform.")]
         [SerializeField] private Transform _cameraTransform;
+        [Tooltip("Palm anchor of the left controller. Try LeftHand Controller > Palm Anchor.")]
         [SerializeField] private Transform _palmTransform;
+        [Tooltip("World-space canvas that shows the menu.")]
         [SerializeField] private Canvas _wristCanvas;
+        [Tooltip("CanvasGroup for fade.")]
         [SerializeField] private CanvasGroup _canvasGroup;
 
         [Header("Visibility Settings")]
-        [SerializeField][Range(0f, 1f)] private float _dotThreshold = 0.3f;
-        [SerializeField][Range(0.1f, 2f)] private float _maxDistance = 1.5f;
+        [Tooltip("Dot product to OPEN the menu (palm must face camera this much). 0.5 = 60°, 0.65 = 49°.")]
+        [SerializeField][Range(0f, 1f)] private float _showThreshold = 0.6f;
+        [Tooltip("Dot product to CLOSE the menu. Lower than show to avoid flickering.")]
+        [SerializeField][Range(0f, 1f)] private float _hideThreshold = 0.25f;
+        [Tooltip("Maximum palm-to-camera distance for the menu to appear.")]
+        [SerializeField][Range(0.1f, 2f)] private float _maxDistance = 0.9f;
+        [Tooltip("Which axis of the palm transform points away from the palm surface toward the user's face. Try each until it works.")]
+        [SerializeField] private PalmAxis _palmNormalAxis = PalmAxis.MinusUp;
 
         [Header("Buttons")]
         [SerializeField] private Button _btnBack;
@@ -37,14 +52,15 @@ namespace _Project.Scripts.UI
         [SerializeField] private Sprite _iconOrbitVisible;
         [SerializeField] private Sprite _iconOrbitHidden;
         [SerializeField] private Image _orbitButtonIcon;
+        #endregion
 
+        #region Events
         public event Action OnBackPressed;
         public event Action OnPausePressed;
         public event Action OnToggleOrbitsPressed;
+        #endregion
 
-        private bool _isVisible;
-        private float _targetAlpha;
-
+        #region Public API
         public bool IsVisible => _isVisible;
 
         public void SetPauseIcon(bool isPaused)
@@ -58,12 +74,28 @@ namespace _Project.Scripts.UI
             if (_orbitButtonIcon != null)
                 _orbitButtonIcon.sprite = isVisible ? _iconOrbitVisible : _iconOrbitHidden;
         }
+        #endregion
 
+        #region Cached Components
+        private Transform _canvasTransform;
+        private Vector3 _baseScale;
+        #endregion
+
+        public enum PalmAxis { Up, MinusUp, Forward, MinusForward }
+
+        private bool _isVisible;
+        private float _debounceTimer;
+        private Coroutine _animCoroutine;
+
+        #region Unity Lifecycle
         private void Start()
         {
+            _canvasTransform = _wristCanvas != null ? _wristCanvas.transform : null;
+            _baseScale = _canvasTransform != null ? _canvasTransform.localScale : Vector3.one;
+
             ValidateReferences();
             RegisterButtonListeners();
-
+            EnsureAutoButtonFeedback();
             HideMenuInstant();
 
             Debug.Log($"{LOG_TAG} Initialized -- wrist menu ready.");
@@ -71,89 +103,177 @@ namespace _Project.Scripts.UI
 
         private void Update()
         {
-            EvaluateVisibility();
-            ApplyFade();
+            EvaluateGesture();
+            FaceCamera();
         }
 
         private void OnDestroy()
         {
             UnregisterButtonListeners();
         }
+        #endregion
 
-        private void EvaluateVisibility()
+        #region Internals
+        private void EvaluateGesture()
         {
             if (_cameraTransform == null || _palmTransform == null)
                 return;
 
             Vector3 cameraOffset = _cameraTransform.position - _palmTransform.position;
-            Vector3 palmToCamera = cameraOffset.normalized;
-
-            /*
-             * IMPORTANTE:
-             * En muchos rigs XR, el eje UP del PalmAnchor apunta hacia el dorso.
-             * Por eso usamos -up para representar la palma mirando hacia la c�mara.
-             *
-             * Si no aparece, prueba estas variantes:
-             * Vector3 palmNormal = _palmTransform.up;
-             * Vector3 palmNormal = _palmTransform.forward;
-             * Vector3 palmNormal = -_palmTransform.forward;
-             */
-            Vector3 palmNormal = -_palmTransform.up;
-
-            float dot = Vector3.Dot(palmNormal, palmToCamera);
             float distanceSqr = cameraOffset.sqrMagnitude;
-            float maxDistanceSqr = _maxDistance * _maxDistance;
 
-            bool shouldShow = dot >= _dotThreshold && distanceSqr <= maxDistanceSqr;
+            // Hysteresis: use a different threshold depending on current state
+            float threshold = _isVisible ? _hideThreshold : _showThreshold;
+            bool inRange = distanceSqr <= _maxDistance * _maxDistance;
+            float dot = Vector3.Dot(GetPalmNormal(), cameraOffset.normalized);
+            bool gestureHeld = inRange && dot >= threshold;
 
-            if (shouldShow == _isVisible)
-                return;
-
-            SetMenuVisible(shouldShow);
-
-            Debug.Log($"{LOG_TAG} Menu {(_isVisible ? "ON" : "OFF")} -- dot: {dot:F2}, dist: {Mathf.Sqrt(distanceSqr):F2}m.");
+            if (gestureHeld && !_isVisible)
+            {
+                _debounceTimer += Time.unscaledDeltaTime;
+                if (_debounceTimer >= DEBOUNCE_TIME)
+                {
+                    _debounceTimer = 0f;
+                    ShowMenu();
+                }
+            }
+            else if (!gestureHeld && _isVisible)
+            {
+                _debounceTimer = 0f;
+                HideMenu();
+            }
+            else if (!gestureHeld)
+            {
+                _debounceTimer = 0f;
+            }
         }
 
-        private void SetMenuVisible(bool visible)
+        private Vector3 GetPalmNormal()
         {
-            _isVisible = visible;
-            _targetAlpha = visible ? 1f : 0f;
+            return _palmNormalAxis switch
+            {
+                PalmAxis.Up          =>  _palmTransform.up,
+                PalmAxis.MinusUp     => -_palmTransform.up,
+                PalmAxis.Forward     =>  _palmTransform.forward,
+                PalmAxis.MinusForward => -_palmTransform.forward,
+                _                   => -_palmTransform.up,
+            };
+        }
 
-            if (_wristCanvas != null)
-                _wristCanvas.enabled = true;
+        private void FaceCamera()
+        {
+            if (!_isVisible || _canvasTransform == null || _cameraTransform == null)
+                return;
+
+            Vector3 dir = _canvasTransform.position - _cameraTransform.position;
+            if (dir.sqrMagnitude > 0.0001f)
+                _canvasTransform.rotation = Quaternion.LookRotation(dir);
+        }
+
+        private void ShowMenu()
+        {
+            if (_isVisible) return;
+            _isVisible = true;
+
+            if (_wristCanvas != null) _wristCanvas.enabled = true;
+            if (_canvasGroup != null)
+            {
+                _canvasGroup.interactable = false;
+                _canvasGroup.blocksRaycasts = false;
+            }
+
+            if (_animCoroutine != null) StopCoroutine(_animCoroutine);
+            _animCoroutine = StartCoroutine(AnimateShow());
+
+            AudioManager.Instance?.PlayUIMenuOpen();
+            Debug.Log($"{LOG_TAG} Menu ON.");
+        }
+
+        private void HideMenu()
+        {
+            if (!_isVisible) return;
+            _isVisible = false;
 
             if (_canvasGroup != null)
             {
-                _canvasGroup.interactable = visible;
-                _canvasGroup.blocksRaycasts = visible;
+                _canvasGroup.interactable = false;
+                _canvasGroup.blocksRaycasts = false;
             }
 
-            if (visible)
-                AudioManager.Instance?.PlayUIMenuOpen();
+            if (_animCoroutine != null) StopCoroutine(_animCoroutine);
+            _animCoroutine = StartCoroutine(AnimateHide());
+
+            Debug.Log($"{LOG_TAG} Menu OFF.");
         }
 
-        private void ApplyFade()
+        private IEnumerator AnimateShow()
         {
-            if (_canvasGroup == null || _wristCanvas == null)
-                return;
+            if (_canvasTransform != null)
+                _canvasTransform.localScale = _baseScale * 0.55f;
 
-            _canvasGroup.alpha = Mathf.Lerp(
-                _canvasGroup.alpha,
-                _targetAlpha,
-                Time.deltaTime * FADE_SPEED
-            );
-
-            if (!_isVisible && _canvasGroup.alpha <= 0.01f)
+            float elapsed = 0f;
+            while (elapsed < SHOW_DURATION)
             {
-                _canvasGroup.alpha = 0f;
-                _wristCanvas.enabled = false;
+                elapsed += Time.unscaledDeltaTime;
+                float t = Mathf.Clamp01(elapsed / SHOW_DURATION);
+
+                if (_canvasGroup != null)
+                    _canvasGroup.alpha = Mathf.Clamp01(t * 2f); // alpha reaches 1 at half-time
+
+                if (_canvasTransform != null)
+                    _canvasTransform.localScale = _baseScale * EaseOutBack(t);
+
+                yield return null;
             }
+
+            if (_canvasGroup != null)
+            {
+                _canvasGroup.alpha = 1f;
+                _canvasGroup.interactable = true;
+                _canvasGroup.blocksRaycasts = true;
+            }
+            if (_canvasTransform != null)
+                _canvasTransform.localScale = _baseScale;
+        }
+
+        private IEnumerator AnimateHide()
+        {
+            float startAlpha = _canvasGroup != null ? _canvasGroup.alpha : 1f;
+            Vector3 startScale = _canvasTransform != null ? _canvasTransform.localScale : _baseScale;
+
+            float elapsed = 0f;
+            while (elapsed < HIDE_DURATION)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float t = Mathf.Clamp01(elapsed / HIDE_DURATION);
+
+                if (_canvasGroup != null)
+                    _canvasGroup.alpha = Mathf.Lerp(startAlpha, 0f, t);
+
+                if (_canvasTransform != null)
+                    _canvasTransform.localScale = Vector3.Lerp(startScale, _baseScale * 0.7f, t);
+
+                yield return null;
+            }
+
+            if (_canvasGroup != null) _canvasGroup.alpha = 0f;
+            if (_canvasTransform != null) _canvasTransform.localScale = _baseScale;
+            if (_wristCanvas != null) _wristCanvas.enabled = false;
+        }
+
+        // Ease-out with slight overshoot — gives the "pop" feel.
+        private static float EaseOutBack(float t)
+        {
+            const float c1 = 1.70158f;
+            const float c3 = c1 + 1f;
+            float u = t - 1f;
+            return 1f + c3 * u * u * u + c1 * u * u;
         }
 
         private void HideMenuInstant()
         {
             _isVisible = false;
-            _targetAlpha = 0f;
+            _debounceTimer = 0f;
 
             if (_canvasGroup != null)
             {
@@ -161,37 +281,24 @@ namespace _Project.Scripts.UI
                 _canvasGroup.interactable = false;
                 _canvasGroup.blocksRaycasts = false;
             }
-
+            if (_canvasTransform != null)
+                _canvasTransform.localScale = _baseScale;
             if (_wristCanvas != null)
                 _wristCanvas.enabled = false;
         }
 
         private void RegisterButtonListeners()
         {
-            if (_btnBack != null)
-                _btnBack.onClick.AddListener(HandleBackPressed);
-
-            if (_btnPause != null)
-                _btnPause.onClick.AddListener(HandlePausePressed);
-
-            if (_btnToggleOrbits != null)
-                _btnToggleOrbits.onClick.AddListener(HandleToggleOrbitsPressed);
-
-            AddButtonHoverSound(_btnBack);
-            AddButtonHoverSound(_btnPause);
-            AddButtonHoverSound(_btnToggleOrbits);
+            if (_btnBack != null)        _btnBack.onClick.AddListener(HandleBackPressed);
+            if (_btnPause != null)       _btnPause.onClick.AddListener(HandlePausePressed);
+            if (_btnToggleOrbits != null) _btnToggleOrbits.onClick.AddListener(HandleToggleOrbitsPressed);
         }
 
         private void UnregisterButtonListeners()
         {
-            if (_btnBack != null)
-                _btnBack.onClick.RemoveListener(HandleBackPressed);
-
-            if (_btnPause != null)
-                _btnPause.onClick.RemoveListener(HandlePausePressed);
-
-            if (_btnToggleOrbits != null)
-                _btnToggleOrbits.onClick.RemoveListener(HandleToggleOrbitsPressed);
+            if (_btnBack != null)        _btnBack.onClick.RemoveListener(HandleBackPressed);
+            if (_btnPause != null)       _btnPause.onClick.RemoveListener(HandlePausePressed);
+            if (_btnToggleOrbits != null) _btnToggleOrbits.onClick.RemoveListener(HandleToggleOrbitsPressed);
         }
 
         private void HandleBackPressed()
@@ -215,47 +322,30 @@ namespace _Project.Scripts.UI
             OnToggleOrbitsPressed?.Invoke();
         }
 
-        private static void AddButtonHoverSound(Button button)
+        private void EnsureAutoButtonFeedback()
         {
-            if (button == null)
-                return;
-
-            EventTrigger trigger = button.gameObject.GetComponent<EventTrigger>();
-
-            if (trigger == null)
-                trigger = button.gameObject.AddComponent<EventTrigger>();
-
-            EventTrigger.Entry entry = new EventTrigger.Entry
-            {
-                eventID = EventTriggerType.PointerEnter
-            };
-
-            entry.callback.AddListener(_ => AudioManager.Instance?.PlayUIHover());
-            trigger.triggers.Add(entry);
+            if (_wristCanvas == null) return;
+            if (_wristCanvas.GetComponent<UIButtonAutoFeedback>() != null) return;
+            _wristCanvas.gameObject.AddComponent<UIButtonAutoFeedback>();
         }
 
         private void ValidateReferences()
         {
             if (_cameraTransform == null)
                 Debug.LogWarning($"{LOG_TAG} _cameraTransform is not assigned.", this);
-
             if (_palmTransform == null)
                 Debug.LogWarning($"{LOG_TAG} _palmTransform is not assigned.", this);
-
             if (_wristCanvas == null)
                 Debug.LogWarning($"{LOG_TAG} _wristCanvas is not assigned.", this);
-
             if (_canvasGroup == null)
                 Debug.LogWarning($"{LOG_TAG} _canvasGroup is not assigned.", this);
-
             if (_btnBack == null)
                 Debug.LogWarning($"{LOG_TAG} _btnBack is not assigned.", this);
-
             if (_btnPause == null)
                 Debug.LogWarning($"{LOG_TAG} _btnPause is not assigned.", this);
-
             if (_btnToggleOrbits == null)
                 Debug.LogWarning($"{LOG_TAG} _btnToggleOrbits is not assigned.", this);
         }
+        #endregion
     }
 }

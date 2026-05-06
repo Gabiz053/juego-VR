@@ -790,16 +790,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7431832797338046406, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
       propertyPath: _maxDistance
-      value: 0.3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7431832797338046406, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
       propertyPath: _dotThreshold
-      value: 0.25
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7431832797338046406, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
       propertyPath: _palmTransform
       value: 
       objectReference: {fileID: 1981320865}
+    - target: {fileID: 7431832797338046406, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
+      propertyPath: _showThreshold
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7431832797338046406, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
+      propertyPath: _palmNormalAxis
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7431832797338046406, guid: 3184947ea28c63a42921286c4525e5a9, type: 3}
       propertyPath: _cameraTransform
       value: 
@@ -1871,8 +1879,6 @@ MonoBehaviour:
   _orbitalPauseController: {fileID: 1829900473}
   _orbitVisibilityController: {fileID: 1829900472}
   _mainMenuSceneName: Main_VR
-  _returnPosition: {x: 0, y: 0, z: -2}
-  _returnEulerAngles: {x: 0, y: 0, z: 0}
 --- !u!4 &1829900470
 Transform:
   m_ObjectHideFlags: 0
