@@ -45,6 +45,12 @@ namespace _Project.Scripts.UI
         [SerializeField] private Button _btnSpawnPlanet;
         [SerializeField] private Button _btnNextLaw;
 
+        [Header("Layout")]
+        [Tooltip("If enabled, forces this menu canvas scale to match SolarSystem wrist menu values.")]
+        [SerializeField] private bool _matchSolarSystemCanvasScale = true;
+        [Tooltip("SolarSystem wrist menu local scale used as canonical reference.")]
+        [SerializeField] private Vector3 _solarSystemCanvasScale = new Vector3(0.0025f, 0.0025f, 0.0025f);
+
         [Header("Pause Button Icons")]
         [SerializeField] private Sprite _iconPause;
         [SerializeField] private Sprite _iconPlay;
@@ -86,6 +92,14 @@ namespace _Project.Scripts.UI
 
             Debug.Log($"{LOG_TAG} Spawn button interactable: {interactable}.");
         }
+
+        public void SetNextLawButtonInteractable(bool interactable)
+        {
+            if (_btnNextLaw != null)
+                _btnNextLaw.interactable = interactable;
+
+            Debug.Log($"{LOG_TAG} Next Law button interactable: {interactable}.");
+        }
         #endregion
 
         #region Cached Components
@@ -103,6 +117,7 @@ namespace _Project.Scripts.UI
         private void Start()
         {
             _canvasTransform = _wristCanvas != null ? _wristCanvas.transform : null;
+            NormalizeCanvasScale();
             _baseScale = _canvasTransform != null ? _canvasTransform.localScale : Vector3.one;
 
             ValidateReferences();
@@ -278,6 +293,15 @@ namespace _Project.Scripts.UI
             const float c3 = c1 + 1f;
             float u = t - 1f;
             return 1f + c3 * u * u * u + c1 * u * u;
+        }
+
+        private void NormalizeCanvasScale()
+        {
+            if (!_matchSolarSystemCanvasScale || _canvasTransform == null)
+                return;
+
+            _canvasTransform.localScale = _solarSystemCanvasScale;
+            Debug.Log($"{LOG_TAG} Canvas scale normalized -- {_solarSystemCanvasScale}.");
         }
 
         private void HideMenuInstant()

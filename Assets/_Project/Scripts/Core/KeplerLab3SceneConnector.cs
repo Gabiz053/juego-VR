@@ -92,6 +92,12 @@ namespace _Project.Scripts.Core
         [Tooltip("Si esta activado, al pausar aparece un panel con la explicacion de la 3a Ley.")]
         [SerializeField] private bool _showExplanationOnPause = true;
 
+        [Tooltip("If enabled, the pause explanation card appears above the Sun instead of on the wrist.")]
+        [SerializeField] private bool _placePausePanelAboveSun = true;
+
+        [Tooltip("World-space offset from Sun center for the pause explanation card.")]
+        [SerializeField] private Vector3 _pausePanelSunOffset = new Vector3(0f, 2.2f, 0f);
+
         [Tooltip("Transform del mando derecho. Si esta vacio se auto-resuelve buscando 'Right Controller'.")]
         [SerializeField] private Transform _rightControllerAnchor;
 
@@ -158,6 +164,8 @@ namespace _Project.Scripts.Core
         // Explanation panel
         private GameObject      _explanationPanelGo;
         private TextMeshProUGUI _explanationLabel;
+        private Transform       _sunTransform;
+        private Renderer        _sunRenderer;
 
         #endregion
 
@@ -452,6 +460,9 @@ namespace _Project.Scripts.Core
                 CreateExplanationPanel();
             if (_explanationPanelGo == null) return;
 
+            if (ShouldPlacePausePanelOverSun())
+                TryPlacePanelOverSun(_explanationPanelGo);
+
             _explanationPanelGo.SetActive(true);
             if (_explanationLabel != null)
                 _explanationLabel.text = _explanationText;
@@ -473,7 +484,7 @@ namespace _Project.Scripts.Core
             }
 
             _explanationPanelGo = new GameObject("HUD_KeplerLab3_Explanation");
-            if (!TryPlacePanel(_explanationPanelGo))
+            if (!TryPlacePanel(_explanationPanelGo, isPauseExplanationPanel: true))
             {
                 Destroy(_explanationPanelGo);
                 _explanationPanelGo = null;
@@ -499,7 +510,15 @@ namespace _Project.Scripts.Core
             return font;
         }
 
-        private bool TryPlacePanel(GameObject panelGo)
+        private bool TryPlacePanel(GameObject panelGo, bool isPauseExplanationPanel = false)
+        {
+            if (isPauseExplanationPanel && ShouldPlacePausePanelOverSun())
+                return TryPlacePanelOverSun(panelGo);
+
+            return TryPlacePanelNearControllerOrCamera(panelGo);
+        }
+
+        private bool TryPlacePanelNearControllerOrCamera(GameObject panelGo)
         {
             if (_rightControllerAnchor != null)
             {
@@ -525,6 +544,85 @@ namespace _Project.Scripts.Core
             return true;
         }
 
+        private bool ShouldPlacePausePanelOverSun()
+        {
+            return _placePausePanelAboveSun;
+        }
+
+        private bool TryPlacePanelOverSun(GameObject panelGo)
+        {
+            if (panelGo == null)
+                return false;
+
+            if (!TryResolveSunReference())
+            {
+                Debug.LogWarning($"{LOG_TAG} Sun reference not found -- cannot place pause panel above Sun.", this);
+                return false;
+            }
+
+            Vector3 panelPosition = GetSunWorldPosition() + _pausePanelSunOffset;
+            panelGo.transform.SetParent(null, worldPositionStays: true);
+            panelGo.transform.position = panelPosition;
+
+            if (Camera.main != null)
+                panelGo.transform.rotation = Quaternion.LookRotation(panelPosition - Camera.main.transform.position, Vector3.up);
+            else
+                panelGo.transform.rotation = Quaternion.identity;
+
+            return true;
+        }
+
+        private bool TryResolveSunReference()
+        {
+            if (_sunTransform != null)
+                return true;
+
+            Transform[] all = FindObjectsByType<Transform>(FindObjectsSortMode.None);
+            Transform fallback = null;
+            for (int i = 0; i < all.Length; i++)
+            {
+                Transform candidate = all[i];
+                string lower = candidate.name.ToLowerInvariant();
+                bool isLikelySun = lower == "sun"
+                    || lower == "sol"
+                    || lower.Contains("sun")
+                    || lower.Contains("sol");
+
+                if (!isLikelySun)
+                    continue;
+
+                if (candidate.GetComponentInChildren<Renderer>() != null)
+                {
+                    _sunTransform = candidate;
+                    CacheSunRenderer();
+                    return true;
+                }
+
+                if (fallback == null)
+                    fallback = candidate;
+            }
+
+            _sunTransform = fallback;
+            CacheSunRenderer();
+            return _sunTransform != null;
+        }
+
+        private void CacheSunRenderer()
+        {
+            _sunRenderer = _sunTransform != null ? _sunTransform.GetComponentInChildren<Renderer>() : null;
+        }
+
+        private Vector3 GetSunWorldPosition()
+        {
+            if (_sunTransform == null)
+                return Vector3.zero;
+
+            if (_sunRenderer == null)
+                CacheSunRenderer();
+
+            return _sunRenderer != null ? _sunRenderer.bounds.center : _sunTransform.position;
+        }
+
         private TextMeshProUGUI BuildPanelVisuals(GameObject panelGo, TMP_FontAsset font, string textObjectName)
         {
             var canvas = panelGo.AddComponent<Canvas>();
@@ -533,7 +631,9 @@ namespace _Project.Scripts.Core
 
             var canvasRect = panelGo.GetComponent<RectTransform>();
             canvasRect.sizeDelta = new Vector2(_messagePanelSize.x * 100f, _messagePanelSize.y * 100f);
-            float baseScale = _rightControllerAnchor != null ? _panelControllerScale * 0.01f : 0.01f;
+            bool anchoredToController = _rightControllerAnchor != null
+                && panelGo.transform.parent == _rightControllerAnchor;
+            float baseScale = anchoredToController ? _panelControllerScale * 0.01f : 0.01f;
             canvasRect.localScale = Vector3.one * baseScale;
 
             var bgGo = new GameObject("Img_PanelBackground");

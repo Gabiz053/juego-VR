@@ -4,6 +4,7 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 namespace _Project.Scripts.Planets
 {
@@ -32,6 +33,8 @@ namespace _Project.Scripts.Planets
         private const string LOG_TAG = "[KeplerLab2Controller]";
         private const float MIN_FALLOFF = 0.001f;
         private const string TMP_FONT_RESOURCE_PATH = "Fonts & Materials/LiberationSans SDF";
+        private const string KEPLER_LAB2_SCENE_NAME = "KeplerLab 2";
+        private const string MESSAGE_PANEL_NAME = "HUD_KeplerLab2_Message";
 
         #endregion
 
@@ -74,15 +77,12 @@ namespace _Project.Scripts.Planets
         [SerializeField] private List<LabPlanet> _planets = new();
 
         [Header("Capture")]
-        [Tooltip("InputAction that toggles capture (Idle -> Capturing -> Complete -> Idle...). " +
-                 "Defaults to the Oculus Quest right-controller A button " +
-                 "(<XRController>{RightHand}/primaryButton). Override in the inspector " +
-                 "to use a different binding.")]
+        [Tooltip("InputAction used as hold-to-capture trigger. Hold grip on either hand to capture; release to calculate.")]
         [SerializeField] private InputActionProperty _toggleAction = new InputActionProperty(
             new InputAction(
-                name: "ToggleCapture",
+                name: "CaptureHold",
                 type: InputActionType.Button,
-                binding: "<XRController>{RightHand}/primaryButton"));
+                binding: "<XRController>{RightHand}/gripPressed"));
 
         [Tooltip("If true, every orbiter is paused immediately when capture stops. Pause is " +
                  "per-orbiter -- Time.timeScale is NOT touched, so VR locomotion keeps working.")]
@@ -100,10 +100,8 @@ namespace _Project.Scripts.Planets
         [Tooltip("If true, a world-space TMP message is created on Start.")]
         [SerializeField] private bool _showMessagePanel = true;
 
-        [Tooltip("Transform of the LEFT XR controller. The message panel is parented to " +
-                 "this transform and floats above it like a wrist HUD. " +
-                 "If left blank, we auto-find a transform named 'Left Controller' on Start; " +
-                 "if that also fails we fall back to placing the panel in front of the camera.")]
+        [Tooltip("Controller anchor used for the message panel. Right controller is preferred and left is fallback. " +
+                 "If empty, it is auto-resolved by name from the scene.")]
         [SerializeField] private Transform _leftControllerAnchor;
 
         [Tooltip("Local-space offset (m), relative to the left controller, applied to the panel. " +
@@ -137,16 +135,38 @@ namespace _Project.Scripts.Planets
                  "default LiberationSans SDF that ships with TextMesh Pro.")]
         [SerializeField] private TMP_FontAsset _messageFont;
 
+        [Header("Panel Style")]
+        [Tooltip("If enabled, enforces the same wrist panel style used in Kepler 1.")]
+        [SerializeField] private bool _useUnifiedPanelStyle = true;
+
+        [Tooltip("Unified panel local offset used by Kepler wrist text panels.")]
+        [SerializeField] private Vector3 _unifiedPanelLocalOffset = new Vector3(0f, 0.11f, 0.05f);
+
+        [Tooltip("Unified panel local euler used by Kepler wrist text panels.")]
+        [SerializeField] private Vector3 _unifiedPanelLocalEuler = new Vector3(45f, 0f, 0f);
+
+        [Tooltip("Unified panel wrist scale used by Kepler wrist text panels.")]
+        [SerializeField] private float _unifiedPanelControllerScale = 0.08f;
+
+        [Tooltip("Unified panel size used by Kepler wrist text panels.")]
+        [SerializeField] private Vector2 _unifiedPanelSize = new Vector2(3f, 1.6f);
+
+        [Tooltip("Unified panel font size used by Kepler wrist text panels.")]
+        [SerializeField] private float _unifiedPanelFontSize = 0.16f;
+
         [Header("Message Strings")]
         [TextArea(2, 5)]
         [SerializeField] private string _msgIdle =
-            "Pulsa el grip para comenzar a capturar barridos de área igual.\n" +
-            "(Todos los planetas barrerán simultáneamente.)";
+            "<size=115%><b>KeplerLab 2 — Segunda Ley</b></size>\n" +
+            "Mantén pulsado <b>Grip</b> en cualquier mano para iniciar la medición.\n" +
+            "Mientras mantienes, todos los planetas acumulan tiempo y área barrida.\n" +
+            "Suelta <b>Grip</b> para detener y calcular resultados.";
 
         [TextArea(2, 5)]
         [SerializeField] private string _msgCapturing =
-            "Capturando...\n" +
-            "Pulsa el grip de nuevo para detener y congelar la simulación.";
+            "Midiendo barridos...\n" +
+            "Mantén pulsado <b>Grip</b> para seguir midiendo.\n" +
+            "Suelta <b>Grip</b> para calcular y mostrar los resultados.";
 
         #endregion
 
@@ -271,13 +291,16 @@ namespace _Project.Scripts.Planets
         {
             TryResolveSunReference();
             CacheSunRenderer();
-            TryResolveLeftControllerAnchor();
+            ApplyUnifiedPanelStyleIfEnabled();
+            ApplyHoldCaptureInstructionTexts();
+            TryResolveControllerAnchor();
             ResolveMissingVisualizers();
             ValidateReferences();
 
             if (_faceSunOnStart)
                 FacePlayerTowardSun();
 
+            CleanupMessagePanel();
             if (_showMessagePanel)
                 CreateMessagePanel();
 
@@ -286,15 +309,17 @@ namespace _Project.Scripts.Planets
 
         private void OnEnable()
         {
-            // Enable the toggle action and listen for press events. The default
-            // binding is the Quest right-controller A button; the inspector can
-            // override this without touching code.
+            // Hold grip (either hand) to capture, release to compute.
             var action = _toggleAction.action;
             if (action != null)
             {
-                action.performed += OnToggleActionPerformed;
+                EnsureHoldActionBindings(action);
+                action.started += OnCaptureHoldStarted;
+                action.canceled += OnCaptureHoldCanceled;
                 action.Enable();
             }
+
+            SceneManager.activeSceneChanged += OnActiveSceneChanged;
         }
 
         private void OnDisable()
@@ -302,20 +327,43 @@ namespace _Project.Scripts.Planets
             var action = _toggleAction.action;
             if (action != null)
             {
-                action.performed -= OnToggleActionPerformed;
+                action.started -= OnCaptureHoldStarted;
+                action.canceled -= OnCaptureHoldCanceled;
                 action.Disable();
             }
+
+            SceneManager.activeSceneChanged -= OnActiveSceneChanged;
+            CleanupMessagePanel();
         }
 
-        private void OnToggleActionPerformed(InputAction.CallbackContext ctx)
+        private void OnCaptureHoldStarted(InputAction.CallbackContext ctx)
         {
-            ToggleCapture();
+            if (!IsGripControl(ctx))
+                return;
+
+            if (_state == LabState.Capturing)
+                return;
+
+            if (_state == LabState.Complete)
+                ResetLab();
+
+            StartCapture();
+        }
+
+        private void OnCaptureHoldCanceled(InputAction.CallbackContext ctx)
+        {
+            if (!IsGripControl(ctx))
+                return;
+
+            if (_state != LabState.Capturing)
+                return;
+
+            StopCapture();
         }
 
         private void OnDestroy()
         {
-            if (_messagePanelGo != null)
-                Destroy(_messagePanelGo);
+            CleanupMessagePanel();
         }
 
         #endregion
@@ -339,39 +387,65 @@ namespace _Project.Scripts.Planets
             }
         }
 
-        private void TryResolveLeftControllerAnchor()
+        private void TryResolveControllerAnchor()
         {
-            if (_leftControllerAnchor != null) return;
+            if (_leftControllerAnchor != null)
+            {
+                string assignedName = _leftControllerAnchor.name.ToLowerInvariant();
+                if (assignedName.Contains("rightcontroller")
+                    || assignedName.Contains("right controller")
+                    || assignedName.Contains("righthand")
+                    || assignedName.Contains("right hand"))
+                    return;
+            }
 
-            // Match the Starter-Assets XR Rig naming first, then fall back to
-            // anything that looks like a left controller / hand.
+            // Prefer right controller so Kepler panels are consistently shown on the right hand.
             Transform[] all = FindObjectsByType<Transform>(FindObjectsSortMode.None);
-            Transform exact = null;
-            Transform fuzzy = null;
+            Transform exactRight = null;
+            Transform fuzzyRight = null;
+            Transform exactLeft = null;
+            Transform fuzzyLeft = null;
+            Transform fallbackAssigned = _leftControllerAnchor;
+
             for (int i = 0; i < all.Length; i++)
             {
                 string n = all[i].name;
                 string lower = n.ToLowerInvariant();
+
+                if (string.Equals(n, "Right Controller", StringComparison.Ordinal))
+                {
+                    exactRight = all[i];
+                    continue;
+                }
+                if (fuzzyRight == null
+                    && (lower.Contains("rightcontroller")
+                        || lower.Contains("right controller")
+                        || lower.Contains("righthand")
+                        || lower.Contains("right hand")))
+                {
+                    fuzzyRight = all[i];
+                }
+
                 if (string.Equals(n, "Left Controller", StringComparison.Ordinal))
-                {
-                    exact = all[i];
-                    break;
-                }
-                if (fuzzy == null
-                    && (lower.Contains("leftcontroller")
-                        || lower.Contains("left controller")
-                        || lower.Contains("lefthand")
-                        || lower.Contains("left hand")))
-                {
-                    fuzzy = all[i];
-                }
+                    exactLeft = all[i];
+                else if (fuzzyLeft == null
+                         && (lower.Contains("leftcontroller")
+                             || lower.Contains("left controller")
+                             || lower.Contains("lefthand")
+                             || lower.Contains("left hand")))
+                    fuzzyLeft = all[i];
             }
 
-            _leftControllerAnchor = exact != null ? exact : fuzzy;
+            _leftControllerAnchor = exactRight != null ? exactRight
+                : fuzzyRight != null ? fuzzyRight
+                : exactLeft != null ? exactLeft
+                : fuzzyLeft != null ? fuzzyLeft
+                : fallbackAssigned;
+
             if (_leftControllerAnchor != null)
-                Debug.Log($"{LOG_TAG} Auto-assigned _leftControllerAnchor: {_leftControllerAnchor.name}.");
+                Debug.Log($"{LOG_TAG} Auto-assigned controller anchor: {_leftControllerAnchor.name}.");
             else
-                Debug.LogWarning($"{LOG_TAG} No left controller transform found -- panel will fall back to camera-front placement.", this);
+                Debug.LogWarning($"{LOG_TAG} No controller transform found -- panel will fall back to camera-front placement.", this);
         }
 
         private void CacheSunRenderer()
@@ -436,23 +510,21 @@ namespace _Project.Scripts.Planets
                 return;
             }
 
-            _messagePanelGo = new GameObject("HUD_KeplerLab2_Message");
+            _messagePanelGo = new GameObject(MESSAGE_PANEL_NAME);
 
             if (_leftControllerAnchor != null)
             {
-                // Parent the panel above the LEFT controller so it follows the
-                // player's wrist like a HUD. Local offset/rotation come from the
-                // inspector so they can be tuned without recompiling.
+                // Parent the panel above the selected controller anchor (right preferred).
                 _messagePanelGo.transform.SetParent(_leftControllerAnchor, worldPositionStays: false);
                 _messagePanelGo.transform.localPosition = _panelLocalOffset;
                 _messagePanelGo.transform.localRotation = Quaternion.Euler(_panelLocalEuler);
             }
             else
             {
-                // Fallback path -- only used if we couldn't find the left controller.
+                // Fallback path -- only used if we couldn't find a controller anchor.
                 if (Camera.main == null)
                 {
-                    Debug.LogWarning($"{LOG_TAG} No main camera and no left controller -- cannot place the message panel.", this);
+                    Debug.LogWarning($"{LOG_TAG} No main camera and no controller anchor -- cannot place the message panel.", this);
                     Destroy(_messagePanelGo);
                     _messagePanelGo = null;
                     return;
@@ -475,9 +547,6 @@ namespace _Project.Scripts.Planets
             // localScale so we can specify font size in metres rather than pixels.
             var canvasRect = _messagePanelGo.GetComponent<RectTransform>();
             canvasRect.sizeDelta = new Vector2(_messagePanelSize.x * 100f, _messagePanelSize.y * 100f);
-            // When parented to the controller we use a smaller scale so the panel
-            // doesn't dwarf the wrist; otherwise the original 0.01 metres-per-unit
-            // scale is fine for camera-front placement.
             float baseScale = _leftControllerAnchor != null ? _panelControllerScale * 0.01f : 0.01f;
             canvasRect.localScale = Vector3.one * baseScale;
 
@@ -514,6 +583,94 @@ namespace _Project.Scripts.Planets
         {
             if (_messageText != null)
                 _messageText.text = message;
+        }
+
+        private static bool IsGripControl(InputAction.CallbackContext ctx)
+        {
+            if (ctx.control == null)
+                return false;
+
+            string path = ctx.control.path;
+            return !string.IsNullOrEmpty(path)
+                && path.IndexOf("grip", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private static void EnsureHoldActionBindings(InputAction action)
+        {
+            if (action == null)
+                return;
+
+            const string rightGripPath = "<XRController>{RightHand}/gripPressed";
+            const string leftGripPath = "<XRController>{LeftHand}/gripPressed";
+
+            bool hasRightGrip = false;
+            bool hasLeftGrip = false;
+            for (int i = 0; i < action.bindings.Count; i++)
+            {
+                string path = action.bindings[i].path;
+                if (string.Equals(path, rightGripPath, StringComparison.OrdinalIgnoreCase))
+                    hasRightGrip = true;
+                if (string.Equals(path, leftGripPath, StringComparison.OrdinalIgnoreCase))
+                    hasLeftGrip = true;
+            }
+
+            if (!hasRightGrip)
+                action.AddBinding(rightGripPath);
+            if (!hasLeftGrip)
+                action.AddBinding(leftGripPath);
+        }
+
+        private void ApplyHoldCaptureInstructionTexts()
+        {
+            _msgIdle =
+                "<size=115%><b>KeplerLab 2 — Segunda Ley</b></size>\n" +
+                "Mantén pulsado <b>Grip</b> en cualquier mano para iniciar la medición.\n" +
+                "Mientras mantienes, todos los planetas acumulan tiempo y área barrida.\n" +
+                "Suelta <b>Grip</b> para detener y calcular resultados.";
+
+            _msgCapturing =
+                "Midiendo barridos...\n" +
+                "Mantén pulsado <b>Grip</b> para seguir midiendo.\n" +
+                "Suelta <b>Grip</b> para calcular y mostrar los resultados.";
+        }
+
+        private void OnActiveSceneChanged(Scene previousScene, Scene nextScene)
+        {
+            _ = previousScene;
+            if (!string.Equals(nextScene.name, KEPLER_LAB2_SCENE_NAME, StringComparison.Ordinal))
+                CleanupMessagePanel();
+        }
+
+        private void ApplyUnifiedPanelStyleIfEnabled()
+        {
+            if (!_useUnifiedPanelStyle)
+                return;
+
+            _panelLocalOffset = _unifiedPanelLocalOffset;
+            _panelLocalEuler = _unifiedPanelLocalEuler;
+            _panelControllerScale = _unifiedPanelControllerScale;
+            _messagePanelSize = _unifiedPanelSize;
+            _messageFontSize = _unifiedPanelFontSize;
+        }
+
+        private void CleanupMessagePanel()
+        {
+            if (_messagePanelGo != null)
+            {
+                Destroy(_messagePanelGo);
+                _messagePanelGo = null;
+            }
+
+            _messageText = null;
+
+            Transform[] all = FindObjectsByType<Transform>(FindObjectsSortMode.None);
+            for (int i = 0; i < all.Length; i++)
+            {
+                if (!string.Equals(all[i].name, MESSAGE_PANEL_NAME, StringComparison.Ordinal))
+                    continue;
+
+                Destroy(all[i].gameObject);
+            }
         }
 
         #endregion
@@ -568,7 +725,7 @@ namespace _Project.Scripts.Planets
                 // sb.AppendLine();
             }
 
-            sb.Append("<size=80%>Pulsa el grip para reiniciar y capturar de nuevo.</size>");
+            sb.Append("<size=80%>Mantén Grip de nuevo para iniciar otra medición y suelta para recalcular.</size>");
             return sb.ToString();
         }
 

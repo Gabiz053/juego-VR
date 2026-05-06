@@ -420,6 +420,8 @@ MonoBehaviour:
   _autoComputeGM: 1
   _sunGM: 100
   _forceXZPlane: 0
+  _allowTwoHandGrab: 1
+  _allowPassThroughWhileGrabbed: 1
 --- !u!114 &1822015264325708518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -708,6 +710,7 @@ MonoBehaviour:
   resolution: 64
   generateOnStart: 0
   _enableSplineAnimateOnGenerate: 1
+  _centerOnLocalOriginWhenFocusIsAncestor: 1
   sun: {fileID: 0}
 --- !u!120 &4907165689212684143
 LineRenderer:

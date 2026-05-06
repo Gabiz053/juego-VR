@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
@@ -50,6 +52,13 @@ namespace _Project.Scripts.Planets
                  "Disable this to preserve the real 3D release position and allow orbits above/below the floor.")]
         [SerializeField] private bool _forceXZPlane = false;
 
+        [Header("Grab Interaction")]
+        [Tooltip("If enabled, multiple interactors can hold the planet simultaneously (two-hand grab).")]
+        [SerializeField] private bool _allowTwoHandGrab = true;
+
+        [Tooltip("If enabled, while grabbed the planet ignores collision response so it can pass through the crystal shell.")]
+        [SerializeField] private bool _allowPassThroughWhileGrabbed = true;
+
         #endregion
 
         #region Cached Components
@@ -58,6 +67,10 @@ namespace _Project.Scripts.Planets
         private XRGrabInteractable _grabInteractable;
         private Rigidbody          _rigidbody;
         private Renderer           _sunRenderer;
+        private readonly List<Collider> _planetColliders = new();
+        private readonly List<bool> _colliderIsTriggerDefaults = new();
+        private bool _rigidbodyDetectCollisionsDefault;
+        private bool _hasRigidbodyDetectCollisionsDefault;
 
         #endregion
 
@@ -77,12 +90,14 @@ namespace _Project.Scripts.Planets
             _orbitalMover     = GetComponent<OrbitalMover>();
             _grabInteractable = GetComponent<XRGrabInteractable>();
             _rigidbody        = GetComponent<Rigidbody>();
+            CachePlanetColliders();
         }
 
         private void Start()
         {
             TryResolveSunReference();
             CacheSunRenderer();
+            ConfigureGrabInteraction();
             ValidateReferences();
 
             _previousPosition      = transform.position;
@@ -102,6 +117,9 @@ namespace _Project.Scripts.Planets
 
         private void OnDestroy()
         {
+            _isGrabbed = false;
+            SetPassThroughWhileGrabbed(false);
+
             if (_grabInteractable == null) return;
             _grabInteractable.selectEntered.RemoveListener(OnGrabbed);
             _grabInteractable.selectExited.RemoveListener(OnReleased);
@@ -113,8 +131,10 @@ namespace _Project.Scripts.Planets
 
         private void OnGrabbed(SelectEnterEventArgs args)
         {
+            _ = args;
             _isGrabbed    = true;
             _releaseVelocity = Vector3.zero;
+            SetPassThroughWhileGrabbed(true);
 
             if (_orbitalMover != null)
                 _orbitalMover.StopOrbit();
@@ -124,7 +144,15 @@ namespace _Project.Scripts.Planets
 
         private void OnReleased(SelectExitEventArgs args)
         {
+            _ = args;
+            if (_grabInteractable != null && _grabInteractable.isSelected)
+            {
+                Debug.Log($"{LOG_TAG} Release received but object is still held by another hand -- keeping grab state.");
+                return;
+            }
+
             _isGrabbed = false;
+            SetPassThroughWhileGrabbed(false);
 
             if (_sunTransform == null || _orbitalMover == null)
             {
@@ -235,6 +263,102 @@ namespace _Project.Scripts.Planets
                 tangent = Vector3.forward;
 
             return tangent * speed;
+        }
+
+        private void ConfigureGrabInteraction()
+        {
+            if (_grabInteractable == null)
+                return;
+
+            if (_allowTwoHandGrab)
+                TrySetEnumMember(_grabInteractable, "selectMode", "Multiple");
+
+            if (_allowPassThroughWhileGrabbed)
+                TrySetEnumMember(_grabInteractable, "movementType", "Instantaneous");
+        }
+
+        private static bool TrySetEnumMember(object target, string memberName, string enumValueName)
+        {
+            if (target == null)
+                return false;
+
+            Type targetType = target.GetType();
+
+            var propertyInfo = targetType.GetProperty(memberName);
+            if (propertyInfo != null && propertyInfo.CanWrite && propertyInfo.PropertyType.IsEnum)
+                return TryAssignEnumValue(propertyInfo.PropertyType, enumValueName, value => propertyInfo.SetValue(target, value));
+
+            var fieldInfo = targetType.GetField(memberName);
+            if (fieldInfo != null && fieldInfo.FieldType.IsEnum)
+                return TryAssignEnumValue(fieldInfo.FieldType, enumValueName, value => fieldInfo.SetValue(target, value));
+
+            return false;
+        }
+
+        private static bool TryAssignEnumValue(Type enumType, string enumValueName, Action<object> setter)
+        {
+            string[] names = Enum.GetNames(enumType);
+            for (int i = 0; i < names.Length; i++)
+            {
+                if (!string.Equals(names[i], enumValueName, StringComparison.Ordinal))
+                    continue;
+
+                object parsedValue = Enum.Parse(enumType, enumValueName);
+                setter(parsedValue);
+                return true;
+            }
+
+            return false;
+        }
+
+        private void CachePlanetColliders()
+        {
+            _planetColliders.Clear();
+            _colliderIsTriggerDefaults.Clear();
+
+            Collider[] colliders = GetComponentsInChildren<Collider>(true);
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                Collider collider = colliders[i];
+                if (collider == null)
+                    continue;
+
+                _planetColliders.Add(collider);
+                _colliderIsTriggerDefaults.Add(collider.isTrigger);
+            }
+
+            if (_rigidbody != null)
+            {
+                _rigidbodyDetectCollisionsDefault = _rigidbody.detectCollisions;
+                _hasRigidbodyDetectCollisionsDefault = true;
+            }
+        }
+
+        private void SetPassThroughWhileGrabbed(bool enabled)
+        {
+            if (!_allowPassThroughWhileGrabbed)
+                return;
+
+            for (int i = 0; i < _planetColliders.Count; i++)
+            {
+                Collider collider = _planetColliders[i];
+                if (collider == null)
+                    continue;
+
+                bool defaultIsTrigger = _colliderIsTriggerDefaults[i];
+                collider.isTrigger = enabled || defaultIsTrigger;
+            }
+
+            if (_rigidbody != null)
+            {
+                if (!_hasRigidbodyDetectCollisionsDefault)
+                {
+                    _rigidbodyDetectCollisionsDefault = _rigidbody.detectCollisions;
+                    _hasRigidbodyDetectCollisionsDefault = true;
+                }
+
+                _rigidbody.detectCollisions = enabled ? false : _rigidbodyDetectCollisionsDefault;
+            }
         }
 
         private void TryResolveSunReference()

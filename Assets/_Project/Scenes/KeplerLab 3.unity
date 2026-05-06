@@ -797,7 +797,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5027304443940058665, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
       propertyPath: _maxDistance
-      value: 0.3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5027304443940058665, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
       propertyPath: _dotThreshold
@@ -807,6 +807,14 @@ PrefabInstance:
       propertyPath: _palmTransform
       value: 
       objectReference: {fileID: 826587939}
+    - target: {fileID: 5027304443940058665, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
+      propertyPath: _showThreshold
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5027304443940058665, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
+      propertyPath: _palmNormalAxis
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5027304443940058665, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
       propertyPath: _cameraTransform
       value: 
@@ -1863,6 +1871,37 @@ MonoBehaviour:
   _spawnDistance: 3
   _spawnScale: 0.5
   _dataCard: {fileID: 0}
+  _showIntroPanel: 1
+  _introFadeInDuration: 1
+  _introHoldDuration: 4
+  _introFadeOutDuration: 1.5
+  _introText: "<size=120%><b>KeplerLab 3</b></size>\n<size=80%>(Tercera Ley de Kepler)</size>\n\n1.
+    Pulsa <b>Spawn Planet</b> para crear un planeta.\n2. <b>Agarralo</b> y col\xF3calo
+    en cualquier punto del espacio.\n3. Al soltarlo, orbita alrededor del Sol y aparece
+    una <b>tarjeta de datos</b> con su <b>semieje mayor (a)</b> y su <b>periodo orbital
+    (T)</b>.\n4. Comprueba que <b>T\xB2 / a\xB3</b> es la misma constante para todos
+    los planetas.\n\n<size=80%>Pausa la simulaci\xF3n para leer la explicaci\xF3n
+    de la ley.</size>"
+  _showExplanationOnPause: 1
+  _placePausePanelAboveSun: 1
+  _pausePanelSunOffset: {x: 0, y: 2.2, z: 0}
+  _rightControllerAnchor: {fileID: 0}
+  _panelLocalOffset: {x: 0, y: 0.18, z: 0.05}
+  _panelLocalEuler: {x: 45, y: 0, z: 0}
+  _panelControllerScale: 0.08
+  _messageDistance: 4
+  _messageHeightOffset: 0.3
+  _messagePanelSize: {x: 3, y: 1.6}
+  _messageFontSize: 0.16
+  _messageFont: {fileID: 0}
+  _explanationText: "<size=120%><b>Tercera Ley de Kepler</b></size>\n<size=80%>(Ley
+    de los periodos)</size>\n\nEl cuadrado del <b>periodo orbital (T\xB2)</b> es
+    proporcional al cubo del <b>semieje mayor (a\xB3)</b> de la \xF3rbita:\n\n         
+    <b>T\xB2 / a\xB3 = constante</b>\n\n\u25CF <b>T</b>: tiempo que tarda el planeta
+    en dar una vuelta completa.\n\u25CF <b>a</b>: distancia media al Sol (semieje
+    mayor de la elipse).\n\u25CF La constante vale <b>4\u03C0\xB2 / (G\xB7M\u2609)</b>
+    y es igual para todos los planetas.\n\n<size=80%>Pulsa play/pausa de nuevo para
+    reanudar.</size>"
 --- !u!1 &1834068109
 GameObject:
   m_ObjectHideFlags: 0

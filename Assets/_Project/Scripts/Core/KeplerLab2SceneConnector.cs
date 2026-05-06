@@ -11,16 +11,16 @@ namespace _Project.Scripts.Core
 {
     /// <summary>
     /// Connects WristMenuController events to global systems (SceneController, GameManager)
-    /// within the solar system scene.
+    /// within the KeplerLab 2 scene.
     /// Place on a service GameObject in the scene (e.g. Svc_SceneConnector).
     /// </summary>
     [DisallowMultipleComponent]
-    [AddComponentMenu("ProyectoVR/Core/Kepler Scene Connector")]
-    public sealed class KeplerSceneConnector : MonoBehaviour
+    [AddComponentMenu("ProyectoVR/Core/Kepler Lab2 Scene Connector")]
+    public sealed class KeplerLab2SceneConnector : MonoBehaviour
     {
         #region Constants
 
-        private const string LOG_TAG = "[KeplerSceneConnector]";
+        private const string LOG_TAG = "[KeplerLab2SceneConnector]";
         private const float MIN_SPAWN_DISTANCE = 0.1f;
 
         #endregion
@@ -42,7 +42,7 @@ namespace _Project.Scripts.Core
         [SerializeField] private string _mainMenuSceneName = "Main_VR";
 
         [Tooltip("Index of this scene within the Kepler sequence (0 = KeplerLab1, 1 = KeplerLab2, 2 = KeplerLab3).")]
-        [SerializeField] private int _currentSceneIndex = 0;
+        [SerializeField] private int _currentSceneIndex = 1;
 
         [Header("Spawn Settings")]
         [Tooltip("Fallback prefab used when _planetPrefabs is empty or has no valid entries.")]
@@ -59,8 +59,8 @@ namespace _Project.Scripts.Core
 
         [Header("Explanation Panel (Pause)")]
         [Tooltip("Si esta activado, al entrar en la escena aparece un panel con instrucciones " +
-                 "de uso, igual que en KeplerLab 2.")]
-        [SerializeField] private bool _showIntroPanel = true;
+                 "de uso para la Segunda Ley de Kepler.")]
+        [SerializeField] private bool _showIntroPanel = false;
 
         [Header("Panel Style")]
         [Tooltip("If enabled, enforces the same panel style used across Kepler 1 and Kepler 2.")]
@@ -79,17 +79,16 @@ namespace _Project.Scripts.Core
         [TextArea(4, 12)]
         [Tooltip("Texto inicial que explica como funciona la escena.")]
         [SerializeField] private string _introText =
-            "<size=120%><b>KeplerLab 1</b></size>\n" +
-            "<size=80%>(Primera Ley de Kepler)</size>\n\n" +
+            "<size=120%><b>KeplerLab 2</b></size>\n" +
+            "<size=80%>(Segunda Ley de Kepler)</size>\n\n" +
             "1. Pulsa <b>Spawn Planet</b> para crear un planeta.\n" +
-            "2. <b>Agarralo</b> y colocalo en cualquier punto del espacio.\n" +
-            "3. Al soltarlo, el sistema genera una <b>orbita eliptica 3D</b> " +
-            "con el <b>Sol en uno de los focos</b>.\n" +
-            "4. Puedes pausar la simulacion para ver la explicacion de la ley.\n\n" +
-            "<size=80%>Observa como cambia la forma de la orbita segun la posicion y el lanzamiento.</size>";
+            "2. Manten pulsado <b>grip</b> (cualquier mano) para iniciar la medicion.\n" +
+            "3. Suelta grip para calcular el tiempo asociado al area barrida.\n" +
+            "4. Repite y compara en distintas zonas de la orbita.\n\n" +
+            "<size=80%>En tiempos iguales, el radio vector barre areas iguales.</size>";
 
         [Tooltip("Si esta activado, al pulsar pausa aparece un panel TMP en la muneca " +
-                 "izquierda con una explicacion de la 1ra Ley de Kepler. " +
+                 "izquierda con una explicacion de la 2da Ley de Kepler. " +
                  "Replicamos el patron del HUD de KeplerLab2Controller.")]
         [SerializeField] private bool _showExplanationOnPause = true;
 
@@ -133,15 +132,12 @@ namespace _Project.Scripts.Core
         [TextArea(4, 12)]
         [Tooltip("Texto que aparece en el panel cuando se pausa la simulacion.")]
         [SerializeField] private string _explanationText =
-            "<size=120%><b>Primera Ley de Kepler</b></size>\n" +
-            "<size=80%>(Ley de las orbitas)</size>\n\n" +
-            "Todos los planetas describen <b>orbitas elipticas</b>, " +
-            "con el <b>Sol</b> situado en uno de los <b>focos</b> de la elipse.\n\n" +
-            "● <b>Perihelio</b>: punto mas cercano al Sol.\n" +
-            "● <b>Afelio</b>: punto mas lejano al Sol.\n" +
-            "● La <b>excentricidad</b> (e) define la forma:\n" +
-            "    e = 0  -> circulo\n" +
-            "    0 < e < 1 -> elipse\n\n" +
+            "<size=120%><b>Segunda Ley de Kepler</b></size>\n" +
+            "<size=80%>(Ley de las areas)</size>\n\n" +
+            "En tiempos iguales, el radio vector planeta-Sol barre <b>areas iguales</b>.\n\n" +
+            "● Cerca del Sol, el planeta se mueve mas rapido.\n" +
+            "● Lejos del Sol, se mueve mas lento.\n" +
+            "● Lo constante es el area barrida por unidad de tiempo.\n\n" +
             "<size=80%>Pulsa play/pausa de nuevo para reanudar.</size>";
 
         [Header("Unified Kepler Style Values")]
@@ -164,8 +160,8 @@ namespace _Project.Scripts.Core
 
         #region Constants — Kepler Scenes
 
-        private const string INTRO_PANEL_NAME = "HUD_KeplerLab1_Intro";
-        private const string EXPLANATION_PANEL_NAME = "HUD_KeplerLab1_Explanation";
+        private const string INTRO_PANEL_NAME = "HUD_KeplerLab2_Intro";
+        private const string EXPLANATION_PANEL_NAME = "HUD_KeplerLab2_Explanation";
         private static readonly string[] KEPLER_SCENES =
         {
             "KeplerLab 1",

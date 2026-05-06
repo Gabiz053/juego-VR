@@ -1534,7 +1534,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1782322548416687588, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.01
+      value: -0.05
       objectReference: {fileID: 0}
     - target: {fileID: 1782322548416687588, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1582,7 +1582,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5027304443940058665, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
       propertyPath: _maxDistance
-      value: 0.3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5027304443940058665, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
       propertyPath: _dotThreshold
@@ -1592,6 +1592,14 @@ PrefabInstance:
       propertyPath: _palmTransform
       value: 
       objectReference: {fileID: 826587939}
+    - target: {fileID: 5027304443940058665, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
+      propertyPath: _showThreshold
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5027304443940058665, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
+      propertyPath: _palmNormalAxis
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5027304443940058665, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
       propertyPath: _cameraTransform
       value: 
@@ -1611,17 +1619,14 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4264298935910122637, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2006318079}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
 --- !u!114 &1645577886 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5027304443940058665, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
   m_PrefabInstance: {fileID: 1645577885}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2006318071}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7dfc9dc743b9663b837b6ae0e5b1c3e, type: 3}
@@ -1906,9 +1911,13 @@ MonoBehaviour:
   _mainMenuSceneName: Main_VR
   _currentSceneIndex: 0
   _planetPrefab: {fileID: 6392694476324826247, guid: fbe2f758224df5f45b6433e200824604, type: 3}
+  _planetPrefabs: []
   _cameraTransform: {fileID: 47491072}
   _spawnDistance: 3
   _showIntroPanel: 1
+  _introFadeInDuration: 1
+  _introHoldDuration: 4
+  _introFadeOutDuration: 1.5
   _introText: '<size=120%><b>KeplerLab 1</b></size>
 
     <size=80%>(Primera Ley de
@@ -1930,7 +1939,7 @@ MonoBehaviour:
     <size=80%>Observa
     como cambia la forma de la orbita segun la posicion y el lanzamiento.</size>'
   _showExplanationOnPause: 1
-  _leftControllerAnchor: {fileID: 0}
+  _rightControllerAnchor: {fileID: 0}
   _panelLocalOffset: {x: 0, y: 0.08, z: 0.05}
   _panelLocalEuler: {x: 45, y: 0, z: 0}
   _panelControllerScale: 0.08
@@ -2251,35 +2260,11 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
---- !u!1 &2006318071 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4264298935910122637, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
-  m_PrefabInstance: {fileID: 1645577885}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &2006318072 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1782322548416687588, guid: 2687a378c4efb3151914f59cf937f7e0, type: 3}
   m_PrefabInstance: {fileID: 1645577885}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2006318079
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2006318071}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 0
-  m_CheckFor2DOcclusion: 0
-  m_CheckFor3DOcclusion: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RaycastTriggerInteraction: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
