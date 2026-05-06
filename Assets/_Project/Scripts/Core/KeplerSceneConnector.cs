@@ -127,7 +127,7 @@ namespace _Project.Scripts.Core
             "● La <b>excentricidad</b> (e) define la forma:\n" +
             "    e = 0  -> circulo\n" +
             "    0 < e < 1 -> elipse\n\n" +
-            "<size=80%>Pulsa pausa de nuevo para reanudar.</size>";
+            "<size=80%>Pulsa play/pausa de nuevo para reanudar.</size>";
 
         #endregion
 

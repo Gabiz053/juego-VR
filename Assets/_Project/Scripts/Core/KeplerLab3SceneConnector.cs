@@ -1,12 +1,17 @@
+using System;
+using System.Collections;
 using _Project.Scripts.Planets;
 using _Project.Scripts.UI;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace _Project.Scripts.Core
 {
     /// <summary>
     /// Conector especifico para KeplerLab 3.
-    /// Igual que KeplerSceneConnector pero activa OrbitalDataCard al soltar el planeta.
+    /// Igual que KeplerSceneConnector pero activa OrbitalDataCard al soltar el planeta,
+    /// y muestra un panel de introduccion y un panel de explicacion de la 3a Ley de Kepler.
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("ProyectoVR/Core/Kepler Lab3 Scene Connector")]
@@ -16,6 +21,7 @@ namespace _Project.Scripts.Core
 
         private const string LOG_TAG = "[KeplerLab3SceneConnector]";
         private const float MIN_SPAWN_DISTANCE = 0.1f;
+        private const string TMP_FONT_RESOURCE_PATH = "Fonts & Materials/LiberationSans SDF";
 
         #endregion
 
@@ -55,9 +61,80 @@ namespace _Project.Scripts.Core
         [Tooltip("OrbitalDataCard que muestra la 3a ley de Kepler al soltar el planeta.")]
         [SerializeField] private OrbitalDataCard _dataCard;
 
+        // -----------------------------------------------------------------------
+        [Header("Intro Panel")]
+        [Tooltip("Si esta activado, al entrar en la escena aparece un panel con instrucciones de uso.")]
+        [SerializeField] private bool _showIntroPanel = true;
+
+        [Tooltip("Segundos que tarda el panel de intro en aparecer (fade in).")]
+        [SerializeField] private float _introFadeInDuration = 1.0f;
+
+        [Tooltip("Segundos que el panel de intro permanece completamente visible.")]
+        [SerializeField] private float _introHoldDuration = 4.0f;
+
+        [Tooltip("Segundos que tarda el panel de intro en desaparecer (fade out).")]
+        [SerializeField] private float _introFadeOutDuration = 1.5f;
+
+        [TextArea(4, 12)]
+        [Tooltip("Texto que aparece al iniciar la escena explicando como usar el lab.")]
+        [SerializeField] private string _introText =
+            "<size=120%><b>KeplerLab 3</b></size>\n" +
+            "<size=80%>(Tercera Ley de Kepler)</size>\n\n" +
+            "1. Pulsa <b>Spawn Planet</b> para crear un planeta.\n" +
+            "2. <b>Agarralo</b> y colócalo en cualquier punto del espacio.\n" +
+            "3. Al soltarlo, orbita alrededor del Sol y aparece una <b>tarjeta de datos</b> " +
+            "con su <b>semieje mayor (a)</b> y su <b>periodo orbital (T)</b>.\n" +
+            "4. Comprueba que <b>T² / a³</b> es la misma constante para todos los planetas.\n\n" +
+            "<size=80%>Pausa la simulación para leer la explicación de la ley.</size>";
+
+        // -----------------------------------------------------------------------
+        [Header("Explanation Panel (Pause)")]
+        [Tooltip("Si esta activado, al pausar aparece un panel con la explicacion de la 3a Ley.")]
+        [SerializeField] private bool _showExplanationOnPause = true;
+
+        [Tooltip("Transform del mando derecho. Si esta vacio se auto-resuelve buscando 'Right Controller'.")]
+        [SerializeField] private Transform _rightControllerAnchor;
+
+        [Tooltip("Offset local (m) respecto al mando derecho donde se ancla el panel.")]
+        [SerializeField] private Vector3 _panelLocalOffset = new Vector3(0f, 0.18f, 0.05f);
+
+        [Tooltip("Rotacion local (grados) respecto al mando derecho.")]
+        [SerializeField] private Vector3 _panelLocalEuler = new Vector3(45f, 0f, 0f);
+
+        [Tooltip("Escala local del panel cuando se ancla al mando.")]
+        [SerializeField] private float _panelControllerScale = 0.08f;
+
+        [Tooltip("Distancia (m) desde la camara cuando no se encuentra el mando (fallback).")]
+        [SerializeField] private float _messageDistance = 4f;
+
+        [Tooltip("Offset vertical (m) del fallback de panel frente a camara.")]
+        [SerializeField] private float _messageHeightOffset = 0.3f;
+
+        [Tooltip("Tamaño (m) del panel: ancho x alto.")]
+        [SerializeField] private Vector2 _messagePanelSize = new Vector2(3f, 1.6f);
+
+        [Tooltip("Tamaño (m) de fuente del panel.")]
+        [SerializeField] private float _messageFontSize = 0.16f;
+
+        [Tooltip("Asset de fuente TMP. Si esta vacio se carga LiberationSans SDF de Resources.")]
+        [SerializeField] private TMP_FontAsset _messageFont;
+
+        [TextArea(4, 12)]
+        [Tooltip("Texto que aparece en el panel cuando se pausa la simulacion.")]
+        [SerializeField] private string _explanationText =
+            "<size=120%><b>Tercera Ley de Kepler</b></size>\n" +
+            "<size=80%>(Ley de los periodos)</size>\n\n" +
+            "El cuadrado del <b>periodo orbital (T²)</b> es proporcional al cubo del " +
+            "<b>semieje mayor (a³)</b> de la órbita:\n\n" +
+            "          <b>T² / a³ = constante</b>\n\n" +
+            "● <b>T</b>: tiempo que tarda el planeta en dar una vuelta completa.\n" +
+            "● <b>a</b>: distancia media al Sol (semieje mayor de la elipse).\n" +
+            "● La constante vale <b>4π² / (G·M☉)</b> y es igual para todos los planetas.\n\n" +
+            "<size=80%>Pulsa play/pausa de nuevo para reanudar.</size>";
+
         #endregion
 
-        #region Constants � Kepler Scenes
+        #region Constants — Kepler Scenes
 
         private static readonly string[] KEPLER_SCENES =
         {
@@ -72,6 +149,16 @@ namespace _Project.Scripts.Core
 
         private GameObject _spawnedPlanet;
 
+        // Intro panel
+        private GameObject    _introPanelGo;
+        private TextMeshProUGUI _introLabel;
+        private CanvasGroup   _introCanvasGroup;
+        private Coroutine     _introFadeCoroutine;
+
+        // Explanation panel
+        private GameObject      _explanationPanelGo;
+        private TextMeshProUGUI _explanationLabel;
+
         #endregion
 
         #region Unity Lifecycle
@@ -82,11 +169,15 @@ namespace _Project.Scripts.Core
                 _cameraTransform = Camera.main.transform;
 
             _spawnDistance = Mathf.Max(MIN_SPAWN_DISTANCE, _spawnDistance);
+            TryResolveRightControllerAnchor();
             ValidateReferences();
             SubscribeEvents();
 
             if (_wristMenuController != null)
                 _wristMenuController.SetSpawnButtonInteractable(true);
+
+            if (_showIntroPanel)
+                ShowIntroPanel();
 
             Debug.Log($"{LOG_TAG} Initialized -- KeplerLab3, events subscribed.");
         }
@@ -95,30 +186,35 @@ namespace _Project.Scripts.Core
         {
             UnsubscribeEvents();
             UnsubscribePlanetEvents();
+
+            if (_introPanelGo != null)
+                Destroy(_introPanelGo);
+            if (_explanationPanelGo != null)
+                Destroy(_explanationPanelGo);
         }
 
         #endregion
 
-        #region Internals
+        #region Internals — Events
 
         private void SubscribeEvents()
         {
             if (_wristMenuController == null) return;
-            _wristMenuController.OnBackPressed += HandleBackPressed;
-            _wristMenuController.OnPausePressed += HandlePausePressed;
+            _wristMenuController.OnBackPressed         += HandleBackPressed;
+            _wristMenuController.OnPausePressed        += HandlePausePressed;
             _wristMenuController.OnToggleOrbitsPressed += HandleToggleOrbitsPressed;
-            _wristMenuController.OnSpawnPlanetPressed += HandleSpawnPlanetPressed;
-            _wristMenuController.OnNextLawPressed += HandleNextLawPressed;
+            _wristMenuController.OnSpawnPlanetPressed  += HandleSpawnPlanetPressed;
+            _wristMenuController.OnNextLawPressed      += HandleNextLawPressed;
         }
 
         private void UnsubscribeEvents()
         {
             if (_wristMenuController == null) return;
-            _wristMenuController.OnBackPressed -= HandleBackPressed;
-            _wristMenuController.OnPausePressed -= HandlePausePressed;
+            _wristMenuController.OnBackPressed         -= HandleBackPressed;
+            _wristMenuController.OnPausePressed        -= HandlePausePressed;
             _wristMenuController.OnToggleOrbitsPressed -= HandleToggleOrbitsPressed;
-            _wristMenuController.OnSpawnPlanetPressed -= HandleSpawnPlanetPressed;
-            _wristMenuController.OnNextLawPressed -= HandleNextLawPressed;
+            _wristMenuController.OnSpawnPlanetPressed  -= HandleSpawnPlanetPressed;
+            _wristMenuController.OnNextLawPressed      -= HandleNextLawPressed;
         }
 
         private void SubscribePlanetEvents()
@@ -156,6 +252,18 @@ namespace _Project.Scripts.Core
             if (_orbitalPauseController == null) return;
             _orbitalPauseController.TogglePause();
             _wristMenuController.SetPauseIcon(_orbitalPauseController.IsPaused);
+
+            // Mostramos / ocultamos el panel de explicacion de la 3a Ley al pausar,
+            // igual que KeplerSceneConnector hace para las leyes 1 y 2.
+            if (_showExplanationOnPause)
+            {
+                if (_orbitalPauseController.IsPaused)
+                    ShowExplanationPanel();
+                else
+                    HideExplanationPanel();
+            }
+
+            Debug.Log($"{LOG_TAG} Pause toggled -- paused: {_orbitalPauseController.IsPaused}.");
         }
 
         private void HandleToggleOrbitsPressed()
@@ -216,6 +324,244 @@ namespace _Project.Scripts.Core
 
             card.ShowOrbitalData(semiMajorAxis, orbitalPeriod);
             Debug.Log($"{LOG_TAG} DataCard shown -- a={semiMajorAxis:F2} T={orbitalPeriod:F2}.");
+        }
+
+        #endregion
+
+        #region Internals — Intro Panel
+
+        private void ShowIntroPanel()
+        {
+            if (_introPanelGo == null)
+                CreateIntroPanel();
+            if (_introPanelGo == null) return;
+
+            if (_introLabel != null)
+                _introLabel.text = _introText;
+
+            if (_introFadeCoroutine != null)
+                StopCoroutine(_introFadeCoroutine);
+
+            _introPanelGo.SetActive(true);
+            _introFadeCoroutine = StartCoroutine(IntroPanelFadeSequence());
+        }
+
+        private void CreateIntroPanel()
+        {
+            TMP_FontAsset font = ResolvePanelFont();
+            if (font == null)
+            {
+                Debug.LogWarning($"{LOG_TAG} No TMP font available -- intro panel skipped.", this);
+                return;
+            }
+
+            _introPanelGo = new GameObject("HUD_KeplerLab3_Intro");
+
+            _introCanvasGroup = _introPanelGo.AddComponent<CanvasGroup>();
+            _introCanvasGroup.alpha = 0f;
+
+            if (!TryPlacePanel(_introPanelGo))
+            {
+                Destroy(_introPanelGo);
+                _introPanelGo = null;
+                return;
+            }
+
+            _introLabel = BuildPanelVisuals(_introPanelGo, font, "Txt_Intro");
+            if (_introLabel != null)
+                _introLabel.text = _introText;
+        }
+
+        /// <summary>Fade in → hold → fade out. Timing driven by inspector fields.</summary>
+        private IEnumerator IntroPanelFadeSequence()
+        {
+            float fadeIn  = Mathf.Max(0f, _introFadeInDuration);
+            float hold    = Mathf.Max(0f, _introHoldDuration);
+            float fadeOut = Mathf.Max(0f, _introFadeOutDuration);
+
+            // Fade In
+            float elapsed = 0f;
+            while (elapsed < fadeIn)
+            {
+                elapsed += Time.deltaTime;
+                if (_introCanvasGroup != null)
+                    _introCanvasGroup.alpha = Mathf.Clamp01(elapsed / Mathf.Max(fadeIn, 0.001f));
+                yield return null;
+            }
+            if (_introCanvasGroup != null) _introCanvasGroup.alpha = 1f;
+
+            // Hold
+            yield return new WaitForSeconds(hold);
+
+            // Fade Out
+            elapsed = 0f;
+            while (elapsed < fadeOut)
+            {
+                elapsed += Time.deltaTime;
+                if (_introCanvasGroup != null)
+                    _introCanvasGroup.alpha = Mathf.Clamp01(1f - elapsed / Mathf.Max(fadeOut, 0.001f));
+                yield return null;
+            }
+            if (_introCanvasGroup != null) _introCanvasGroup.alpha = 0f;
+
+            if (_introPanelGo != null)
+                _introPanelGo.SetActive(false);
+
+            _introFadeCoroutine = null;
+            Debug.Log($"{LOG_TAG} Intro panel fade sequence complete.");
+        }
+
+        #endregion
+
+        #region Internals — Explanation Panel
+
+        private void TryResolveRightControllerAnchor()
+        {
+            if (_rightControllerAnchor != null) return;
+
+            Transform[] all = FindObjectsByType<Transform>(FindObjectsSortMode.None);
+            Transform exact = null;
+            Transform fuzzy = null;
+            for (int i = 0; i < all.Length; i++)
+            {
+                string n     = all[i].name;
+                string lower = n.ToLowerInvariant();
+                if (string.Equals(n, "Right Controller", StringComparison.Ordinal))
+                {
+                    exact = all[i];
+                    break;
+                }
+                if (fuzzy == null
+                    && (lower.Contains("rightcontroller")
+                        || lower.Contains("right controller")
+                        || lower.Contains("righthand")
+                        || lower.Contains("right hand")))
+                {
+                    fuzzy = all[i];
+                }
+            }
+
+            _rightControllerAnchor = exact != null ? exact : fuzzy;
+            if (_rightControllerAnchor != null)
+                Debug.Log($"{LOG_TAG} Auto-assigned _rightControllerAnchor: {_rightControllerAnchor.name}.");
+        }
+
+        private void ShowExplanationPanel()
+        {
+            if (_explanationPanelGo == null)
+                CreateExplanationPanel();
+            if (_explanationPanelGo == null) return;
+
+            _explanationPanelGo.SetActive(true);
+            if (_explanationLabel != null)
+                _explanationLabel.text = _explanationText;
+        }
+
+        private void HideExplanationPanel()
+        {
+            if (_explanationPanelGo != null)
+                _explanationPanelGo.SetActive(false);
+        }
+
+        private void CreateExplanationPanel()
+        {
+            TMP_FontAsset font = ResolvePanelFont();
+            if (font == null)
+            {
+                Debug.LogWarning($"{LOG_TAG} No TMP font available -- explanation panel skipped.", this);
+                return;
+            }
+
+            _explanationPanelGo = new GameObject("HUD_KeplerLab3_Explanation");
+            if (!TryPlacePanel(_explanationPanelGo))
+            {
+                Destroy(_explanationPanelGo);
+                _explanationPanelGo = null;
+                return;
+            }
+
+            _explanationLabel = BuildPanelVisuals(_explanationPanelGo, font, "Txt_Explanation");
+            if (_explanationLabel != null)
+                _explanationLabel.text = _explanationText;
+        }
+
+        #endregion
+
+        #region Internals — Panel Helpers
+
+        private TMP_FontAsset ResolvePanelFont()
+        {
+            TMP_FontAsset font = _messageFont;
+            if (font == null)
+                font = Resources.Load<TMP_FontAsset>(TMP_FONT_RESOURCE_PATH);
+            if (font == null && TMP_Settings.instance != null)
+                font = TMP_Settings.defaultFontAsset;
+            return font;
+        }
+
+        private bool TryPlacePanel(GameObject panelGo)
+        {
+            if (_rightControllerAnchor != null)
+            {
+                panelGo.transform.SetParent(_rightControllerAnchor, worldPositionStays: false);
+                panelGo.transform.localPosition = _panelLocalOffset;
+                panelGo.transform.localRotation = Quaternion.Euler(_panelLocalEuler);
+                return true;
+            }
+
+            if (Camera.main == null)
+            {
+                Debug.LogWarning($"{LOG_TAG} No main camera and no right controller -- cannot place panel.", this);
+                return false;
+            }
+
+            Camera cam     = Camera.main;
+            Vector3 pos    = cam.transform.position
+                           + cam.transform.forward * _messageDistance
+                           + Vector3.up * _messageHeightOffset;
+            panelGo.transform.position = pos;
+            panelGo.transform.rotation =
+                Quaternion.LookRotation(pos - cam.transform.position, Vector3.up);
+            return true;
+        }
+
+        private TextMeshProUGUI BuildPanelVisuals(GameObject panelGo, TMP_FontAsset font, string textObjectName)
+        {
+            var canvas = panelGo.AddComponent<Canvas>();
+            canvas.renderMode  = RenderMode.WorldSpace;
+            canvas.sortingOrder = 100;
+
+            var canvasRect = panelGo.GetComponent<RectTransform>();
+            canvasRect.sizeDelta = new Vector2(_messagePanelSize.x * 100f, _messagePanelSize.y * 100f);
+            float baseScale = _rightControllerAnchor != null ? _panelControllerScale * 0.01f : 0.01f;
+            canvasRect.localScale = Vector3.one * baseScale;
+
+            var bgGo = new GameObject("Img_PanelBackground");
+            bgGo.transform.SetParent(panelGo.transform, worldPositionStays: false);
+            var bgImage = bgGo.AddComponent<Image>();
+            bgImage.color = new Color(0f, 0f, 0f, 0.55f);
+            var bgRect = bgGo.GetComponent<RectTransform>();
+            bgRect.anchorMin = Vector2.zero;
+            bgRect.anchorMax = Vector2.one;
+            bgRect.offsetMin = Vector2.zero;
+            bgRect.offsetMax = Vector2.zero;
+
+            var textGo = new GameObject(textObjectName);
+            textGo.transform.SetParent(panelGo.transform, worldPositionStays: false);
+            var label = textGo.AddComponent<TextMeshProUGUI>();
+            label.font             = font;
+            label.fontSize         = _messageFontSize * 100f;
+            label.alignment        = TextAlignmentOptions.Center;
+            label.color            = Color.white;
+            label.textWrappingMode = TextWrappingModes.Normal;
+
+            var textRect = textGo.GetComponent<RectTransform>();
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.offsetMin = new Vector2(20, 20);
+            textRect.offsetMax = new Vector2(-20, -20);
+
+            return label;
         }
 
         #endregion
