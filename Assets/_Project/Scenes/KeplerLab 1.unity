@@ -1915,10 +1915,11 @@ MonoBehaviour:
   _cameraTransform: {fileID: 47491072}
   _spawnDistance: 3
   _showIntroPanel: 1
+  _useUnifiedPanelStyle: 1
   _introFadeInDuration: 1
   _introHoldDuration: 4
   _introFadeOutDuration: 1.5
-  _introText: '<size=120%><b>KeplerLab 1</b></size>
+  _introText: '<size=140%><b>KeplerLab 1</b></size>
 
     <size=80%>(Primera Ley de
     Kepler)</size>
@@ -1939,6 +1940,8 @@ MonoBehaviour:
     <size=80%>Observa
     como cambia la forma de la orbita segun la posicion y el lanzamiento.</size>'
   _showExplanationOnPause: 1
+  _placeKepler2PausePanelAboveSun: 1
+  _kepler2PausePanelSunOffset: {x: 0, y: 2.2, z: 0}
   _rightControllerAnchor: {fileID: 0}
   _panelLocalOffset: {x: 0, y: 0.08, z: 0.05}
   _panelLocalEuler: {x: 45, y: 0, z: 0}
@@ -1955,6 +1958,11 @@ MonoBehaviour:
     lejano al Sol.\n\u25CF La <b>excentricidad</b> (e) define la forma:\n    e =
     0  -> circulo\n    0 < e < 1 -> elipse\n\n<size=80%>Pulsa pausa de nuevo para
     reanudar.</size>"
+  _unifiedPanelLocalOffset: {x: 0, y: 0.11, z: 0.05}
+  _unifiedPanelLocalEuler: {x: 45, y: 0, z: 0}
+  _unifiedPanelControllerScale: 0.08
+  _unifiedPanelSize: {x: 3, y: 3}
+  _unifiedPanelFontSize: 0.16
 --- !u!1 &1834068109
 GameObject:
   m_ObjectHideFlags: 0
