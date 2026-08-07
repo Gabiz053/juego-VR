@@ -2,12 +2,6 @@
 
 # Juego VR — Sistema Solar Educativo
 
-![Unity](https://img.shields.io/badge/Unity-6-black?style=flat-square&logo=unity)
-![OpenXR](https://img.shields.io/badge/OpenXR-1.16-blue?style=flat-square)
-![XRI](https://img.shields.io/badge/XR_Interaction_Toolkit-3.0.10-5b9bd5?style=flat-square)
-![URP](https://img.shields.io/badge/Render-URP_17-red?style=flat-square)
-![Device](https://img.shields.io/badge/Target-Meta_Quest_3-green?style=flat-square&logo=meta)
-
 Videojuego educativo VR del Sistema Solar para **Meta Quest 3** (Android Standalone). El jugador navega entre cuatro modos de aprendizaje cruzando portales físicos en una sala de cristal flotante en el espacio.
 
 | Dato | Valor |
